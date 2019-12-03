@@ -1,7 +1,8 @@
-package com.fastival.jetpackwithmviapp
+package com.fastival.jetpackwithmviapp.ui.auth
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.fastival.jetpackwithmviapp.R
 
 class AuthActivity : AppCompatActivity() {
 
