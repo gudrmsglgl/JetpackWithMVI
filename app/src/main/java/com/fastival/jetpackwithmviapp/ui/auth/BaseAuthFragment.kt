@@ -9,6 +9,8 @@ import javax.inject.Inject
 
 abstract class BaseAuthFragment: DaggerFragment() {
 
+    val TAG = "AppDebug"
+
     @Inject
     lateinit var providerFactory: ViewModelProviderFactory
 

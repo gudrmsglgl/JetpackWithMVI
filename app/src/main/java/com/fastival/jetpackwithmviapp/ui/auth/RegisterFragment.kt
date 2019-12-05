@@ -7,8 +7,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 
 import com.fastival.jetpackwithmviapp.R
+import com.fastival.jetpackwithmviapp.util.ApiEmptyResponse
+import com.fastival.jetpackwithmviapp.util.ApiErrorResponse
+import com.fastival.jetpackwithmviapp.util.ApiSuccessResponse
 
 /**
  * A simple [Fragment] subclass.
@@ -27,5 +31,19 @@ class RegisterFragment : BaseAuthFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d("Main", "RegisterFragment: $viewModel")
+
+        viewModel.testRegister().observe(viewLifecycleOwner, Observer { response ->
+            when(response) {
+                is ApiSuccessResponse -> {
+                    Log.d(TAG, "REGISTER RESPONSE: ${response.body}")
+                }
+                is ApiErrorResponse -> {
+                    Log.d(TAG, "REGISTER RESPONSE: ${response.errorMessage}")
+                }
+                is ApiEmptyResponse -> {
+                    Log.d(TAG, "REGISTER RESPONSE: Empty Response")
+                }
+            }
+        })
     }
 }
