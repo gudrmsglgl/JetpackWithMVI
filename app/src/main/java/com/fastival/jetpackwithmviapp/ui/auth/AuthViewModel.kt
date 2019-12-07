@@ -1,12 +1,10 @@
 package com.fastival.jetpackwithmviapp.ui.auth
 
+import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import com.fastival.jetpackwithmviapp.api.auth.network_response.LoginResponse
-import com.fastival.jetpackwithmviapp.api.auth.network_response.RegistrationResponse
 import com.fastival.jetpackwithmviapp.models.AuthToken
 import com.fastival.jetpackwithmviapp.repository.auth.AuthRepository
-import com.fastival.jetpackwithmviapp.ui.BaseViewModel
+import com.fastival.jetpackwithmviapp.ui.base.BaseViewModel
 import com.fastival.jetpackwithmviapp.ui.DataState
 import com.fastival.jetpackwithmviapp.ui.auth.state.AuthStateEvent
 import com.fastival.jetpackwithmviapp.ui.auth.state.AuthStateEvent.*
@@ -14,7 +12,6 @@ import com.fastival.jetpackwithmviapp.ui.auth.state.AuthViewState
 import com.fastival.jetpackwithmviapp.ui.auth.state.LoginFields
 import com.fastival.jetpackwithmviapp.ui.auth.state.RegistrationFields
 import com.fastival.jetpackwithmviapp.util.AbsentLiveData
-import com.fastival.jetpackwithmviapp.util.GenericApiResponse
 import javax.inject.Inject
 
 class AuthViewModel
@@ -58,6 +55,7 @@ class AuthViewModel
     }
 
     fun setAuthToken(authToken: AuthToken) {
+        Log.d(TAG, "authToken: $authToken")
         val update = getCurrentViewStateOrNew()
         if (update.authToken == authToken) return
         update.authToken = authToken

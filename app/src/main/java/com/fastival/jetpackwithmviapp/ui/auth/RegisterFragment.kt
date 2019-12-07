@@ -32,7 +32,7 @@ class RegisterFragment : BaseAuthFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("Main", "RegisterFragment: $viewModel")
+        Log.d(TAG, "RegisterFragment: $viewModel")
 
         subscribeObservers()
     }
@@ -55,7 +55,7 @@ class RegisterFragment : BaseAuthFragment() {
                 input_email.text.toString(),
                 input_username.text.toString(),
                 input_password.text.toString(),
-                input_password_confirm.toString()
+                input_password_confirm.text.toString()
             )
         )
     }
