@@ -11,7 +11,9 @@ import com.fastival.jetpackwithmviapp.models.AuthToken
 import com.fastival.jetpackwithmviapp.persistence.AuthTokenDao
 import kotlinx.coroutines.*
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class SessionManager
 @Inject
 constructor(
@@ -22,9 +24,9 @@ constructor(
 
     private val TAG = "AppDebug"
 
-    private val _cachedToken = MutableLiveData<AuthToken>()
+    private val _cachedToken = MutableLiveData<AuthToken?>()
 
-    val cachedToken: LiveData<AuthToken>
+    val cachedToken: LiveData<AuthToken?>
         get()= _cachedToken
 
     fun login(newValue: AuthToken){

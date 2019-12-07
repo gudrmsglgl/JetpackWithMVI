@@ -41,11 +41,12 @@ abstract class BaseActivity<vb: ViewDataBinding, vm: BaseViewModel<*, *>>: Dagge
         subscribeObservers()
     }
 
-    private fun initBinding(){
+    protected open fun initBinding(){
         binding = DataBindingUtil.setContentView(this, getLayoutId())
         binding.lifecycleOwner = this
         binding.setVariable(getBindingVariable(), viewModel)
         binding.executePendingBindings()
+        Log.d(TAG, "baseActivity_initBinding()")
     }
 
     protected abstract fun getBindingVariable(): Int

@@ -5,6 +5,7 @@ import com.fastival.jetpackwithmviapp.di.auth.AuthModule
 import com.fastival.jetpackwithmviapp.di.auth.AuthScope
 import com.fastival.jetpackwithmviapp.di.auth.AuthViewModelModule
 import com.fastival.jetpackwithmviapp.ui.auth.AuthActivity
+import com.fastival.jetpackwithmviapp.ui.main.MainActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -16,4 +17,7 @@ abstract class ActivityBuildersModule {
         modules = [AuthModule::class, AuthFragmentBuildersModule::class, AuthViewModelModule::class]
     )
     abstract fun contributeAuthActivity(): AuthActivity
+
+    @ContributesAndroidInjector
+    abstract fun contributeMainActivity(): MainActivity
 }
