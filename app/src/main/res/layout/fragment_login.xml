@@ -6,8 +6,8 @@
             name="authViewModel"
             type="com.fastival.jetpackwithmviapp.ui.auth.AuthViewModel" />
         <variable
-            name="authToken"
-            type="com.fastival.jetpackwithmviapp.models.AuthToken" />
+            name="loginEvent"
+            type="com.fastival.jetpackwithmviapp.ui.auth.state.AuthStateEvent.LoginAttemptEvent" />
     </data>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -87,7 +87,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:background="@drawable/main_button_drawable"
             android:text="@string/field_login"
-            android:onClick="@{()-> authViewModel.setAuthToken(authToken)}"
+            android:onClick="@{()-> authViewModel.setStateEvent(loginEvent)}"
             android:textAllCaps="false"
             android:textColor="#fff"
             android:textSize="16sp"

@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="viewModel"
+            type="com.fastival.jetpackwithmviapp.ui.auth.AuthViewModel" />
+        <variable
+            name="regEvent"
+            type="com.fastival.jetpackwithmviapp.ui.auth.state.AuthStateEvent.RegisterAttemptEvent" />
+    </data>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -127,9 +137,10 @@
             android:textColor="#fff"
             android:textSize="16sp"
             android:layout_marginTop="50dp"
+            android:onClick="@{()-> viewModel.setStateEvent(regEvent)}"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-</ScrollView>
+</ScrollView></layout>

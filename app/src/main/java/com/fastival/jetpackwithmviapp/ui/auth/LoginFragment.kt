@@ -13,6 +13,8 @@ import com.fastival.jetpackwithmviapp.BR
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentLoginBinding
 import com.fastival.jetpackwithmviapp.models.AuthToken
+import com.fastival.jetpackwithmviapp.ui.auth.state.AuthStateEvent
+import com.fastival.jetpackwithmviapp.ui.auth.state.AuthStateEvent.LoginAttemptEvent
 import com.fastival.jetpackwithmviapp.ui.auth.state.LoginFields
 import com.fastival.jetpackwithmviapp.ui.base.BaseFragment
 import com.fastival.jetpackwithmviapp.util.ApiEmptyResponse
@@ -30,7 +32,10 @@ class LoginFragment : BaseFragment<FragmentLoginBinding, AuthViewModel>() {
     }
 
     override fun setBindingVariable() {
-        binding.authToken = AuthToken(1, "abcdefgffff")
+        binding.loginEvent = LoginAttemptEvent(
+            input_email.text.toString(),
+            input_password.text.toString()
+        )
     }
 
     override fun getLayoutId(): Int {

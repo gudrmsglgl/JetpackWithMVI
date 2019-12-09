@@ -2,7 +2,7 @@ package com.fastival.jetpackwithmviapp.ui.auth.state
 
 sealed class AuthStateEvent {
 
-    data class LoginAttempEvent(
+    data class LoginAttemptEvent(
         val email: String,
         val password: String
     ): AuthStateEvent()

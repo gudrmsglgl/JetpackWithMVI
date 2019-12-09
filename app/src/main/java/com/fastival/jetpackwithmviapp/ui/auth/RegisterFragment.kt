@@ -8,9 +8,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
+import com.fastival.jetpackwithmviapp.BR
 
 import com.fastival.jetpackwithmviapp.R
+import com.fastival.jetpackwithmviapp.databinding.FragmentRegisterBinding
+import com.fastival.jetpackwithmviapp.ui.auth.state.AuthStateEvent
+import com.fastival.jetpackwithmviapp.ui.auth.state.AuthStateEvent.RegisterAttemptEvent
 import com.fastival.jetpackwithmviapp.ui.auth.state.RegistrationFields
+import com.fastival.jetpackwithmviapp.ui.base.BaseFragment
 import com.fastival.jetpackwithmviapp.util.ApiEmptyResponse
 import com.fastival.jetpackwithmviapp.util.ApiErrorResponse
 import com.fastival.jetpackwithmviapp.util.ApiSuccessResponse
@@ -19,25 +24,29 @@ import kotlinx.android.synthetic.main.fragment_register.*
 /**
  * A simple [Fragment] subclass.
  */
-class RegisterFragment : BaseAuthFragment() {
+class RegisterFragment : BaseFragment<FragmentRegisterBinding, AuthViewModel>() {
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_register, container, false)
+    override fun getBindingVariable(): Int {
+        return BR.viewModel
     }
 
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        Log.d(TAG, "RegisterFragment: $viewModel")
-
-        subscribeObservers()
+    override fun setBindingVariable() {
+        binding.regEvent = RegisterAttemptEvent(
+            input_email.text.toString(),
+            input_username.text.toString(),
+            input_password.text.toString(),
+            input_password_confirm.text.toString()
+        )
     }
 
-    private fun subscribeObservers(){
+    override fun getLayoutId()= R.layout.fragment_register
+
+
+    override fun getViewModel(): Class<AuthViewModel> {
+        return AuthViewModel::class.java
+    }
+
+    override fun subscribeObservers(){
         viewModel.viewState.observe(viewLifecycleOwner, Observer {viewState->
             viewState.registrationFields?.let {regField->
                 regField.registration_email?.let { input_email.setText(it) }

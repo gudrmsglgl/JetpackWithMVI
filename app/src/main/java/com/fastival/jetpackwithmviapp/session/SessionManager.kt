@@ -24,9 +24,9 @@ constructor(
 
     private val TAG = "AppDebug"
 
-    private val _cachedToken = MutableLiveData<AuthToken?>()
+    private val _cachedToken = MutableLiveData<AuthToken>()
 
-    val cachedToken: LiveData<AuthToken?>
+    val cachedToken: LiveData<AuthToken>
         get()= _cachedToken
 
     fun login(newValue: AuthToken){

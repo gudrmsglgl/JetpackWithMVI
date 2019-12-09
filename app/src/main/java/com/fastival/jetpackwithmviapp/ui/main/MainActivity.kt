@@ -36,12 +36,15 @@ class MainActivity : BaseActivity<ActivityMainBinding, EmptyViewModel>() {
         sessionManager.cachedToken.observe(this, Observer {authToken->
             Log.d(TAG, "MainActivity, subscribeObservers: ViewState: $authToken")
 
-            if (authToken == null ) {
+
+            if (authToken == null) {
+                Log.d(TAG, "authToken == null")
                 navActivity<AuthActivity>(true){}
             }
 
             authToken?.let {
                 if (it.token == null || it.account_pk == -1) {
+                    Log.d(TAG, "authToken.token == null || authToken.account_pk == -1")
                     navActivity<AuthActivity>(true){}
                 }
             }

@@ -20,12 +20,16 @@ class AuthViewModel
 
     override fun handleStateEvent(stateEvent: AuthStateEvent): LiveData<DataState<AuthViewState>> {
         return when(stateEvent) {
-            is LoginAttempEvent -> {
-                AbsentLiveData.create()
+            is LoginAttemptEvent -> {
+               authRepository.attemptLogin(stateEvent.email, stateEvent.password)
             }
 
             is RegisterAttemptEvent -> {
-                AbsentLiveData.create()
+               authRepository.attemptRegistration(
+                   stateEvent.email,
+                   stateEvent.username,
+                   stateEvent.password,
+                   stateEvent.confirm_password)
             }
 
             is CheckPreviousAuthEvent -> {
