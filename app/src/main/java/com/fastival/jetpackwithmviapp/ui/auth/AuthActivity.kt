@@ -1,7 +1,10 @@
 package com.fastival.jetpackwithmviapp.ui.auth
 
+import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.Observer
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import com.fastival.jetpackwithmviapp.BR
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.ActivityAuthBinding
@@ -10,7 +13,8 @@ import com.fastival.jetpackwithmviapp.ui.ResponseType
 import com.fastival.jetpackwithmviapp.ui.base.BaseActivity
 import com.fastival.jetpackwithmviapp.ui.main.MainActivity
 
-class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel>() {
+class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel>(),
+    NavController.OnDestinationChangedListener {
 
     override fun getLayoutId() = R.layout.activity_auth
 
@@ -63,4 +67,12 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel>() {
         })
     }
 
+    // Navigation Changed -> JobCancel()
+    override fun onDestinationChanged(
+        controller: NavController,
+        destination: NavDestination,
+        arguments: Bundle?
+    ) {
+        viewModel.cancelActiveJobs()
+    }
 }
