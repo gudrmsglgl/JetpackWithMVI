@@ -8,6 +8,7 @@ import com.fastival.jetpackwithmviapp.ui.Response
 import com.fastival.jetpackwithmviapp.ui.ResponseType
 import com.fastival.jetpackwithmviapp.util.*
 import com.fastival.jetpackwithmviapp.util.Constants.Companion.NETWORK_TIMEOUT
+import com.fastival.jetpackwithmviapp.util.Constants.Companion.TESTING_CACHE_DELAY
 import com.fastival.jetpackwithmviapp.util.Constants.Companion.TESTING_NETWORK_DELAY
 import com.fastival.jetpackwithmviapp.util.ErrorHandling.Companion.ERROR_CHECK_NETWORK_CONNECTION
 import com.fastival.jetpackwithmviapp.util.ErrorHandling.Companion.ERROR_UNKNOWN
@@ -18,7 +19,7 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 
 abstract class NetworkBoundResource<ResponseObject, ViewStateType>
-(isNetworkAvailable: Boolean) {
+(isNetworkAvailable: Boolean, isNetworkRequest: Boolean) {
 
     private val TAG: String = "AppDebug"
 
@@ -29,6 +30,22 @@ abstract class NetworkBoundResource<ResponseObject, ViewStateType>
     init {
         setJob(initNewJob())
         setValue(DataState.loading(isLoading = true, cachedData = null))
+
+        if (isNetworkRequest){
+            handleNetworkRequest(isNetworkAvailable)
+        }
+
+        else {
+            coroutineScope.launch {
+                delay(TESTING_CACHE_DELAY)
+                // View data from cache only and return
+                createCacheRequestAndReturn()
+            }
+        }
+
+    }
+
+    private fun handleNetworkRequest(isNetworkAvailable: Boolean){
 
         if (isNetworkAvailable) {
             coroutineScope.launch {
@@ -44,7 +61,7 @@ abstract class NetworkBoundResource<ResponseObject, ViewStateType>
                         result.removeSource(apiResponse)
 
                         coroutineScope.launch {
-                            handleNetworkCall(response)
+                            handleGenericResponse(response)
                         }
                     }
                 }
@@ -65,7 +82,7 @@ abstract class NetworkBoundResource<ResponseObject, ViewStateType>
         }
     }
 
-    suspend fun handleNetworkCall(response: GenericApiResponse<ResponseObject>?) {
+    private suspend fun handleGenericResponse(response: GenericApiResponse<ResponseObject>?) {
         when (response) {
             is ApiSuccessResponse -> handleApiSuccessResponse(response)
             is ApiErrorResponse -> {
@@ -138,6 +155,8 @@ abstract class NetworkBoundResource<ResponseObject, ViewStateType>
     abstract suspend fun handleApiSuccessResponse(response: ApiSuccessResponse<ResponseObject>)
 
     abstract fun createCall(): LiveData<GenericApiResponse<ResponseObject>>
+
+    abstract suspend fun createCacheRequestAndReturn()
 
     abstract fun setJob(job: Job)
 }

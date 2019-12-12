@@ -33,7 +33,7 @@ class AuthViewModel
             }
 
             is CheckPreviousAuthEvent -> {
-                AbsentLiveData.create()
+                authRepository.checkPreviousAuthUser()
             }
         }
     }

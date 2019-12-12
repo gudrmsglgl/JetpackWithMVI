@@ -2,16 +2,22 @@ package com.fastival.jetpackwithmviapp.ui.auth
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
+import androidx.navigation.findNavController
 import com.fastival.jetpackwithmviapp.BR
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.ActivityAuthBinding
 import com.fastival.jetpackwithmviapp.extension.navActivity
 import com.fastival.jetpackwithmviapp.ui.ResponseType
+import com.fastival.jetpackwithmviapp.ui.auth.state.AuthStateEvent
+import com.fastival.jetpackwithmviapp.ui.auth.state.AuthViewState
 import com.fastival.jetpackwithmviapp.ui.base.BaseActivity
 import com.fastival.jetpackwithmviapp.ui.main.MainActivity
+import com.fastival.jetpackwithmviapp.util.SuccessHandling.Companion.RESPONSE_CHECK_PREVIOUS_AUTH_USER_DONE
+import kotlinx.android.synthetic.main.activity_auth.*
 
 class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel>(),
     NavController.OnDestinationChangedListener {
@@ -26,29 +32,45 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel>(),
         return BR.authViewModel
     }
 
+    override fun initVariables() {
+        super.initVariables()
+        findNavController(R.id.auth_nav_host_fragment).addOnDestinationChangedListener(this)
+    }
+
+    override fun initFunc() {
+        super.initFunc()
+        emitCheckPreviousAuthUser()
+    }
+
     override fun subscribeObservers() {
         Log.d(TAG, "AuthActivityObserve__ viewModel: $viewModel")
 
         viewModel.dataState.observe(this, Observer {dataState->
-            dataState.data?.data?.getContentIfNotHandled()?.let { authViewState ->
-                authViewState.authToken?.let {
-                    Log.d(TAG, "AuthActivity, DataState: $it")
-                    viewModel.setAuthToken(it)
-                }
-            }
-            dataState.data?.response?.getContentIfNotHandled()?.let { response ->
-                when(response.responseType) {
-                    is ResponseType.Dialog -> {
 
-                    }
-                    is ResponseType.Toast -> {
+            onDataStateChange(dataState)
 
-                    }
-                    is ResponseType.None -> {
-                        Log.e(TAG, "AuthActivity: Response: ${response.message}, ${response.responseType}")
+            dataState.data?.let { data ->
+
+                data.data?.getContentIfNotHandled()?.let { authViewState ->
+                    authViewState.authToken?.let {
+                        Log.d(TAG, "AuthActivity, DataState: $it")
+                        viewModel.setAuthToken(it)
                     }
                 }
+
+                data.response?.let { event->
+                    event.peekContent().let { response ->
+                        response.message?.let { message ->
+                            if (message.equals(RESPONSE_CHECK_PREVIOUS_AUTH_USER_DONE)){
+                                onFinishCheckPreviousAuthUser()
+                            }
+                        }
+                    }
+                }
+
             }
+
+
         })
 
 
@@ -67,6 +89,10 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel>(),
         })
     }
 
+    private fun emitCheckPreviousAuthUser(){
+        viewModel.setStateEvent(AuthStateEvent.CheckPreviousAuthEvent())
+    }
+
     // Navigation Changed -> JobCancel()
     override fun onDestinationChanged(
         controller: NavController,
@@ -74,5 +100,14 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel>(),
         arguments: Bundle?
     ) {
         viewModel.cancelActiveJobs()
+    }
+
+    override fun displayProgressBar(bool: Boolean) {
+        if (bool) progress_bar.visibility = View.VISIBLE
+        else progress_bar.visibility = View.GONE
+    }
+
+    private fun onFinishCheckPreviousAuthUser(){
+        fragment_container.visibility = View.VISIBLE
     }
 }

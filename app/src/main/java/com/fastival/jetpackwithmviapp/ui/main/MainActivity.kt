@@ -3,6 +3,7 @@ package com.fastival.jetpackwithmviapp.ui.main
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.Observer
 import com.fastival.jetpackwithmviapp.BR
 import com.fastival.jetpackwithmviapp.R
@@ -11,6 +12,7 @@ import com.fastival.jetpackwithmviapp.extension.navActivity
 import com.fastival.jetpackwithmviapp.ui.EmptyViewModel
 import com.fastival.jetpackwithmviapp.ui.auth.AuthActivity
 import com.fastival.jetpackwithmviapp.ui.base.BaseActivity
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity<ActivityMainBinding, EmptyViewModel>() {
 
@@ -50,5 +52,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, EmptyViewModel>() {
             }
 
         })
+    }
+
+    override fun displayProgressBar(bool: Boolean) {
+        if (bool) progress_bar.visibility = View.VISIBLE
+        else progress_bar.visibility = View.GONE
     }
 }
