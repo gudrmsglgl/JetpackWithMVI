@@ -242,10 +242,9 @@ constructor(
 
     private fun retNoTokenFound(): LiveData<DataState<AuthViewState>> {
         return object : LiveData<DataState<AuthViewState>>(){
-            override fun onInactive() {
+            override fun onActive() {
                 value = DataState.data(
-                    null, Response(RESPONSE_CHECK_PREVIOUS_AUTH_USER_DONE, ResponseType.None())
-                )
+                    null, Response(RESPONSE_CHECK_PREVIOUS_AUTH_USER_DONE, ResponseType.None()))
             }
         }
     }

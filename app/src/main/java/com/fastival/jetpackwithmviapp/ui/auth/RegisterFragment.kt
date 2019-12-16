@@ -30,14 +30,20 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding, AuthViewModel>() 
         return BR.viewModel
     }
 
-    override fun setBindingVariable() {
-        binding.regEvent = RegisterAttemptEvent(
-            input_email.text.toString(),
-            input_username.text.toString(),
-            input_password.text.toString(),
-            input_password_confirm.text.toString()
-        )
+
+    override fun initFunc() {
+        register_button.setOnClickListener {
+            viewModel.setStateEvent(
+                RegisterAttemptEvent(
+                    input_email.text.toString(),
+                    input_username.text.toString(),
+                    input_password.text.toString(),
+                    input_password_confirm.text.toString()
+                )
+            )
+        }
     }
+
 
     override fun getLayoutId()= R.layout.fragment_register
 

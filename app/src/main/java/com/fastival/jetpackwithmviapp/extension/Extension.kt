@@ -40,7 +40,7 @@ fun Context.displaySuccessDialog(message: String?) {
 fun Context.displayErrorDialog(errorMessage: String?) {
     MaterialDialog(this)
         .show {
-            title(R.string.text_success)
+            title(R.string.text_error)
             message(text = errorMessage)
             positiveButton(R.string.text_ok)
         }

@@ -16,8 +16,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity<ActivityMainBinding, EmptyViewModel>() {
 
-    override fun initBinding() {
-        super.initBinding()
+    override fun initVariables() {
+        super.initVariables()
         Log.d(TAG, "MainActivity_ sessionManager: ${sessionManager.hashCode()}")
         binding.smr = sessionManager
     }

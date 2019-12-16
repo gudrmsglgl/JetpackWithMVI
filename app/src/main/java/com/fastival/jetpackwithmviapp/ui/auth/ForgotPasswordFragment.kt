@@ -7,13 +7,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebView
 
 import com.fastival.jetpackwithmviapp.R
+import com.fastival.jetpackwithmviapp.ui.DataStateChangeListener
 
 /**
  * A simple [Fragment] subclass.
  */
 class ForgotPasswordFragment : BaseAuthFragment() {
+
+    lateinit var webView: WebView
+
+    lateinit var stateChangeListener: DataStateChangeListener
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,6 +32,11 @@ class ForgotPasswordFragment : BaseAuthFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d("Main", "ForgotPasswordFragment: $viewModel")
+        
+        //loadPasswordResetWebView()
+
     }
+
+
 
 }

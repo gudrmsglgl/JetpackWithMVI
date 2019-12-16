@@ -1,12 +1,7 @@
 package com.fastival.jetpackwithmviapp.ui.auth
 
 
-import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import com.fastival.jetpackwithmviapp.BR
 
@@ -31,11 +26,13 @@ class LoginFragment : BaseFragment<FragmentLoginBinding, AuthViewModel>() {
         return BR.authViewModel
     }
 
-    override fun setBindingVariable() {
-        binding.loginEvent = LoginAttemptEvent(
-            input_email.text.toString(),
-            input_password.text.toString()
-        )
+    override fun initFunc() {
+        login_button.setOnClickListener {
+            viewModel.setStateEvent(LoginAttemptEvent(
+                input_email.text.toString(),
+                input_password.text.toString()
+            ))
+        }
     }
 
     override fun getLayoutId(): Int {

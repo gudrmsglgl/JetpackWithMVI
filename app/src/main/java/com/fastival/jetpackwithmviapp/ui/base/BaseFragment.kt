@@ -39,14 +39,14 @@ abstract class BaseFragment<vb: ViewDataBinding, vm: BaseViewModel<*,*>>: Dagger
         }?:throw Exception("Invalid Activity")
 
         binding.setVariable(getBindingVariable(), viewModel)
-        setBindingVariable()
 
+        initFunc()
         subscribeObservers()
     }
 
     protected abstract fun getBindingVariable(): Int
 
-    protected abstract fun setBindingVariable()
+    protected abstract fun initFunc()
 
     @LayoutRes
     protected abstract fun getLayoutId(): Int
