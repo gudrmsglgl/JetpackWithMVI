@@ -35,9 +35,7 @@ class ForgotPasswordFragment : BaseFragment<FragmentForgotPasswordBinding, Empty
         binding.root.findViewById<WebView>(R.id.webview)
     }
 
-    lateinit var stateChangeListener: DataStateChangeListener
-
-    val webInteractionCallback = object : WebAppInterface.OnWebInteractionCallback{
+    private val webInteractionCallback = object : WebAppInterface.OnWebInteractionCallback{
 
         override fun onSuccess(email: String) {
             Log.e(TAG, "WebAppInterface.onSuccess: a reset link will be sent to $email.")
@@ -50,7 +48,7 @@ class ForgotPasswordFragment : BaseFragment<FragmentForgotPasswordBinding, Empty
             val dataState = DataState.error<Any>(
                 response = Response(errorMessage, ResponseType.Dialog())
             )
-            stateChangeListener.onDataStateChange(
+            stateListener.onDataStateChange(
                 dataState = dataState
             )
         }
@@ -58,7 +56,7 @@ class ForgotPasswordFragment : BaseFragment<FragmentForgotPasswordBinding, Empty
         override fun onLoading(isLoading: Boolean) {
             Log.e(TAG, "WebAppInterface.onLoading...")
             CoroutineScope(Dispatchers.Main).launch {
-                stateChangeListener.onDataStateChange(
+                stateListener.onDataStateChange(
                     DataState.loading(isLoading, null)
                 )
             }
@@ -80,13 +78,13 @@ class ForgotPasswordFragment : BaseFragment<FragmentForgotPasswordBinding, Empty
     @SuppressLint("SetJavaScriptEnabled")
     private fun loadPasswordResetWebView() {
 
-        stateChangeListener.onDataStateChange(
+        stateListener.onDataStateChange(
             DataState.loading(true,null)
         )
         webView.webViewClient = object : WebViewClient(){
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
-                stateChangeListener.onDataStateChange(
+                stateListener.onDataStateChange(
                     DataState.loading(false, null)
                 )
             }
@@ -152,13 +150,5 @@ class ForgotPasswordFragment : BaseFragment<FragmentForgotPasswordBinding, Empty
         }
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        try{
-            stateChangeListener = context as DataStateChangeListener
-        }catch (e: ClassCastException){
-            Log.e(TAG, "$context must implement DataStateChangeListener" )
-        }
-    }
 
 }

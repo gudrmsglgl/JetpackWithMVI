@@ -1,6 +1,8 @@
 package com.fastival.jetpackwithmviapp.ui.base
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +10,7 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
+import com.fastival.jetpackwithmviapp.ui.DataStateChangeListener
 import com.fastival.jetpackwithmviapp.viewmodels.ViewModelProviderFactory
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
@@ -18,6 +21,8 @@ abstract class BaseFragment<vb: ViewDataBinding, vm: BaseViewModel<*,*>>: Dagger
 
     @Inject
     lateinit var provider: ViewModelProviderFactory
+
+    protected lateinit var stateListener: DataStateChangeListener
 
     protected lateinit var binding: vb
     protected lateinit var viewModel: vm
@@ -42,6 +47,15 @@ abstract class BaseFragment<vb: ViewDataBinding, vm: BaseViewModel<*,*>>: Dagger
 
         initFunc()
         subscribeObservers()
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        try{
+            stateListener = context as DataStateChangeListener
+        }catch (e: ClassCastException) {
+            Log.e(TAG, "$context must implement DataStateChangeListener" )
+        }
     }
 
     protected abstract fun getBindingVariable(): Int
