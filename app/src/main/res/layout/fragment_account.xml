@@ -4,6 +4,9 @@
         <variable
             name="vm"
             type="com.fastival.jetpackwithmviapp.ui.EmptyViewModel" />
+        <variable
+            name="smr"
+            type="com.fastival.jetpackwithmviapp.session.SessionManager" />
     </data>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -103,6 +106,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:background="@drawable/red_button_drawable"
             android:text="Log out"
+            android:onClick="@{()->smr.logout()}"
             android:textAllCaps="false"
             android:textColor="#fff"
             android:textSize="16sp"

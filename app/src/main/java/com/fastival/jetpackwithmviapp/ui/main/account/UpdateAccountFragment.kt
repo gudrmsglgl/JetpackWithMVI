@@ -33,4 +33,9 @@ class UpdateAccountFragment : BaseFragment<FragmentUpdateAccountBinding, EmptyVi
 
     override fun subscribeObservers() {
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setHasOptionsMenu(false)
+    }
 }

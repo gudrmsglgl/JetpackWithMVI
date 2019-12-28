@@ -20,6 +20,7 @@ import com.fastival.jetpackwithmviapp.ui.main.account.UpdateAccountFragment
 import com.fastival.jetpackwithmviapp.ui.main.blog.UpdateBlogFragment
 import com.fastival.jetpackwithmviapp.ui.main.blog.ViewBlogFragment
 import com.fastival.jetpackwithmviapp.util.BottomNavController
+import com.fastival.jetpackwithmviapp.util.setUpNavigation
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -50,7 +51,9 @@ BottomNavController.OnNavigationReselectedListener{
         //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun onReselectNavItem(navController: NavController, fragment: Fragment) = when(fragment){
+    override fun onReselectNavItem(
+        navController: NavController, fragment: Fragment
+    ) = when(fragment){
         is ViewBlogFragment -> navController.navigate(R.id.action_viewBlogFragment_to_blogFragment)
         is UpdateBlogFragment -> navController.navigate(R.id.action_updateBlogFragment_to_blogFragment)
         is UpdateAccountFragment -> navController.navigate(R.id.action_updateAccountFragment_to_accountFragment)
@@ -67,11 +70,21 @@ BottomNavController.OnNavigationReselectedListener{
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setupActionBar()
+        bottomNavigationView = findViewById(R.id.bottom_navigation_view)
+        bottomNavigationView.setUpNavigation(bottomNavController, this)
+        if (savedInstanceState == null) {
+            bottomNavController.onNavigationItemSelected()
+        }
+    }
+
     override fun initVariables() {
         super.initVariables()
         Log.d(TAG, "MainActivity_ sessionManager: ${sessionManager.hashCode()}")
         binding.smr = sessionManager
-
 
     }
 
@@ -110,5 +123,9 @@ BottomNavController.OnNavigationReselectedListener{
     override fun displayProgressBar(bool: Boolean) {
         if (bool) progress_bar.visibility = View.VISIBLE
         else progress_bar.visibility = View.GONE
+    }
+
+    private fun setupActionBar(){
+        setSupportActionBar(tool_bar)
     }
 }
