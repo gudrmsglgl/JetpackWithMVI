@@ -102,6 +102,10 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel>(),
         viewModel.cancelActiveJobs()
     }
 
+    override fun expandAppBar() {
+        // ignore
+    }
+
     override fun displayProgressBar(bool: Boolean) {
         if (bool) progress_bar.visibility = View.VISIBLE
         else progress_bar.visibility = View.GONE

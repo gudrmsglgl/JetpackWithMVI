@@ -11,7 +11,7 @@ import com.fastival.jetpackwithmviapp.models.AuthToken
 import com.fastival.jetpackwithmviapp.ui.auth.state.AuthStateEvent
 import com.fastival.jetpackwithmviapp.ui.auth.state.AuthStateEvent.LoginAttemptEvent
 import com.fastival.jetpackwithmviapp.ui.auth.state.LoginFields
-import com.fastival.jetpackwithmviapp.ui.base.BaseFragment
+import com.fastival.jetpackwithmviapp.ui.base.BaseAuthFragment
 import com.fastival.jetpackwithmviapp.util.ApiEmptyResponse
 import com.fastival.jetpackwithmviapp.util.ApiErrorResponse
 import com.fastival.jetpackwithmviapp.util.ApiSuccessResponse
@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.fragment_login.*
 /**
  * A simple [Fragment] subclass.
  */
-class LoginFragment : BaseFragment<FragmentLoginBinding, AuthViewModel>() {
+class LoginFragment : BaseAuthFragment<FragmentLoginBinding, AuthViewModel>() {
 
     override fun getBindingVariable(): Int {
         return BR.authViewModel

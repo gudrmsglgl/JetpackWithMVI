@@ -11,12 +11,14 @@ import com.fastival.jetpackwithmviapp.BR
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentChangePasswordBinding
 import com.fastival.jetpackwithmviapp.ui.EmptyViewModel
-import com.fastival.jetpackwithmviapp.ui.base.BaseFragment
+import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
 
 /**
  * A simple [Fragment] subclass.
  */
-class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding, EmptyViewModel>() {
+class ChangePasswordFragment : BaseMainFragment<FragmentChangePasswordBinding, EmptyViewModel>() {
+
+    override fun setTopLevelDesId(): Int = R.id.accountFragment
 
     override fun getBindingVariable(): Int {
         return BR.vm

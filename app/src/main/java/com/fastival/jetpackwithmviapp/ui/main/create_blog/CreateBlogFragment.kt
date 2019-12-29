@@ -1,22 +1,20 @@
 package com.fastival.jetpackwithmviapp.ui.main.create_blog
 
 
-import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import com.fastival.jetpackwithmviapp.BR
 
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentCreateBlogBinding
 import com.fastival.jetpackwithmviapp.ui.EmptyViewModel
-import com.fastival.jetpackwithmviapp.ui.base.BaseFragment
+import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
 
 /**
  * A simple [Fragment] subclass.
  */
-class CreateBlogFragment : BaseFragment<FragmentCreateBlogBinding, EmptyViewModel>() {
+class CreateBlogFragment : BaseMainFragment<FragmentCreateBlogBinding, EmptyViewModel>() {
+
+    override fun setTopLevelDesId(): Int = R.id.createBlogFragment
 
     override fun getBindingVariable() = BR.vm
 

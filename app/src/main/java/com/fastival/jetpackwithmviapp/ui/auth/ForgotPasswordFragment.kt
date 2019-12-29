@@ -19,7 +19,7 @@ import com.fastival.jetpackwithmviapp.BR
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentForgotPasswordBinding
 import com.fastival.jetpackwithmviapp.ui.*
-import com.fastival.jetpackwithmviapp.ui.base.BaseFragment
+import com.fastival.jetpackwithmviapp.ui.base.BaseAuthFragment
 import com.fastival.jetpackwithmviapp.util.Constants
 import kotlinx.android.synthetic.main.fragment_forgot_password.*
 import kotlinx.coroutines.CoroutineScope
@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 /**
  * A simple [Fragment] subclass.
  */
-class ForgotPasswordFragment : BaseFragment<FragmentForgotPasswordBinding, EmptyViewModel>() {
+class ForgotPasswordFragment : BaseAuthFragment<FragmentForgotPasswordBinding, EmptyViewModel>() {
 
     private val webView: WebView by lazy {
         binding.root.findViewById<WebView>(R.id.webview)

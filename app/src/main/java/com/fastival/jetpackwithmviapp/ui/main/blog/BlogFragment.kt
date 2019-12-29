@@ -13,11 +13,13 @@ import com.fastival.jetpackwithmviapp.BR
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentBlogBinding
 import com.fastival.jetpackwithmviapp.ui.EmptyViewModel
-import com.fastival.jetpackwithmviapp.ui.base.BaseFragment
+import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
 import kotlinx.android.synthetic.main.fragment_blog.*
 
 
-class BlogFragment : BaseFragment<FragmentBlogBinding, EmptyViewModel>() {
+class BlogFragment : BaseMainFragment<FragmentBlogBinding, EmptyViewModel>() {
+
+    override fun setTopLevelDesId(): Int = R.id.blogFragment
 
     override fun getBindingVariable(): Int = BR.vm
 

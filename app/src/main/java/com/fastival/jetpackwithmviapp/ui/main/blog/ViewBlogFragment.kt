@@ -10,12 +10,14 @@ import com.fastival.jetpackwithmviapp.BR
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentViewBlogBinding
 import com.fastival.jetpackwithmviapp.ui.EmptyViewModel
-import com.fastival.jetpackwithmviapp.ui.base.BaseFragment
+import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
 
 /**
  * A simple [Fragment] subclass.
  */
-class ViewBlogFragment : BaseFragment<FragmentViewBlogBinding, EmptyViewModel>() {
+class ViewBlogFragment : BaseMainFragment<FragmentViewBlogBinding, EmptyViewModel>() {
+
+    override fun setTopLevelDesId(): Int = R.id.blogFragment
 
     override fun getBindingVariable(): Int = BR.vm
 

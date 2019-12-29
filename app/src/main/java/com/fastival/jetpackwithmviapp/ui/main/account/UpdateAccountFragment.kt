@@ -11,12 +11,14 @@ import com.fastival.jetpackwithmviapp.BR
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentUpdateAccountBinding
 import com.fastival.jetpackwithmviapp.ui.EmptyViewModel
-import com.fastival.jetpackwithmviapp.ui.base.BaseFragment
+import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
 
 /**
  * A simple [Fragment] subclass.
  */
-class UpdateAccountFragment : BaseFragment<FragmentUpdateAccountBinding, EmptyViewModel>() {
+class UpdateAccountFragment : BaseMainFragment<FragmentUpdateAccountBinding, EmptyViewModel>() {
+
+    override fun setTopLevelDesId(): Int = R.id.accountFragment
 
     override fun getBindingVariable(): Int {
         return BR.vm

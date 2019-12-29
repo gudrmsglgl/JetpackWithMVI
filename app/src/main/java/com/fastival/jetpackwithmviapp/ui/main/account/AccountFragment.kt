@@ -11,17 +11,19 @@ import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentAccountBinding
 import com.fastival.jetpackwithmviapp.session.SessionManager
 import com.fastival.jetpackwithmviapp.ui.EmptyViewModel
-import com.fastival.jetpackwithmviapp.ui.base.BaseFragment
+import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
 import kotlinx.android.synthetic.main.fragment_account.*
 import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass.
  */
-class AccountFragment : BaseFragment<FragmentAccountBinding, EmptyViewModel>() {
+class AccountFragment : BaseMainFragment<FragmentAccountBinding, EmptyViewModel>() {
 
     @Inject
     lateinit var sessionManager: SessionManager
+
+    override fun setTopLevelDesId(): Int = R.id.accountFragment
 
     override fun getBindingVariable(): Int {
         return BR.vm

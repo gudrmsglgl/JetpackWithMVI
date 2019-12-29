@@ -15,7 +15,7 @@ import com.fastival.jetpackwithmviapp.databinding.FragmentRegisterBinding
 import com.fastival.jetpackwithmviapp.ui.auth.state.AuthStateEvent
 import com.fastival.jetpackwithmviapp.ui.auth.state.AuthStateEvent.RegisterAttemptEvent
 import com.fastival.jetpackwithmviapp.ui.auth.state.RegistrationFields
-import com.fastival.jetpackwithmviapp.ui.base.BaseFragment
+import com.fastival.jetpackwithmviapp.ui.base.BaseAuthFragment
 import com.fastival.jetpackwithmviapp.util.ApiEmptyResponse
 import com.fastival.jetpackwithmviapp.util.ApiErrorResponse
 import com.fastival.jetpackwithmviapp.util.ApiSuccessResponse
@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.fragment_register.*
 /**
  * A simple [Fragment] subclass.
  */
-class RegisterFragment : BaseFragment<FragmentRegisterBinding, AuthViewModel>() {
+class RegisterFragment : BaseAuthFragment<FragmentRegisterBinding, AuthViewModel>() {
 
     override fun getBindingVariable(): Int {
         return BR.viewModel

@@ -6,16 +6,23 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
+import androidx.annotation.NavigationRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
+import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.ui.DataStateChangeListener
 import com.fastival.jetpackwithmviapp.viewmodels.ViewModelProviderFactory
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
-abstract class BaseFragment<vb: ViewDataBinding, vm: BaseViewModel<*,*>>: DaggerFragment() {
+abstract class BaseMainFragment<vb: ViewDataBinding, vm: BaseViewModel<*,*>>: DaggerFragment() {
 
     val TAG = "AppDebug"
 
@@ -47,6 +54,8 @@ abstract class BaseFragment<vb: ViewDataBinding, vm: BaseViewModel<*,*>>: Dagger
 
         initFunc()
         subscribeObservers()
+
+        setupActionBarWithNavController(setTopLevelDesId(), activity as AppCompatActivity)
     }
 
     override fun onAttach(context: Context) {
@@ -57,6 +66,18 @@ abstract class BaseFragment<vb: ViewDataBinding, vm: BaseViewModel<*,*>>: Dagger
             Log.e(TAG, "$context must implement DataStateChangeListener" )
         }
     }
+
+    private fun setupActionBarWithNavController(@IdRes fragmentId: Int, activity: AppCompatActivity)  {
+        val appBarConfiguration = AppBarConfiguration(setOf(fragmentId))
+        NavigationUI.setupActionBarWithNavController(
+            activity,
+            findNavController(),
+            appBarConfiguration
+        )
+    }
+
+    @IdRes
+    protected abstract fun setTopLevelDesId(): Int
 
     protected abstract fun getBindingVariable(): Int
 

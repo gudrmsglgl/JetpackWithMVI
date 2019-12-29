@@ -21,6 +21,7 @@ import com.fastival.jetpackwithmviapp.ui.main.blog.UpdateBlogFragment
 import com.fastival.jetpackwithmviapp.ui.main.blog.ViewBlogFragment
 import com.fastival.jetpackwithmviapp.util.BottomNavController
 import com.fastival.jetpackwithmviapp.util.setUpNavigation
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -48,7 +49,7 @@ BottomNavController.OnNavigationReselectedListener{
     }
 
     override fun onGraphChange() {
-        //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        expandAppBar()
     }
 
     override fun onReselectNavItem(
@@ -127,5 +128,9 @@ BottomNavController.OnNavigationReselectedListener{
 
     private fun setupActionBar(){
         setSupportActionBar(tool_bar)
+    }
+
+    override fun expandAppBar() {
+        findViewById<AppBarLayout>(R.id.app_bar).setExpanded(true)
     }
 }
