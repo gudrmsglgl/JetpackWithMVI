@@ -18,10 +18,7 @@ import javax.inject.Inject
 /**
  * A simple [Fragment] subclass.
  */
-class AccountFragment : BaseMainFragment<FragmentAccountBinding, EmptyViewModel>() {
-
-    @Inject
-    lateinit var sessionManager: SessionManager
+class AccountFragment : BaseMainFragment<FragmentAccountBinding, AccountViewModel>() {
 
     override fun setTopLevelDesId(): Int = R.id.accountFragment
 
@@ -36,8 +33,8 @@ class AccountFragment : BaseMainFragment<FragmentAccountBinding, EmptyViewModel>
         return R.layout.fragment_account
     }
 
-    override fun getViewModel(): Class<EmptyViewModel> {
-        return EmptyViewModel::class.java
+    override fun getViewModel(): Class<AccountViewModel> {
+        return AccountViewModel::class.java
     }
 
     override fun subscribeObservers() {
@@ -51,7 +48,6 @@ class AccountFragment : BaseMainFragment<FragmentAccountBinding, EmptyViewModel>
             findNavController().navigate(R.id.action_accountFragment_to_changePasswordFragment)
         }
 
-        binding.smr = sessionManager
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

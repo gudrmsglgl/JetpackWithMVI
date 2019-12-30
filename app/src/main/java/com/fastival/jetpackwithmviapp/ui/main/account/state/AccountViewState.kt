@@ -1,4 +1,7 @@
 package com.fastival.jetpackwithmviapp.ui.main.account.state
 
-class AccountViewState {
-}
+import com.fastival.jetpackwithmviapp.models.AccountProperties
+
+class AccountViewState(
+  var accountProperties: AccountProperties? = null
+)
