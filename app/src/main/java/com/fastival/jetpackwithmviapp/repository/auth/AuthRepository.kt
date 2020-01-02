@@ -49,8 +49,8 @@ constructor(
             return retErrorResponse(loginFieldError, ResponseType.Dialog())
         }
 
-        return object : NetworkBoundResource<LoginResponse, AuthViewState>
-            (sessionManager.isConnectedToTheInternet(), true) {
+        return object : NetworkBoundResource<LoginResponse, Any, AuthViewState>
+            (sessionManager.isConnectedToTheInternet(), true, false) {
             override suspend fun handleApiSuccessResponse(response: ApiSuccessResponse<LoginResponse>) {
 
                 Log.d(TAG, "handleApiSuccessResponse: $response")
@@ -104,6 +104,15 @@ constructor(
 
             }
 
+            // not used in this case
+            override fun loadFromCache(): LiveData<AuthViewState> {
+                return AbsentLiveData.create()
+            }
+
+            // not used in this case
+            override suspend fun updateLocalDb(cacheObject: Any?) {
+            }
+
         }.asLiveData()
     }
 
@@ -120,8 +129,8 @@ constructor(
         if (!registrationFieldsErrors.equals(RegistrationFields.RegistrationError.none()))
             return retErrorResponse(registrationFieldsErrors, ResponseType.Dialog())
 
-        return object : NetworkBoundResource<RegistrationResponse, AuthViewState>
-            (sessionManager.isConnectedToTheInternet(), true){
+        return object : NetworkBoundResource<RegistrationResponse, Any, AuthViewState>
+            (sessionManager.isConnectedToTheInternet(), true, false){
             override suspend fun handleApiSuccessResponse(response: ApiSuccessResponse<RegistrationResponse>) {
 
                 Log.d(TAG, "handleApiSuccessResponse: $response")
@@ -174,8 +183,18 @@ constructor(
                 repositoryJob = job
             }
 
+            // not used in this case
             override suspend fun createCacheRequestAndReturn() {
 
+            }
+
+            // not used in this case
+            override fun loadFromCache(): LiveData<AuthViewState> {
+                return AbsentLiveData.create()
+            }
+
+            // not used in this case
+            override suspend fun updateLocalDb(cacheObject: Any?) {
             }
 
         }.asLiveData()
@@ -190,8 +209,8 @@ constructor(
             return retNoTokenFound()
         }
 
-        return object : NetworkBoundResource<Void, AuthViewState>
-            (sessionManager.isConnectedToTheInternet(), false)
+        return object : NetworkBoundResource<Void, Any, AuthViewState>
+            (sessionManager.isConnectedToTheInternet(), false, false)
         {
             override suspend fun handleApiSuccessResponse(response: ApiSuccessResponse<Void>) {
             }
@@ -237,6 +256,16 @@ constructor(
                 repositoryJob?.cancel()
                 repositoryJob = job
             }
+
+            // not used in this case
+            override fun loadFromCache(): LiveData<AuthViewState> {
+                return AbsentLiveData.create()
+            }
+
+            // not used in this case
+            override suspend fun updateLocalDb(cacheObject: Any?) {
+            }
+
         }.asLiveData()
     }
 

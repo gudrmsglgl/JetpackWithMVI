@@ -2,16 +2,20 @@ package com.fastival.jetpackwithmviapp.ui.main.account
 
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.fastival.jetpackwithmviapp.BR
 
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentAccountBinding
+import com.fastival.jetpackwithmviapp.models.AccountProperties
 import com.fastival.jetpackwithmviapp.session.SessionManager
 import com.fastival.jetpackwithmviapp.ui.EmptyViewModel
 import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
+import com.fastival.jetpackwithmviapp.ui.main.account.state.AccountStateEvent
 import kotlinx.android.synthetic.main.fragment_account.*
 import javax.inject.Inject
 
@@ -38,6 +42,31 @@ class AccountFragment : BaseMainFragment<FragmentAccountBinding, AccountViewMode
     }
 
     override fun subscribeObservers() {
+        viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState->
+            stateListener.onDataStateChange(dataState)
+            if (dataState != null) {
+                dataState.data?.data?.let { event ->
+                    event.getContentIfNotHandled()?.accountProperties?.let { accountProperties ->
+                        Log.d(TAG, "AccountFragment, DataState: $accountProperties")
+                        viewModel.setAccountPropertiesData(accountProperties)
+                    }
+                }
+            }
+        })
+
+        viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState->
+            if (viewState != null) {
+                viewState.accountProperties?.let {
+                    Log.d(TAG, "AccountFragment, ViewState: $it")
+                    setAccountDataFields(it)
+                }
+            }
+        })
+    }
+
+    private fun setAccountDataFields(accountProperties: AccountProperties){
+        email?.text = accountProperties.email
+        username?.text = accountProperties.username
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -48,6 +77,11 @@ class AccountFragment : BaseMainFragment<FragmentAccountBinding, AccountViewMode
             findNavController().navigate(R.id.action_accountFragment_to_changePasswordFragment)
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.setStateEvent(AccountStateEvent.GetAccountPropertiesEvent())
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
