@@ -50,7 +50,10 @@ constructor(
         }
 
         return object : NetworkBoundResource<LoginResponse, Any, AuthViewState>
-            (sessionManager.isConnectedToTheInternet(), true, false) {
+            (sessionManager.isConnectedToTheInternet(),
+            true,
+            true,
+            false) {
             override suspend fun handleApiSuccessResponse(response: ApiSuccessResponse<LoginResponse>) {
 
                 Log.d(TAG, "handleApiSuccessResponse: $response")
@@ -130,7 +133,10 @@ constructor(
             return retErrorResponse(registrationFieldsErrors, ResponseType.Dialog())
 
         return object : NetworkBoundResource<RegistrationResponse, Any, AuthViewState>
-            (sessionManager.isConnectedToTheInternet(), true, false){
+            (sessionManager.isConnectedToTheInternet(),
+            true,
+            true,
+            false){
             override suspend fun handleApiSuccessResponse(response: ApiSuccessResponse<RegistrationResponse>) {
 
                 Log.d(TAG, "handleApiSuccessResponse: $response")
@@ -210,7 +216,10 @@ constructor(
         }
 
         return object : NetworkBoundResource<Void, Any, AuthViewState>
-            (sessionManager.isConnectedToTheInternet(), false, false)
+            (sessionManager.isConnectedToTheInternet(),
+            false,
+            true,
+            false)
         {
             override suspend fun handleApiSuccessResponse(response: ApiSuccessResponse<Void>) {
             }

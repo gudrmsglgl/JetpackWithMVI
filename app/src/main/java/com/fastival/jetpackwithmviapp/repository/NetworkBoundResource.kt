@@ -21,6 +21,7 @@ import kotlinx.coroutines.Dispatchers.Main
 abstract class NetworkBoundResource<ResponseObject, CacheObject, ViewStateType>(
     isNetworkAvailable: Boolean,
     isNetworkRequest: Boolean,
+    shouldCancelIfNoInternet: Boolean,
     shouldLoadFromCache: Boolean)
 {
 
@@ -44,20 +45,24 @@ abstract class NetworkBoundResource<ResponseObject, CacheObject, ViewStateType>(
         }
 
         if (isNetworkRequest){
-            handleNetworkRequest(isNetworkAvailable)
+            handleNetworkRequest(isNetworkAvailable, shouldCancelIfNoInternet)
         }
 
         else {
-            coroutineScope.launch {
-                delay(TESTING_CACHE_DELAY)
-                // View data from cache only and return
-                createCacheRequestAndReturn()
-            }
+            doCacheRequest()
         }
 
     }
 
-    private fun handleNetworkRequest(isNetworkAvailable: Boolean){
+    private fun doCacheRequest(){
+        coroutineScope.launch {
+            delay(TESTING_CACHE_DELAY)
+            // View data from cache only and return
+            createCacheRequestAndReturn()
+        }
+    }
+
+    private fun handleNetworkRequest(isNetworkAvailable: Boolean, shouldCancelIfNoInternet: Boolean){
 
         if (isNetworkAvailable) {
             coroutineScope.launch {
@@ -90,7 +95,15 @@ abstract class NetworkBoundResource<ResponseObject, CacheObject, ViewStateType>(
             }
         }
         else {
-            onErrorReturn(UNABLE_TODO_OPERATION_WO_INTERNET, shouldUseDialog = true, shouldUseToast = false)
+            if (shouldCancelIfNoInternet) {
+                onErrorReturn(
+                    UNABLE_TODO_OPERATION_WO_INTERNET,
+                    shouldUseDialog = true,
+                    shouldUseToast = false)
+            }
+            else {
+                doCacheRequest()
+            }
         }
     }
 
