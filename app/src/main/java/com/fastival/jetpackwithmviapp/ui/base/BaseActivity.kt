@@ -1,8 +1,11 @@
 package com.fastival.jetpackwithmviapp.ui.base
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.view.inputmethod.InputMethodManager
 import androidx.annotation.LayoutRes
+import androidx.core.content.getSystemService
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
@@ -127,4 +130,13 @@ DataStateChangeListener{
     protected abstract fun subscribeObservers()
 
     abstract fun displayProgressBar(bool: Boolean)
+
+    override fun hideSoftKeyboard() {
+        if (currentFocus != null) {
+            val inputMethodManager =
+                getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager
+                .hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
+        }
+    }
 }
