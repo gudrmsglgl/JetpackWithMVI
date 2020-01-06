@@ -52,10 +52,16 @@ abstract class BaseMainFragment<vb: ViewDataBinding, vm: BaseViewModel<*,*>>: Da
 
         binding.setVariable(getBindingVariable(), viewModel)
 
+        cancelActiveJobs()
+
         initFunc()
         subscribeObservers()
 
         setupActionBarWithNavController(setTopLevelDesId(), activity as AppCompatActivity)
+    }
+
+    fun cancelActiveJobs() {
+        viewModel.cancelActiveJobs()
     }
 
     override fun onAttach(context: Context) {

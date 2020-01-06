@@ -6,6 +6,7 @@ import com.fastival.jetpackwithmviapp.models.AuthToken
 import com.fastival.jetpackwithmviapp.repository.auth.AuthRepository
 import com.fastival.jetpackwithmviapp.ui.base.BaseViewModel
 import com.fastival.jetpackwithmviapp.ui.DataState
+import com.fastival.jetpackwithmviapp.ui.Loading
 import com.fastival.jetpackwithmviapp.ui.auth.state.AuthStateEvent
 import com.fastival.jetpackwithmviapp.ui.auth.state.AuthStateEvent.*
 import com.fastival.jetpackwithmviapp.ui.auth.state.AuthViewState
@@ -34,6 +35,15 @@ class AuthViewModel
 
             is CheckPreviousAuthEvent -> {
                 authRepository.checkPreviousAuthUser()
+            }
+
+            is None -> {
+                object: LiveData<DataState<AuthViewState>>(){
+                    override fun onActive() {
+                        super.onActive()
+                        value = DataState.data(null, null)
+                    }
+                }
             }
         }
     }
@@ -66,13 +76,13 @@ class AuthViewModel
         _viewState.value = update
     }
 
-    fun cancelActiveJobs(){
+    override fun cancelActiveJobs() {
+        handlePendingData()
         authRepository.cancelActiveJobs()
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        cancelActiveJobs()
+    private fun handlePendingData(){
+        setStateEvent(None())
     }
 
 }

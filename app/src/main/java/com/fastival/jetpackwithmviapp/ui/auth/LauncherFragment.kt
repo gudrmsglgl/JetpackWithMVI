@@ -8,30 +8,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import com.fastival.jetpackwithmviapp.BR
 
 import com.fastival.jetpackwithmviapp.R
+import com.fastival.jetpackwithmviapp.databinding.FragmentLauncherBinding
+import com.fastival.jetpackwithmviapp.ui.base.BaseAuthFragment
 import kotlinx.android.synthetic.main.fragment_launcher.*
 
 /**
  * A simple [Fragment] subclass.
  */
-class LauncherFragment : BaseAuthFragment() {
+class LauncherFragment : BaseAuthFragment<FragmentLauncherBinding, AuthViewModel>() {
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_launcher, container, false)
-    }
+    override fun getBindingVariable() = BR.vm
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        Log.d("Main", "LauncherFragment: $viewModel")
-
+    override fun initFunc() {
         register.setOnClickListener {
-            navRegisteration()
+            navRegistration()
         }
 
         login.setOnClickListener {
@@ -42,20 +35,27 @@ class LauncherFragment : BaseAuthFragment() {
             navForgotPassword()
         }
 
-        focusable_view.requestFocus()
+        focusable_view.requestFocus() // reset focus
+
+        Log.d(TAG, "LauncherFragment: $viewModel")
     }
 
-    private fun navForgotPassword() {
-        findNavController().navigate(R.id.action_launcherFragment_to_forgotPasswordFragment)
+    override fun getLayoutId() = R.layout.fragment_launcher
+
+    override fun getViewModel(): Class<AuthViewModel> = AuthViewModel::class.java
+
+    override fun subscribeObservers() {
     }
 
-    private fun navLogin() {
+    private fun navLogin(){
         findNavController().navigate(R.id.action_launcherFragment_to_loginFragment)
     }
 
-    private fun navRegisteration() {
+    private fun navRegistration(){
         findNavController().navigate(R.id.action_launcherFragment_to_registerFragment)
     }
 
-
+    private fun navForgotPassword(){
+        findNavController().navigate(R.id.action_launcherFragment_to_forgotPasswordFragment)
+    }
 }

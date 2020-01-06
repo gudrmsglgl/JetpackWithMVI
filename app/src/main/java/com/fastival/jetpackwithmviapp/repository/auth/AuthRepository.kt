@@ -11,6 +11,7 @@ import com.fastival.jetpackwithmviapp.models.AccountProperties
 import com.fastival.jetpackwithmviapp.models.AuthToken
 import com.fastival.jetpackwithmviapp.persistence.AccountPropertiesDao
 import com.fastival.jetpackwithmviapp.persistence.AuthTokenDao
+import com.fastival.jetpackwithmviapp.repository.JobManager
 import com.fastival.jetpackwithmviapp.repository.NetworkBoundResource
 import com.fastival.jetpackwithmviapp.session.SessionManager
 import com.fastival.jetpackwithmviapp.ui.DataState
@@ -37,11 +38,10 @@ constructor(
     val sessionManager: SessionManager,
     val sharedPreferences: SharedPreferences,
     val editor: SharedPreferences.Editor
-) {
+): JobManager("AuthRepository")
+{
 
     private val TAG = "AppDebug"
-
-    private var repositoryJob: Job? = null
 
     fun attemptLogin(email: String, password: String): LiveData<DataState<AuthViewState>> {
         val loginFieldError = LoginFields(email, password).isValidForLogin()
@@ -98,8 +98,7 @@ constructor(
             }
 
             override fun setJob(job: Job) {
-                repositoryJob?.cancel()
-                repositoryJob = job
+                addJob("attemptLogin", job)
             }
 
             // not used in this case
@@ -185,8 +184,7 @@ constructor(
             }
 
             override fun setJob(job: Job) {
-                repositoryJob?.cancel()
-                repositoryJob = job
+                addJob("attemptRegistration", job)
             }
 
             // not used in this case
@@ -262,8 +260,7 @@ constructor(
             }
 
             override fun setJob(job: Job) {
-                repositoryJob?.cancel()
-                repositoryJob = job
+                addJob("checkPreviousAuthUser", job)
             }
 
             // not used in this case
@@ -302,13 +299,9 @@ constructor(
         }
     }
 
-    fun cancelActiveJobs(){
-        Log.d(TAG, "AuthRepository: Cancelling on-going job...")
-        repositoryJob?.cancel()
-    }
-
     private fun saveAuthenticatedUserToPrefs(email: String) {
         editor.putString(PreferenceKeys.PREVIOUS_AUTH_USER, email)
         editor.apply()
     }
+
 }

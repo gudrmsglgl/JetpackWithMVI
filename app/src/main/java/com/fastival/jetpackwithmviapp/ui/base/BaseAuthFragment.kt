@@ -45,9 +45,15 @@ abstract class BaseAuthFragment<vb: ViewDataBinding, vm: BaseViewModel<*,*>>: Da
 
         binding.setVariable(getBindingVariable(), viewModel)
 
+        cancelActiveJobs()
+
         initFunc()
         subscribeObservers()
 
+    }
+
+    private fun cancelActiveJobs(){
+        viewModel.cancelActiveJobs()
     }
 
     override fun onAttach(context: Context) {

@@ -1,6 +1,5 @@
 package com.fastival.jetpackwithmviapp.ui.main
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -15,6 +14,7 @@ import com.fastival.jetpackwithmviapp.extension.navActivity
 import com.fastival.jetpackwithmviapp.ui.EmptyViewModel
 import com.fastival.jetpackwithmviapp.ui.auth.AuthActivity
 import com.fastival.jetpackwithmviapp.ui.base.BaseActivity
+import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
 import com.fastival.jetpackwithmviapp.ui.main.account.ChangePasswordFragment
 import com.fastival.jetpackwithmviapp.ui.main.account.UpdateAccountFragment
 import com.fastival.jetpackwithmviapp.ui.main.blog.UpdateBlogFragment
@@ -49,7 +49,30 @@ BottomNavController.OnNavigationReselectedListener{
     }
 
     override fun onGraphChange() {
+        cancelActiveJobs()
         expandAppBar()
+    }
+
+    private fun cancelActiveJobs() {
+        val fragments = bottomNavController.fragmentManager
+            .findFragmentById(bottomNavController.containerId)
+            ?.childFragmentManager
+            ?.fragments
+
+        Log.d(TAG, "MainActivity_in_fragments: ${fragments?.size}")
+
+        if (fragments != null) {
+            for (fragment in fragments) {
+                when(fragment) {
+                    is BaseMainFragment<*, *> -> {
+                        Log.d(TAG, "MainActivity_cancelActiveJobs()_is_BaseMainFragment")
+                        fragment.cancelActiveJobs()
+                    }
+                }
+            }
+        }
+
+        displayProgressBar(false)
     }
 
     override fun onReselectNavItem(

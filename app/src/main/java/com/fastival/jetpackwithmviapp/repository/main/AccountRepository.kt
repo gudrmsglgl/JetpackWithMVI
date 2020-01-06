@@ -8,6 +8,7 @@ import com.fastival.jetpackwithmviapp.api.main.OpenApiMainService
 import com.fastival.jetpackwithmviapp.models.AccountProperties
 import com.fastival.jetpackwithmviapp.models.AuthToken
 import com.fastival.jetpackwithmviapp.persistence.AccountPropertiesDao
+import com.fastival.jetpackwithmviapp.repository.JobManager
 import com.fastival.jetpackwithmviapp.repository.NetworkBoundResource
 import com.fastival.jetpackwithmviapp.session.SessionManager
 import com.fastival.jetpackwithmviapp.ui.DataState
@@ -28,11 +29,10 @@ constructor(
     val openApiMainService: OpenApiMainService,
     val accountPropertiesDao: AccountPropertiesDao,
     val sessionManager: SessionManager
-)
+): JobManager("AccountRepository")
 {
-    private val TAG: String = "AppDebug"
 
-    private var repositoryJob: Job? = null
+    private val TAG: String = "AppDebug"
 
     fun getAccountProperties(authToken: AuthToken): LiveData<DataState<AccountViewState>> {
         return object: NetworkBoundResource<AccountProperties, AccountProperties, AccountViewState>(
@@ -87,8 +87,7 @@ constructor(
             }
 
             override fun setJob(job: Job) {
-                repositoryJob?.cancel()
-                repositoryJob = job
+                addJob("getAccountProperties", job)
             }
 
         }.asLiveData()
@@ -142,8 +141,7 @@ constructor(
             }
 
             override fun setJob(job: Job) {
-                repositoryJob?.cancel()
-                repositoryJob = job
+                addJob("saveAccountProperties",job)
             }
         }.asLiveData()
     }
@@ -196,15 +194,9 @@ constructor(
                 }
 
                 override fun setJob(job: Job) {
-                    repositoryJob?.cancel()
-                    repositoryJob = job
+                    addJob("updatePassword", job)
                 }
             }.asLiveData()
-    }
-
-    fun cancelActiveJobs(){
-        Log.d(TAG, "AccountRepository: Cancelling on-going jobs...")
-        repositoryJob?.cancel()
     }
 
 }

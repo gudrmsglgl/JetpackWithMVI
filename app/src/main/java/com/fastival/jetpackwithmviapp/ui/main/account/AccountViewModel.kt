@@ -5,6 +5,7 @@ import com.fastival.jetpackwithmviapp.models.AccountProperties
 import com.fastival.jetpackwithmviapp.repository.main.AccountRepository
 import com.fastival.jetpackwithmviapp.session.SessionManager
 import com.fastival.jetpackwithmviapp.ui.DataState
+import com.fastival.jetpackwithmviapp.ui.Loading
 import com.fastival.jetpackwithmviapp.ui.base.BaseViewModel
 import com.fastival.jetpackwithmviapp.ui.main.account.state.AccountStateEvent
 import com.fastival.jetpackwithmviapp.ui.main.account.state.AccountViewState
@@ -53,7 +54,12 @@ constructor(
             }
 
             is AccountStateEvent.None -> {
-                return AbsentLiveData.create()
+                return object: LiveData<DataState<AccountViewState>>(){
+                    override fun onActive() {
+                        super.onActive()
+                        value = DataState(null, Loading(false), null)
+                    }
+                }
             }
         }
     }
@@ -73,5 +79,14 @@ constructor(
 
     fun logout(){
         sessionManager.logout()
+    }
+
+    override fun cancelActiveJobs() {
+        accountRepository.cancelActiveJobs()
+        handlePendingData() // hide progress bar
+    }
+
+    private fun handlePendingData(){
+        setStateEvent(AccountStateEvent.None())
     }
 }

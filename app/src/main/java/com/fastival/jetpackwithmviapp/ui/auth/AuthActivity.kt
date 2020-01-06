@@ -37,8 +37,8 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel>(),
         findNavController(R.id.auth_nav_host_fragment).addOnDestinationChangedListener(this)
     }
 
-    override fun initFunc() {
-        super.initFunc()
+    override fun onResume() {
+        super.onResume()
         emitCheckPreviousAuthUser()
     }
 

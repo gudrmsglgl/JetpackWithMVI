@@ -14,4 +14,8 @@ class EmptyViewModel @Inject constructor(): BaseViewModel<EmptyEvent, EmptyViewS
     override fun initNewViewState(): EmptyViewState {
         return EmptyViewState()
     }
+
+    override fun cancelActiveJobs() {
+
+    }
 }
