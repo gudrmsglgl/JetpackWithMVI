@@ -27,7 +27,11 @@ constructor(
     override fun handleStateEvent(stateEvent: BlogStateEvent): LiveData<DataState<BlogViewState>> {
         return when(stateEvent) {
             is BlogStateEvent.BlogSearchEvent -> {
-                AbsentLiveData.create()
+                sessionManager.cachedToken.value?.let {authToken ->
+                    blogRepository.searchBlogPosts(
+                        authToken,
+                        viewState.value!!.blogFields.searchQuery)
+                }?: AbsentLiveData.create()
             }
 
             is BlogStateEvent.None -> {
