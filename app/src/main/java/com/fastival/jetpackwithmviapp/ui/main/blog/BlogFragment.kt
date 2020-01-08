@@ -3,6 +3,7 @@ package com.fastival.jetpackwithmviapp.ui.main.blog
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +18,7 @@ import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
 import kotlinx.android.synthetic.main.fragment_blog.*
 
 
-class BlogFragment : BaseMainFragment<FragmentBlogBinding, EmptyViewModel>() {
+class BlogFragment : BaseMainFragment<FragmentBlogBinding, BlogViewModel>() {
 
     override fun setTopLevelDesId(): Int = R.id.blogFragment
 
@@ -28,7 +29,7 @@ class BlogFragment : BaseMainFragment<FragmentBlogBinding, EmptyViewModel>() {
 
     override fun getLayoutId(): Int = R.layout.fragment_blog
 
-    override fun getViewModel(): Class<EmptyViewModel> = EmptyViewModel::class.java
+    override fun getViewModel(): Class<BlogViewModel> = BlogViewModel::class.java
 
     override fun subscribeObservers() {
     }
@@ -36,6 +37,8 @@ class BlogFragment : BaseMainFragment<FragmentBlogBinding, EmptyViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
+
+        Log.d(TAG, "blogFragment_ViewModel: $viewModel")
 
         goViewBlogFragment.setOnClickListener {
             findNavController().navigate(R.id.action_blogFragment_to_viewBlogFragment)
