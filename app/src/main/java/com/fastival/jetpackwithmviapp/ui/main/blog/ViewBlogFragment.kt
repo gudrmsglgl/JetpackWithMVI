@@ -4,18 +4,22 @@ package com.fastival.jetpackwithmviapp.ui.main.blog
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.fastival.jetpackwithmviapp.BR
 
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentViewBlogBinding
+import com.fastival.jetpackwithmviapp.extension.convertLongToStringDate
+import com.fastival.jetpackwithmviapp.models.BlogPost
 import com.fastival.jetpackwithmviapp.ui.EmptyViewModel
 import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
+import kotlinx.android.synthetic.main.fragment_view_blog.*
 
 /**
  * A simple [Fragment] subclass.
  */
-class ViewBlogFragment : BaseMainFragment<FragmentViewBlogBinding, EmptyViewModel>() {
+class ViewBlogFragment : BaseMainFragment<FragmentViewBlogBinding, BlogViewModel>() {
 
     override fun setTopLevelDesId(): Int = R.id.blogFragment
 
@@ -26,14 +30,34 @@ class ViewBlogFragment : BaseMainFragment<FragmentViewBlogBinding, EmptyViewMode
 
     override fun getLayoutId(): Int = R.layout.fragment_view_blog
 
-    override fun getViewModel(): Class<EmptyViewModel> = EmptyViewModel::class.java
+    override fun getViewModel(): Class<BlogViewModel> = BlogViewModel::class.java
 
     override fun subscribeObservers() {
+        viewModel.dataState.observe(viewLifecycleOwner , Observer { dateState ->
+            stateListener.onDataStateChange(dateState)
+        })
+        viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
+            viewState.viewBlogFields.blogPost?.let { blogPost ->
+                setBlogProperties(blogPost)
+            }
+        })
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
+        stateListener.expandAppBar()
+    }
+
+
+    private fun setBlogProperties(blogPost: BlogPost) {
+        requestManager
+            .load(blogPost.image)
+            .into(blog_image)
+        blog_title.setText(blogPost.title)
+        blog_author.setText(blogPost.username)
+        blog_update_date.setText(blogPost.date_updated.convertLongToStringDate())
+        blog_body.setText(blogPost.body)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

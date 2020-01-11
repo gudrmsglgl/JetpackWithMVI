@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
+import com.bumptech.glide.RequestManager
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.ui.DataStateChangeListener
 import com.fastival.jetpackwithmviapp.viewmodels.ViewModelProviderFactory
@@ -25,6 +26,9 @@ import javax.inject.Inject
 abstract class BaseMainFragment<vb: ViewDataBinding, vm: BaseViewModel<*,*>>: DaggerFragment() {
 
     val TAG = "AppDebug"
+
+    @Inject
+    lateinit var requestManager: RequestManager
 
     @Inject
     lateinit var provider: ViewModelProviderFactory

@@ -29,9 +29,6 @@ import javax.inject.Inject
 class BlogFragment : BaseMainFragment<FragmentBlogBinding, BlogViewModel>(),
  BlogListAdapter.Interaction{
 
-    @Inject
-    lateinit var requestManager: RequestManager
-
     private lateinit var recyclerAdapter: BlogListAdapter
 
     override fun setTopLevelDesId(): Int = R.id.blogFragment
@@ -113,6 +110,8 @@ class BlogFragment : BaseMainFragment<FragmentBlogBinding, BlogViewModel>(),
 
     override fun onItemSelected(position: Int, item: BlogPost) {
         Log.d(TAG, "onItemSelected: position, BlogPost: $position, $item")
+        viewModel.setBlogPost(item)
+        findNavController().navigate(R.id.action_blogFragment_to_viewBlogFragment)
     }
 
     override fun onDestroyView() {
