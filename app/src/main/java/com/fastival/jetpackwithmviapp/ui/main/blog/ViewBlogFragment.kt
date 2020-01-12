@@ -12,8 +12,8 @@ import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentViewBlogBinding
 import com.fastival.jetpackwithmviapp.extension.convertLongToStringDate
 import com.fastival.jetpackwithmviapp.models.BlogPost
-import com.fastival.jetpackwithmviapp.ui.EmptyViewModel
 import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
+import com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel.BlogViewModel
 import kotlinx.android.synthetic.main.fragment_view_blog.*
 
 /**

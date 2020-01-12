@@ -1,4 +1,4 @@
-package com.fastival.jetpackwithmviapp.ui.main.blog
+package com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel
 
 import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
@@ -7,8 +7,7 @@ import com.fastival.jetpackwithmviapp.models.BlogPost
 import com.fastival.jetpackwithmviapp.repository.main.BlogRepository
 import com.fastival.jetpackwithmviapp.session.SessionManager
 import com.fastival.jetpackwithmviapp.ui.DataState
-import com.fastival.jetpackwithmviapp.ui.EmptyEvent
-import com.fastival.jetpackwithmviapp.ui.EmptyViewState
+import com.fastival.jetpackwithmviapp.ui.Loading
 import com.fastival.jetpackwithmviapp.ui.base.BaseViewModel
 import com.fastival.jetpackwithmviapp.ui.main.blog.state.BlogStateEvent
 import com.fastival.jetpackwithmviapp.ui.main.blog.state.BlogViewState
@@ -31,7 +30,8 @@ constructor(
                 sessionManager.cachedToken.value?.let {authToken ->
                     blogRepository.searchBlogPosts(
                         authToken,
-                        viewState.value!!.blogFields.searchQuery)
+                        getSearchQuery(),
+                        getPage())
                 }?: AbsentLiveData.create()
             }
 
@@ -40,7 +40,12 @@ constructor(
             }
 
             is BlogStateEvent.None -> {
-                AbsentLiveData.create()
+                return object : LiveData<DataState<BlogViewState>>(){
+                    override fun onActive() {
+                        super.onActive()
+                        value = DataState(null, Loading(false), null)
+                    }
+                }
             }
         }
     }
@@ -49,29 +54,6 @@ constructor(
         return BlogViewState()
     }
 
-    fun setBlogPost(blogPost: BlogPost) {
-        val update = getCurrentViewStateOrNew()
-        update.viewBlogFields.blogPost = blogPost
-        _viewState.value = update
-    }
-
-    fun setIsAuthorOfBlogPost(isAuthorOfBlogPost: Boolean) {
-        val update = getCurrentViewStateOrNew()
-        update.viewBlogFields.isAuthorOfBlogPost = isAuthorOfBlogPost
-        _viewState.value = update
-    }
-
-    fun setQuery(query: String) {
-        val update = getCurrentViewStateOrNew()
-        update.blogFields.searchQuery = query
-        _viewState.value = update
-    }
-
-    fun setBlogListData(blogList: List<BlogPost>) {
-        val update = getCurrentViewStateOrNew()
-        update.blogFields.blogList = blogList
-        _viewState.value = update
-    }
 
     override fun cancelActiveJobs() {
         blogRepository.cancelActiveJobs()

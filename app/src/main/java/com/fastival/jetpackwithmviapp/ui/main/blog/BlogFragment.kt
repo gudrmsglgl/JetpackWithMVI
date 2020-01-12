@@ -1,29 +1,25 @@
 package com.fastival.jetpackwithmviapp.ui.main.blog
 
-import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.RequestManager
 import com.fastival.jetpackwithmviapp.BR
 
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentBlogBinding
 import com.fastival.jetpackwithmviapp.models.BlogPost
-import com.fastival.jetpackwithmviapp.ui.EmptyViewModel
+import com.fastival.jetpackwithmviapp.ui.DataState
 import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
 import com.fastival.jetpackwithmviapp.ui.main.blog.state.BlogStateEvent
+import com.fastival.jetpackwithmviapp.ui.main.blog.state.BlogViewState
+import com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel.*
+import com.fastival.jetpackwithmviapp.util.ErrorHandling
 import com.fastival.jetpackwithmviapp.util.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.fragment_blog.*
-import javax.inject.Inject
 
 
 class BlogFragment : BaseMainFragment<FragmentBlogBinding, BlogViewModel>(),
@@ -37,7 +33,6 @@ class BlogFragment : BaseMainFragment<FragmentBlogBinding, BlogViewModel>(),
 
     override fun initFunc() {
         initRecyclerView()
-        executeSearch()
     }
 
     private fun initRecyclerView() {
@@ -54,11 +49,13 @@ class BlogFragment : BaseMainFragment<FragmentBlogBinding, BlogViewModel>(),
 
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     super.onScrollStateChanged(recyclerView, newState)
+
                     val layoutManager = recyclerView.layoutManager as LinearLayoutManager
                     val lastPosition = layoutManager.findLastVisibleItemPosition()
+
                     if (lastPosition == recyclerAdapter.itemCount.minus(1)) {
                         Log.d(TAG, "BlogFragment: attempting to load next page...")
-//                    TODO("load next page using ViewModel")
+                        viewModel.nextPage()
                     }
                 }
             })
@@ -68,10 +65,6 @@ class BlogFragment : BaseMainFragment<FragmentBlogBinding, BlogViewModel>(),
 
     }
 
-    private fun executeSearch() {
-        viewModel.setQuery("")
-        viewModel.setStateEvent(BlogStateEvent.BlogSearchEvent())
-    }
 
     override fun getLayoutId(): Int = R.layout.fragment_blog
 
@@ -80,13 +73,8 @@ class BlogFragment : BaseMainFragment<FragmentBlogBinding, BlogViewModel>(),
     override fun subscribeObservers() {
         viewModel.dataState.observe(viewLifecycleOwner, Observer {dataState ->
             if (dataState != null) {
+                handlePagination(dataState)
                 stateListener.onDataStateChange(dataState)
-                dataState.data?.data?.let { event ->
-                    event.getContentIfNotHandled()?.blogFields?.let {
-                        Log.d(TAG, "BlogFragment, DataState: $dataState")
-                        viewModel.setBlogListData(it.blogList)
-                    }
-                }
             }
         })
 
@@ -95,7 +83,7 @@ class BlogFragment : BaseMainFragment<FragmentBlogBinding, BlogViewModel>(),
             if (viewState != null ) {
                 recyclerAdapter.submitList(
                     viewState.blogFields.blogList,
-                    true)
+                    viewState.blogFields.isQueryExhausted)
             }
         })
     }
@@ -106,6 +94,35 @@ class BlogFragment : BaseMainFragment<FragmentBlogBinding, BlogViewModel>(),
 
         Log.d(TAG, "blogFragment_ViewModel: $viewModel")
 
+        if (savedInstanceState == null) {
+            viewModel.loadFirstPage()
+        }
+    }
+
+    private fun handlePagination(dataState: DataState<BlogViewState>) {
+
+        // Handle incoming data from DataState
+        dataState.data?.data?.getContentIfNotHandled()?.let { viewState ->
+            viewModel.handleIncomingBlogListData(viewState)
+        }
+
+        // Check for pagination end (no more results)
+        // must do this b/c server will return an ApiErrorResponse if page is not valid,
+        // -> meaning there is no more data.
+        dataState.error?.let { event ->
+            event.peekContent().response.message?.let{
+                if (ErrorHandling.isPaginationDone(it)) {
+
+                    // handle the error message event so it doesn't display in UI
+                    event.getContentIfNotHandled()
+
+                    // set query exhausted to update RecyclerView with
+                    // "No more results... " list item
+                    viewModel.setQueryExhausted(true)
+
+                }
+            }
+        }
     }
 
     override fun onItemSelected(position: Int, item: BlogPost) {

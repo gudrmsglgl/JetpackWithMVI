@@ -3,7 +3,7 @@ package com.fastival.jetpackwithmviapp.di.main
 import androidx.lifecycle.ViewModel
 import com.fastival.jetpackwithmviapp.di.ViewModelKey
 import com.fastival.jetpackwithmviapp.ui.main.account.AccountViewModel
-import com.fastival.jetpackwithmviapp.ui.main.blog.BlogViewModel
+import com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel.BlogViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap

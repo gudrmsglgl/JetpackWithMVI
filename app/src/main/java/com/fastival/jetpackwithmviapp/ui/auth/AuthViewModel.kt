@@ -56,7 +56,7 @@ class AuthViewModel
             return
         }
         update.registrationFields = registrationFields
-        _viewState.value = update
+        setViewState(update)
     }
 
     fun setLoginFields(loginFields: LoginFields) {
@@ -65,7 +65,7 @@ class AuthViewModel
             return
         }
         update.loginFields = loginFields
-        _viewState.value = update
+        setViewState(update)
     }
 
     fun setAuthToken(authToken: AuthToken) {
@@ -73,7 +73,7 @@ class AuthViewModel
         val update = getCurrentViewStateOrNew()
         if (update.authToken == authToken) return
         update.authToken = authToken
-        _viewState.value = update
+        setViewState(update)
     }
 
     override fun cancelActiveJobs() {

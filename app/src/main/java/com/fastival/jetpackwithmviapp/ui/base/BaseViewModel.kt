@@ -33,6 +33,11 @@ abstract class BaseViewModel<StateEvent, ViewState>: ViewModel() {
         }?: initNewViewState()
     }
 
+    fun setViewState(viewState: ViewState) {
+        _viewState.value = viewState
+    }
+
+
     override fun onCleared() {
         super.onCleared()
         cancelActiveJobs()
