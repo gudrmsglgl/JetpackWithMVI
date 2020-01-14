@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import androidx.annotation.IdRes
 import androidx.annotation.NavigationRes
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
@@ -158,7 +159,6 @@ fun BottomNavigationView.setUpNavigation(
     bottomNavController: BottomNavController,
     onReselectListener: BottomNavController.OnNavigationReselectedListener
 ){
-
     setOnNavigationItemSelectedListener {menuItem->
         bottomNavController.onNavigationItemSelected(menuItem.itemId)
     }

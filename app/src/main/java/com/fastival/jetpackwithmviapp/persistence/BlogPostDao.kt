@@ -17,10 +17,10 @@ interface BlogPostDao {
     // || is string concatenate operator in SQLite. Think of it as + in Java String
     // https://stackoverflow.com/questions/44184769/android-room-select-query-with-like
     @Query("""
-        SELECT * FROM blog_post
-        WHERE title LIKE '%' || :query || '%'
-        OR body LIKE '%' || :query || '%'
-        OR username LIKE '%' || :query || '%'
+        SELECT * FROM blog_post 
+        WHERE title LIKE '%' || :query || '%' 
+        OR body LIKE '%' || :query || '%' 
+        OR username LIKE '%' || :query || '%' 
         LIMIT (:page * :pageSize)
     """)
     fun getAllBlogPosts(
@@ -28,4 +28,59 @@ interface BlogPostDao {
         page: Int,
         pageSize: Int = PAGINATION_PAGE_SIZE
     ): LiveData<List<BlogPost>>
+
+    @Query("""
+        SELECT * FROM blog_post 
+        WHERE title LIKE '%' || :query || '%' 
+        OR body LIKE '%' || :query || '%' 
+        OR username LIKE '%' || :query || '%' 
+        ORDER BY date_updated DESC LIMIT (:page * :pageSize)
+    """)
+    fun searchBlogPostsOrderByDateDESC(
+        query: String,
+        page: Int,
+        pageSize: Int = PAGINATION_PAGE_SIZE
+    ): LiveData<List<BlogPost>>
+
+    @Query("""
+        SELECT * FROM blog_post 
+        WHERE title LIKE '%' || :query || '%' 
+        OR body LIKE '%' || :query || '%' 
+        OR username LIKE '%' || :query || '%' 
+        ORDER BY date_updated ASC LIMIT (:page * :pageSize)
+    """)
+    fun searchBlogPostsOrderByDateASC(
+        query: String,
+        page: Int,
+        pageSize: Int = PAGINATION_PAGE_SIZE
+    ): LiveData<List<BlogPost>>
+
+    @Query("""
+        SELECT * FROM blog_post 
+        WHERE title LIKE '%' || :query || '%' 
+        OR body LIKE '%' || :query || '%' 
+        OR username LIKE '%' || :query || '%' 
+        ORDER BY username DESC LIMIT (:page * :pageSize)
+    """)
+    fun searchBlogPostsOrderByAuthorDESC(
+        query: String,
+        page: Int,
+        pageSize: Int = PAGINATION_PAGE_SIZE
+    ): LiveData<List<BlogPost>>
+
+    @Query("""
+        SELECT * FROM blog_post 
+        WHERE title LIKE '%' || :query || '%' 
+        OR body LIKE '%' || :query || '%' 
+        OR username LIKE '%' || :query || '%' 
+        ORDER BY username ASC LIMIT (:page * :pageSize)
+    """)
+    fun searchBlogPostsOrderByAuthorASC(
+        query: String,
+        page: Int,
+        pageSize: Int = PAGINATION_PAGE_SIZE
+    ): LiveData<List<BlogPost>>
+
+
+
 }

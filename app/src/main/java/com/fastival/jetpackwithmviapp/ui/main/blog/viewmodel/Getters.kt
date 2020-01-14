@@ -13,3 +13,9 @@ fun bvm.getIsQueryExhausted() =
 
 fun bvm.getIsQueryInProgress() =
     getCurrentViewStateOrNew().blogFields.isQueryInProgress
+
+fun bvm.getOrder(): String =
+    getCurrentViewStateOrNew().blogFields.order
+
+fun bvm.getFilter(): String =
+    getCurrentViewStateOrNew().blogFields.filter

@@ -9,6 +9,7 @@ import com.fastival.jetpackwithmviapp.extension.convertServerStringDateToLong
 import com.fastival.jetpackwithmviapp.models.AuthToken
 import com.fastival.jetpackwithmviapp.models.BlogPost
 import com.fastival.jetpackwithmviapp.persistence.BlogPostDao
+import com.fastival.jetpackwithmviapp.persistence.returnOrderedBlogQuery
 import com.fastival.jetpackwithmviapp.repository.JobManager
 import com.fastival.jetpackwithmviapp.repository.NetworkBoundResource
 import com.fastival.jetpackwithmviapp.session.SessionManager
@@ -38,6 +39,7 @@ constructor(
     fun searchBlogPosts(
         authToken: AuthToken,
         query: String,
+        filterAndOrder: String,
         page: Int
     ): LiveData<DataState<BlogViewState>> {
         return object: NetworkBoundResource<BlogListSearchResponse, List<BlogPost>, BlogViewState>(
@@ -73,12 +75,13 @@ constructor(
                 return openApiMainService.searchListBlogPosts(
                     "Token ${authToken.token!!}",
                     query,
+                    filterAndOrder,
                     page
                 )
             }
 
             override fun loadFromCache(): LiveData<BlogViewState> {
-                return blogPostDao.getAllBlogPosts(query, page)
+                return blogPostDao.returnOrderedBlogQuery(query, filterAndOrder, page)
                     .switchMap { list ->
                         object : LiveData<BlogViewState>(){
                             override fun onActive() {
