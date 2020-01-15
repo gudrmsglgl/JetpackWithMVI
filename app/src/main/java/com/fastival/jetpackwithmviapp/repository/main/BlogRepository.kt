@@ -129,11 +129,13 @@ constructor(
 
                     // finishing by viewing db cache
                     result.addSource(loadFromCache()){ viewState ->
+
                         viewState.blogFields.isQueryInProgress = false
                         if (page * PAGINATION_PAGE_SIZE > viewState.blogFields.blogList.size) {
                             viewState.blogFields.isQueryExhausted = true
                         }
                         onCompleteJob(DataState.data(viewState, null))
+
                     }
                 }
             }

@@ -33,10 +33,10 @@ abstract class BaseMainFragment<vb: ViewDataBinding, vm: BaseViewModel<*,*>>: Da
     @Inject
     lateinit var provider: ViewModelProviderFactory
 
-    protected lateinit var stateListener: DataStateChangeListener
+    internal lateinit var stateListener: DataStateChangeListener
 
     protected lateinit var binding: vb
-    protected lateinit var viewModel: vm
+    internal lateinit var viewModel: vm
 
     override fun onCreateView(
         inflater: LayoutInflater,
