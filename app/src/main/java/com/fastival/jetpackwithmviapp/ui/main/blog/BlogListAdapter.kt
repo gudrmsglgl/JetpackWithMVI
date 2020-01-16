@@ -4,10 +4,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.cardview.widget.CardView
+import androidx.databinding.BindingAdapter
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.*
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.fastival.jetpackwithmviapp.R
+import com.fastival.jetpackwithmviapp.databinding.LayoutBlogListItemBinding
 import com.fastival.jetpackwithmviapp.extension.convertLongToStringDate
 import com.fastival.jetpackwithmviapp.models.BlogPost
 import com.fastival.jetpackwithmviapp.util.GenericViewHolder
@@ -99,10 +104,12 @@ class BlogListAdapter(
 
             BLOG_ITEM -> {
                 return BlogViewHolder(
-                    LayoutInflater.from(parent.context).inflate(
+                    DataBindingUtil.inflate(
+                        LayoutInflater.from(parent.context),
                         R.layout.layout_blog_list_item,
                         parent,
-                        false),
+                        false
+                    ),
                     requestManager,
                     interaction
                 )
@@ -110,10 +117,12 @@ class BlogListAdapter(
 
             else -> {
                 return BlogViewHolder(
-                    LayoutInflater.from(parent.context).inflate(
+                    DataBindingUtil.inflate(
+                        LayoutInflater.from(parent.context),
                         R.layout.layout_blog_list_item,
                         parent,
-                        false),
+                        false
+                    ),
                     requestManager,
                     interaction
                 )
@@ -133,26 +142,32 @@ class BlogListAdapter(
 
 
     class BlogViewHolder(
-        itemView: View,
+        val binding: LayoutBlogListItemBinding,
         val requestManager: RequestManager,
         private val interaction: Interaction?
-    ): RecyclerView.ViewHolder(itemView){
+    ): RecyclerView.ViewHolder(binding.root){
 
-        fun bind(item: BlogPost) = with(itemView) {
-
-            setOnClickListener{
+        fun bind(item: BlogPost) {
+            binding.item = item
+            binding.requestManager = requestManager
+            binding.blogContainer.setOnClickListener{
                 interaction?.onItemSelected(adapterPosition, item)
             }
-
-            requestManager
-                .load(item.image)
-                .transition(withCrossFade())
-                .into(itemView.blog_image)
-
-            blog_title.text = item.title
-            blog_author.text = item.username
-            blog_update_date.text = item.date_updated.convertLongToStringDate()
         }
+
+        companion object{
+            @JvmStatic
+            @BindingAdapter(value = ["url", "requestManager"])
+            fun bindingImage(view: ImageView, url: String, requestManager: RequestManager) {
+                requestManager
+                    .load(url)
+                    .transition(withCrossFade())
+                    .into(view)
+            }
+
+        }
+
+
     }
 
     interface Interaction{
