@@ -54,19 +54,15 @@ class AccountFragment : BaseMainFragment<FragmentAccountBinding, AccountViewMode
             }
         })
 
-        viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState->
+        // replace xml liveData
+        /*viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState->
             if (viewState != null) {
                 viewState.accountProperties?.let {
                     Log.d(TAG, "AccountFragment, ViewState: $it")
                     setAccountDataFields(it)
                 }
             }
-        })
-    }
-
-    private fun setAccountDataFields(accountProperties: AccountProperties){
-        email?.text = accountProperties.email
-        username?.text = accountProperties.username
+        })*/
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

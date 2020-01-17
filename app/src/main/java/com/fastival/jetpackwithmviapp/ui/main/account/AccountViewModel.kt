@@ -19,6 +19,11 @@ constructor(
     val accountRepository: AccountRepository
 ): BaseViewModel<AccountStateEvent, AccountViewState>()
 {
+    // for xml val viewState.accountProperty.XXX
+    override val viewState: LiveData<AccountViewState>
+        get() = super.viewState
+
+
     override fun handleStateEvent(stateEvent: AccountStateEvent): LiveData<DataState<AccountViewState>> {
         when(stateEvent) {
             is AccountStateEvent.GetAccountPropertiesEvent -> {

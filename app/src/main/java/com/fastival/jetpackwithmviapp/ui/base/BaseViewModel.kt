@@ -13,7 +13,7 @@ abstract class BaseViewModel<StateEvent, ViewState>: ViewModel() {
     protected val _stateEvent: MutableLiveData<StateEvent> = MutableLiveData()
     protected val _viewState: MutableLiveData<ViewState> = MutableLiveData()
 
-    val viewState: LiveData<ViewState>
+    open val viewState: LiveData<ViewState>
         get() = _viewState
 
     val dataState: LiveData<DataState<ViewState>> = Transformations

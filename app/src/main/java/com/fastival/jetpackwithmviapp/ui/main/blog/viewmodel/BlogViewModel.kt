@@ -28,6 +28,9 @@ constructor(
     private val editor: SharedPreferences.Editor
 ): BaseViewModel<BlogStateEvent, BlogViewState>() {
 
+    override val viewState: LiveData<BlogViewState>
+        get() = super.viewState
+
     init {
         // viewState init filter & order
         setBlogFilter(

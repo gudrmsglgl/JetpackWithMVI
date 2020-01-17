@@ -32,11 +32,10 @@
             app:layout_constraintVertical_chainStyle="packed"
             >
             <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#000"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:id="@+id/input_email" android:textColor="#000"
+                android:text="@{vm.viewState.accountProperties.email}"
                 android:inputType="textEmailAddress"
-                android:id="@+id/input_email"
                 android:imeOptions="flagNoExtractUi"
                 />
 
@@ -56,10 +55,9 @@
             android:layout_marginTop="50dp"
             >
             <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/input_username"
-                android:textColor="#000"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:id="@+id/input_username" android:textColor="#000"
+                android:text="@{vm.viewState.accountProperties.username}"
                 android:inputType="text"
                 android:layout_marginTop="30dp"
                 android:imeOptions="flagNoExtractUi"

@@ -43,26 +43,11 @@ class UpdateAccountFragment : BaseMainFragment<FragmentUpdateAccountBinding, Acc
             Log.d(TAG, "UpdateAccountFragment, DataState: ${dataState}")
         })
 
-        viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
-            viewState?.accountProperties?.let {
-                Log.d(TAG, "UpdateAccountFragment, ViewState: $it")
-                setAccountDataFields(it)
-            }
-        })
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
-    }
-
-    private fun setAccountDataFields(accountProperties: AccountProperties){
-        if (input_email.text.isNullOrBlank()) {
-            input_email.setText(accountProperties.email)
-        }
-        if (input_username.text.isNullOrBlank()) {
-            input_username.setText(accountProperties.username)
-        }
     }
 
     private fun saveChange(){

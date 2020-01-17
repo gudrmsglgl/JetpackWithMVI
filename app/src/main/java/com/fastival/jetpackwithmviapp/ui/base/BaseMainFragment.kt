@@ -43,18 +43,19 @@ abstract class BaseMainFragment<vb: ViewDataBinding, vm: BaseViewModel<*,*>>: Da
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater, getLayoutId(), container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
         viewModel = activity?.let {
             ViewModelProvider(it, provider).get(getViewModel())
         }?:throw Exception("Invalid Activity")
 
+        binding = DataBindingUtil.inflate(inflater, getLayoutId(), container, false)
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.setVariable(getBindingVariable(), viewModel)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         cancelActiveJobs()
 

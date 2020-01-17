@@ -36,29 +36,17 @@ class ViewBlogFragment : BaseMainFragment<FragmentViewBlogBinding, BlogViewModel
         viewModel.dataState.observe(viewLifecycleOwner , Observer { dateState ->
             stateListener.onDataStateChange(dateState)
         })
-        viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
-            viewState.viewBlogFields.blogPost?.let { blogPost ->
-                setBlogProperties(blogPost)
-            }
-        })
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
         stateListener.expandAppBar()
+        binding.requestManager = requestManager
     }
 
 
-    private fun setBlogProperties(blogPost: BlogPost) {
-        requestManager
-            .load(blogPost.image)
-            .into(blog_image)
-        blog_title.setText(blogPost.title)
-        blog_author.setText(blogPost.username)
-        blog_update_date.setText(blogPost.date_updated.convertLongToStringDate())
-        blog_body.setText(blogPost.body)
-    }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         // TODO("Check if user is author of blog post")

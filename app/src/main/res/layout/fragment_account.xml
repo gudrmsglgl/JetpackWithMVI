@@ -48,6 +48,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/email"
                 android:textColor="#000"
+                android:text="@{vm.viewState.accountProperties.email}"
                 android:hint="@string/your_email"
                 android:textSize="20sp"
                 />
@@ -72,6 +73,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/username"
                 android:textColor="#000"
+                android:text="@{vm.viewState.accountProperties.username}"
                 android:hint="@string/your_username"
                 android:textSize="20sp"
                 />
