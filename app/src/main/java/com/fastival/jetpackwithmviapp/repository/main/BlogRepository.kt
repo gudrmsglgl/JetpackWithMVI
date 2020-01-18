@@ -3,6 +3,7 @@ package com.fastival.jetpackwithmviapp.repository.main
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.switchMap
+import com.fastival.jetpackwithmviapp.api.GenericResponse
 import com.fastival.jetpackwithmviapp.api.main.OpenApiMainService
 import com.fastival.jetpackwithmviapp.api.main.response.BlogListSearchResponse
 import com.fastival.jetpackwithmviapp.extension.convertServerStringDateToLong
@@ -13,11 +14,17 @@ import com.fastival.jetpackwithmviapp.persistence.returnOrderedBlogQuery
 import com.fastival.jetpackwithmviapp.repository.JobManager
 import com.fastival.jetpackwithmviapp.repository.NetworkBoundResource
 import com.fastival.jetpackwithmviapp.session.SessionManager
+import com.fastival.jetpackwithmviapp.ui.Data
 import com.fastival.jetpackwithmviapp.ui.DataState
+import com.fastival.jetpackwithmviapp.ui.Response
 import com.fastival.jetpackwithmviapp.ui.main.blog.state.BlogViewState
+import com.fastival.jetpackwithmviapp.util.AbsentLiveData
 import com.fastival.jetpackwithmviapp.util.ApiSuccessResponse
 import com.fastival.jetpackwithmviapp.util.Constants.Companion.PAGINATION_PAGE_SIZE
+import com.fastival.jetpackwithmviapp.util.ErrorHandling.Companion.ERROR_UNKNOWN
 import com.fastival.jetpackwithmviapp.util.GenericApiResponse
+import com.fastival.jetpackwithmviapp.util.SuccessHandling.Companion.RESPONSE_HAS_PERMISSION_TO_EDIT
+import com.fastival.jetpackwithmviapp.util.SuccessHandling.Companion.RESPONSE_NO_PERMISSION_TO_EDIT
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -145,6 +152,72 @@ constructor(
             }
         }.asLiveData()
 
+    }
+
+    fun isAuthorOfBlogPost(
+        authToken: AuthToken,
+        slug: String
+    ): LiveData<DataState<BlogViewState>> {
+        return object: NetworkBoundResource<GenericResponse, Any, BlogViewState>
+            (sessionManager.isConnectedToTheInternet(),
+            true,
+            true,
+            false){
+            override suspend fun handleApiSuccessResponse(response: ApiSuccessResponse<GenericResponse>) {
+                withContext(Dispatchers.Main) {
+
+                    Log.d(TAG, "handleApiSuccessResponse: ${response.body.response}")
+                    if (response.body.response == RESPONSE_NO_PERMISSION_TO_EDIT) {
+                        onCompleteJob(DataState.data(
+                            data = BlogViewState(
+                                viewBlogFields = BlogViewState.ViewBlogFields(
+                                    isAuthorOfBlogPost = false
+                                )
+                            ),
+                            response = null
+                        ))
+                    }
+                    else if (response.body.response == RESPONSE_HAS_PERMISSION_TO_EDIT) {
+                        onCompleteJob(DataState.data(
+                            data = BlogViewState(
+                                viewBlogFields = BlogViewState.ViewBlogFields(
+                                    isAuthorOfBlogPost = true
+                                )
+                            ),
+                            response = null
+                        ))
+                    }
+                    else {
+                        onErrorReturn(ERROR_UNKNOWN, false, false)
+                    }
+                }
+            }
+
+            override fun createCall(): LiveData<GenericApiResponse<GenericResponse>> {
+                return openApiMainService.isAuthorOfBlogPost(
+                    "Token ${authToken.token!!}",
+                    slug
+                )
+            }
+
+            override fun loadFromCache(): LiveData<BlogViewState> {
+                return AbsentLiveData.create()
+            }
+
+            // not used in this case
+            override suspend fun updateLocalDb(cacheObject: Any?) {
+
+            }
+
+            // not used in this case
+            override suspend fun createCacheRequestAndReturn() {
+
+            }
+
+            override fun setJob(job: Job) {
+                addJob("isAuthorOfBlogPost",job)
+            }
+        }.asLiveData()
     }
 
 }

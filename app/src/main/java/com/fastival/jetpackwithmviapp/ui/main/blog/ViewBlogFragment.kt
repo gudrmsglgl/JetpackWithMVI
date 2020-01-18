@@ -14,6 +14,7 @@ import com.fastival.jetpackwithmviapp.extension.convertLongToStringDate
 import com.fastival.jetpackwithmviapp.models.BlogPost
 import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
 import com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel.BlogViewModel
+import com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel.setIsAuthorOfBlogPost
 import kotlinx.android.synthetic.main.fragment_view_blog.*
 
 /**
@@ -35,6 +36,12 @@ class ViewBlogFragment : BaseMainFragment<FragmentViewBlogBinding, BlogViewModel
     override fun subscribeObservers() {
         viewModel.dataState.observe(viewLifecycleOwner , Observer { dateState ->
             stateListener.onDataStateChange(dateState)
+
+            dateState.data?.data?.getContentIfNotHandled()?.let { viewState ->
+                viewModel.setIsAuthorOfBlogPost(
+                    viewState.viewBlogFields.isAuthorOfBlogPost
+                )
+            }
         })
 
     }

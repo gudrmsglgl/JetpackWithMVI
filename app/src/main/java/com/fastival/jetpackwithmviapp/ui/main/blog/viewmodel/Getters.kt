@@ -19,3 +19,6 @@ fun bvm.getOrder(): String =
 
 fun bvm.getFilter(): String =
     getCurrentViewStateOrNew().blogFields.filter
+
+fun bvm.getSlug(): String =
+    getCurrentViewStateOrNew().viewBlogFields.blogPost?.slug ?: ""
