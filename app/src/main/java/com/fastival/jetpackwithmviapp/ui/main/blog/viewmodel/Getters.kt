@@ -22,3 +22,6 @@ fun bvm.getFilter(): String =
 
 fun bvm.getSlug(): String =
     getCurrentViewStateOrNew().viewBlogFields.blogPost?.slug ?: ""
+
+fun bvm.isAuthorOfBlogPost(): Boolean =
+    getCurrentViewStateOrNew().viewBlogFields.isAuthorOfBlogPost

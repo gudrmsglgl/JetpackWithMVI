@@ -2,6 +2,7 @@
 <layout>
     <data>
         <import type="com.fastival.jetpackwithmviapp.extension.ExDateConvertKt"/>
+        <import type="android.view.View"/>
         <variable
             name="vm"
             type="com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel.BlogViewModel" />
@@ -126,7 +127,7 @@
                 android:textSize="16sp"
                 android:layout_marginTop="50dp"
                 android:layout_marginBottom="30dp"
-                android:visibility="invisible"/>
+                android:visibility="@{vm.viewState.viewBlogFields.authorOfBlogPost ? View.VISIBLE : View.INVISIBLE}"/>
 
         </LinearLayout>
 
