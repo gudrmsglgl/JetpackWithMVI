@@ -60,6 +60,7 @@ class ViewBlogFragment : BaseMainFragment<FragmentViewBlogBinding, BlogViewModel
         setHasOptionsMenu(true)
         stateListener.expandAppBar()
         binding.requestManager = requestManager
+        binding.deleteEvent = BlogStateEvent.DeleteBlogPostEvent()
     }
 
     private fun checkIsAuthor() {

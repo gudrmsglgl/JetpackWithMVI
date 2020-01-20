@@ -1,10 +1,7 @@
 package com.fastival.jetpackwithmviapp.persistence
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.fastival.jetpackwithmviapp.models.BlogPost
 import com.fastival.jetpackwithmviapp.util.Constants.Companion.PAGINATION_PAGE_SIZE
 
@@ -13,6 +10,10 @@ interface BlogPostDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(blogPost: BlogPost): Long
+
+    @Delete
+    suspend fun deleteBlogPost(blogPost: BlogPost)
+
 
     // || is string concatenate operator in SQLite. Think of it as + in Java String
     // https://stackoverflow.com/questions/44184769/android-room-select-query-with-like

@@ -1,6 +1,7 @@
 package com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel
 
 import com.fastival.jetpackwithmviapp.bvm
+import com.fastival.jetpackwithmviapp.models.BlogPost
 
 fun bvm.getSearchQuery() =
     getCurrentViewStateOrNew().blogFields.searchQuery
@@ -25,3 +26,7 @@ fun bvm.getSlug(): String =
 
 fun bvm.isAuthorOfBlogPost(): Boolean =
     getCurrentViewStateOrNew().viewBlogFields.isAuthorOfBlogPost
+
+fun bvm.getBlogPost(): BlogPost =
+    getCurrentViewStateOrNew().viewBlogFields.blogPost ?:
+    BlogPost(-1,"","","","",1,"")
