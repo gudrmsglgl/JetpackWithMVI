@@ -10,8 +10,8 @@
             name="requestManager"
             type="com.bumptech.glide.RequestManager" />
         <variable
-            name="deleteEvent"
-            type="com.fastival.jetpackwithmviapp.ui.main.blog.state.BlogStateEvent.DeleteBlogPostEvent" />
+            name="fragment"
+            type="com.fastival.jetpackwithmviapp.ui.main.blog.ViewBlogFragment" />
     </data>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -130,7 +130,7 @@
                 android:textSize="16sp"
                 android:layout_marginTop="50dp"
                 android:layout_marginBottom="30dp"
-                android:onClick="@{() -> vm.setStateEvent(deleteEvent)}"
+                android:onClick="@{(v) -> fragment.confirmDeleteRequest(v)}"
                 android:visibility="@{vm.viewState.viewBlogFields.authorOfBlogPost ? View.VISIBLE : View.INVISIBLE}"/>
 
         </LinearLayout>

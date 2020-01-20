@@ -19,6 +19,7 @@ import androidx.navigation.ui.NavigationUI
 import com.bumptech.glide.RequestManager
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.ui.DataStateChangeListener
+import com.fastival.jetpackwithmviapp.ui.UICommunicationListener
 import com.fastival.jetpackwithmviapp.viewmodels.ViewModelProviderFactory
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
@@ -34,6 +35,7 @@ abstract class BaseMainFragment<vb: ViewDataBinding, vm: BaseViewModel<*,*>>: Da
     lateinit var provider: ViewModelProviderFactory
 
     internal lateinit var stateListener: DataStateChangeListener
+    internal lateinit var uiCommunicationListener: UICommunicationListener
 
     protected lateinit var binding: vb
     internal lateinit var viewModel: vm
@@ -75,6 +77,12 @@ abstract class BaseMainFragment<vb: ViewDataBinding, vm: BaseViewModel<*,*>>: Da
             stateListener = context as DataStateChangeListener
         }catch (e: ClassCastException) {
             Log.e(TAG, "$context must implement DataStateChangeListener" )
+        }
+
+        try{
+            uiCommunicationListener = context as UICommunicationListener
+        }catch (e: ClassCastException) {
+            Log.e(TAG, "$context must implement UICommunicationListener" )
         }
     }
 

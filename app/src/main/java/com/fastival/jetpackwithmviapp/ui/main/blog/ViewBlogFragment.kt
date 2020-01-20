@@ -10,13 +10,18 @@ import com.fastival.jetpackwithmviapp.BR
 
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentViewBlogBinding
+import com.fastival.jetpackwithmviapp.extension.AreYouSureCallBack
 import com.fastival.jetpackwithmviapp.extension.convertLongToStringDate
 import com.fastival.jetpackwithmviapp.models.BlogPost
+import com.fastival.jetpackwithmviapp.ui.UIMessage
+import com.fastival.jetpackwithmviapp.ui.UIMessageType
 import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
 import com.fastival.jetpackwithmviapp.ui.main.blog.state.BlogStateEvent
 import com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel.BlogViewModel
 import com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel.isAuthorOfBlogPost
+import com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel.removeDeletedBlogPost
 import com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel.setIsAuthorOfBlogPost
+import com.fastival.jetpackwithmviapp.util.SuccessHandling.Companion.SUCCESS_BLOG_DELETED
 import kotlinx.android.synthetic.main.fragment_view_blog.*
 
 /**
@@ -45,6 +50,13 @@ class ViewBlogFragment : BaseMainFragment<FragmentViewBlogBinding, BlogViewModel
                     viewState.viewBlogFields.isAuthorOfBlogPost
                 )
             }
+
+            dateState.data?.response?.peekContent()?.let { response ->
+                if (response.message == SUCCESS_BLOG_DELETED) {
+                    viewModel.removeDeletedBlogPost()
+                    findNavController().popBackStack()
+                }
+            }
         })
 
         viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
@@ -60,12 +72,29 @@ class ViewBlogFragment : BaseMainFragment<FragmentViewBlogBinding, BlogViewModel
         setHasOptionsMenu(true)
         stateListener.expandAppBar()
         binding.requestManager = requestManager
-        binding.deleteEvent = BlogStateEvent.DeleteBlogPostEvent()
+        binding.fragment = this
     }
 
     private fun checkIsAuthor() {
         viewModel.setIsAuthorOfBlogPost(false) // reset
         viewModel.setStateEvent(BlogStateEvent.CheckAuthorOfBlogPost())
+    }
+
+    fun confirmDeleteRequest(view: View) {
+        uiCommunicationListener.onUIMessageReceived(UIMessage(
+            message = getString(R.string.are_you_sure_delete),
+            uiMessageType = UIMessageType.AreYouSureDialog(callback = object: AreYouSureCallBack{
+                override fun proceed() {
+                    viewModel.setStateEvent(
+                        BlogStateEvent.DeleteBlogPostEvent()
+                    )
+                }
+
+                override fun cancel() {
+                    // ignore
+                }
+            })
+        ))
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

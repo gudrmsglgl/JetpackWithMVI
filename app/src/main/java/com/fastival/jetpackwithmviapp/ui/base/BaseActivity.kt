@@ -9,9 +9,7 @@ import androidx.core.content.getSystemService
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
-import com.fastival.jetpackwithmviapp.extension.displayErrorDialog
-import com.fastival.jetpackwithmviapp.extension.displaySuccessDialog
-import com.fastival.jetpackwithmviapp.extension.displayToast
+import com.fastival.jetpackwithmviapp.extension.*
 import com.fastival.jetpackwithmviapp.session.SessionManager
 import com.fastival.jetpackwithmviapp.ui.*
 import com.fastival.jetpackwithmviapp.viewmodels.ViewModelProviderFactory
@@ -22,7 +20,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 abstract class BaseActivity<vb: ViewDataBinding, vm: BaseViewModel<*, *>>: DaggerAppCompatActivity(),
-DataStateChangeListener{
+DataStateChangeListener,
+UICommunicationListener{
 
     val TAG: String = "AppDebug"
 
@@ -63,6 +62,30 @@ DataStateChangeListener{
 
     protected open fun initFunc(){
 
+    }
+
+    override fun onUIMessageReceived(uiMessage: UIMessage) {
+        when(uiMessage.uiMessageType){
+
+            is UIMessageType.AreYouSureDialog -> {
+                areYouSureDialog(
+                    message = uiMessage.message,
+                    callback = uiMessage.uiMessageType.callback
+                )
+            }
+
+            is UIMessageType.Dialog -> {
+                displayInfoDialog(uiMessage.message)
+            }
+
+            is UIMessageType.Toast -> {
+                displayToast(uiMessage.message)
+            }
+
+            is UIMessageType.None -> {
+                Log.i(TAG, "onUIMessageReceived: ${uiMessage.message}")
+            }
+        }
     }
 
     override fun onDataStateChange(dataState: DataState<*>?) {

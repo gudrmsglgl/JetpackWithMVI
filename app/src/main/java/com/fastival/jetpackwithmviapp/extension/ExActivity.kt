@@ -18,15 +18,15 @@ inline fun <reified T: Activity> Context.navActivity(isFinish: Boolean, noinline
     }
 }
 
-fun Context.displayToast(@StringRes message: Int) {
+fun Activity.displayToast(@StringRes message: Int) {
     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 }
 
-fun Context.displayToast(message: String) {
+fun Activity.displayToast(message: String) {
     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 }
 
-fun Context.displaySuccessDialog(message: String?) {
+fun Activity.displaySuccessDialog(message: String?) {
     MaterialDialog(this)
         .show {
             title(R.string.text_success)
@@ -35,11 +35,41 @@ fun Context.displaySuccessDialog(message: String?) {
         }
 }
 
-fun Context.displayErrorDialog(errorMessage: String?) {
+fun Activity.displayErrorDialog(errorMessage: String?) {
     MaterialDialog(this)
         .show {
             title(R.string.text_error)
             message(text = errorMessage)
             positiveButton(R.string.text_ok)
         }
+}
+
+fun Activity.displayInfoDialog(message: String?) {
+    MaterialDialog(this)
+        .show {
+            title(R.string.text_info)
+            message(text = message)
+            positiveButton(R.string.text_ok)
+        }
+}
+
+fun Activity.areYouSureDialog(message: String, callback: AreYouSureCallBack){
+    MaterialDialog(this)
+        .show {
+            title(R.string.are_you_sure)
+            message(text = message)
+            negativeButton(R.string.text_cancel){
+                callback.cancel()
+            }
+            positiveButton(R.string.text_yes) {
+                callback.proceed()
+            }
+        }
+}
+
+interface AreYouSureCallBack {
+
+    fun proceed()
+
+    fun cancel()
 }
