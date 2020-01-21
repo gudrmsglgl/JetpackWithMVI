@@ -17,6 +17,8 @@ import com.fastival.jetpackwithmviapp.ui.main.blog.state.BlogViewState
 import com.fastival.jetpackwithmviapp.util.AbsentLiveData
 import com.fastival.jetpackwithmviapp.util.PreferenceKeys.Companion.BLOG_FILTER
 import com.fastival.jetpackwithmviapp.util.PreferenceKeys.Companion.BLOG_ORDER
+import okhttp3.MediaType
+import okhttp3.RequestBody
 import javax.inject.Inject
 
 class BlogViewModel
@@ -70,6 +72,29 @@ constructor(
                     blogRepository.deleteBlogPost(
                         authToken,
                         getBlogPost())
+                }?: AbsentLiveData.create()
+            }
+
+            is BlogStateEvent.UpdateBlogPostEvent -> {
+                sessionManager.cachedToken.value?.let { authToken ->
+
+                    val title = RequestBody.create(
+                        MediaType.parse("text/plain"),
+                        stateEvent.title
+                    )
+
+                    val body = RequestBody.create(
+                        MediaType.parse("text/plain"),
+                        stateEvent.body
+                    )
+
+                    blogRepository.updateBlogPost(
+                        authToken = authToken,
+                        slug = getSlug(),
+                        title = title,
+                        body = body,
+                        image = stateEvent.image
+                    )
                 }?: AbsentLiveData.create()
             }
 

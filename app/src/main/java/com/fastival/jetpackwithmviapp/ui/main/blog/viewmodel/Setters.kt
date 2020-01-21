@@ -1,5 +1,6 @@
 package com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel
 
+import android.net.Uri
 import com.fastival.jetpackwithmviapp.bvm
 import com.fastival.jetpackwithmviapp.models.BlogPost
 
@@ -68,4 +69,14 @@ fun bvm.removeDeletedBlogPost() {
         }
     }
     setBlogListData(list)
+}
+
+fun bvm.setUpdatedBlogFields(title: String?, body: String?, uri: Uri?) {
+    val update = getCurrentViewStateOrNew()
+    val updatedBlogFields = update.updatedBlogFields
+    title?.let{ updatedBlogFields.updatedBlogTitle = it }
+    body?.let{ updatedBlogFields.updatedBlogBody = it }
+    uri?.let{ updatedBlogFields.updatedImageUri = it }
+    update.updatedBlogFields = updatedBlogFields
+    setViewState(update)
 }

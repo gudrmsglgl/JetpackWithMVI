@@ -2,7 +2,9 @@ package com.fastival.jetpackwithmviapp.ui.main.blog
 
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -17,10 +19,7 @@ import com.fastival.jetpackwithmviapp.ui.UIMessage
 import com.fastival.jetpackwithmviapp.ui.UIMessageType
 import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
 import com.fastival.jetpackwithmviapp.ui.main.blog.state.BlogStateEvent
-import com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel.BlogViewModel
-import com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel.isAuthorOfBlogPost
-import com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel.removeDeletedBlogPost
-import com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel.setIsAuthorOfBlogPost
+import com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel.*
 import com.fastival.jetpackwithmviapp.util.SuccessHandling.Companion.SUCCESS_BLOG_DELETED
 import kotlinx.android.synthetic.main.fragment_view_blog.*
 
@@ -115,6 +114,16 @@ class ViewBlogFragment : BaseMainFragment<FragmentViewBlogBinding, BlogViewModel
     }
 
     private fun navUpdateBlogFragment(){
-        findNavController().navigate(R.id.action_viewBlogFragment_to_updateBlogFragment)
+        try{
+            viewModel.setUpdatedBlogFields(
+                title = viewModel.getBlogPost().title,
+                body = viewModel.getBlogPost().body,
+                uri = viewModel.getBlogPost().image.toUri()
+            )
+            findNavController().navigate(R.id.action_viewBlogFragment_to_updateBlogFragment)
+        } catch (e: Exception){
+            // send error report or something. These fields should never be null. Not possible
+            Log.e(TAG, "Exception: ${e.message}")
+        }
     }
 }

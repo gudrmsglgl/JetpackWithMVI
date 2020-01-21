@@ -2,9 +2,12 @@ package com.fastival.jetpackwithmviapp.api.main
 
 import androidx.lifecycle.LiveData
 import com.fastival.jetpackwithmviapp.api.GenericResponse
+import com.fastival.jetpackwithmviapp.api.main.response.BlogCreateUpdateResponse
 import com.fastival.jetpackwithmviapp.api.main.response.BlogListSearchResponse
 import com.fastival.jetpackwithmviapp.models.AccountProperties
 import com.fastival.jetpackwithmviapp.util.GenericApiResponse
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.http.*
 
 interface OpenApiMainService {
@@ -50,4 +53,14 @@ interface OpenApiMainService {
         @Header("Authorization") authorization: String,
         @Path("slug") slug: String
     ): LiveData<GenericApiResponse<GenericResponse>>
+
+    @Multipart
+    @PUT("blog/{slug}/update")
+    fun updateBlog(
+        @Header("Authorization") authorization: String,
+        @Path("slug") slug: String,
+        @Part("title") title: RequestBody,
+        @Part("body") body: RequestBody,
+        @Part image: MultipartBody.Part?
+    ): LiveData<GenericApiResponse<BlogCreateUpdateResponse>>
 }

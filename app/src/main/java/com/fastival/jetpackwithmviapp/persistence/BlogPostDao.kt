@@ -14,6 +14,11 @@ interface BlogPostDao {
     @Delete
     suspend fun deleteBlogPost(blogPost: BlogPost)
 
+    @Query("""
+        UPDATE blog_post SET title = :title, body = :body, image = :image 
+        WHERE pk = :pk
+    """)
+    fun updateBlogPost(pk: Int, title: String, body: String, image: String)
 
     // || is string concatenate operator in SQLite. Think of it as + in Java String
     // https://stackoverflow.com/questions/44184769/android-room-select-query-with-like

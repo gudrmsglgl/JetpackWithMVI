@@ -1,5 +1,6 @@
 package com.fastival.jetpackwithmviapp.ui.main.blog
 
+import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -157,10 +158,15 @@ class BlogListAdapter(
 
         companion object{
             @JvmStatic
-            @BindingAdapter(value = ["url", "requestManager"])
-            fun bindingImage(view: ImageView, url: String, requestManager: RequestManager) {
-                requestManager
-                    .load(url)
+            @BindingAdapter(value = ["url", "requestManager","uri"] , requireAll = false)
+            fun bindingImage(view: ImageView, url: String?, requestManager: RequestManager, uri: Uri?) {
+                if (url != null && uri == null) {
+                    requestManager
+                        .load(url)
+                } else {
+                    requestManager
+                        .load(uri)
+                }
                     .transition(withCrossFade())
                     .into(view)
             }
