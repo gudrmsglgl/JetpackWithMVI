@@ -12,7 +12,7 @@ import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
 /**
  * A simple [Fragment] subclass.
  */
-class CreateBlogFragment : BaseMainFragment<FragmentCreateBlogBinding, EmptyViewModel>() {
+class CreateBlogFragment : BaseMainFragment<FragmentCreateBlogBinding, CreateBlogViewModel>() {
 
     override fun setTopLevelDesId(): Int = R.id.createBlogFragment
 
@@ -23,7 +23,7 @@ class CreateBlogFragment : BaseMainFragment<FragmentCreateBlogBinding, EmptyView
 
     override fun getLayoutId(): Int = R.layout.fragment_create_blog
 
-    override fun getViewModel(): Class<EmptyViewModel> = EmptyViewModel::class.java
+    override fun getViewModel(): Class<CreateBlogViewModel> = CreateBlogViewModel::class.java
 
     override fun subscribeObservers() {
     }

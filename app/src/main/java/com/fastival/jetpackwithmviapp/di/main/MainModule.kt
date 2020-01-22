@@ -6,6 +6,7 @@ import com.fastival.jetpackwithmviapp.persistence.AppDatabase
 import com.fastival.jetpackwithmviapp.persistence.BlogPostDao
 import com.fastival.jetpackwithmviapp.repository.main.AccountRepository
 import com.fastival.jetpackwithmviapp.repository.main.BlogRepository
+import com.fastival.jetpackwithmviapp.repository.main.CreateBlogRepository
 import com.fastival.jetpackwithmviapp.session.SessionManager
 import dagger.Module
 import dagger.Provides
@@ -45,5 +46,16 @@ class MainModule {
         sessionManager: SessionManager
     ): BlogRepository{
         return BlogRepository(openApiMainService, blogPostDao, sessionManager)
+    }
+
+    @MainScope
+    @Provides
+    fun provideCreateBlogPostRepository(
+        openApiMainService: OpenApiMainService,
+        blogPostDao: BlogPostDao,
+        sessionManager: SessionManager
+    ): CreateBlogRepository
+    {
+        return CreateBlogRepository(openApiMainService, blogPostDao, sessionManager)
     }
 }
