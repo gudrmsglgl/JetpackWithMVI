@@ -59,7 +59,6 @@ class ViewBlogFragment : BaseMainFragment<FragmentViewBlogBinding, BlogViewModel
         })
 
         viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
-
             if (viewState.viewBlogFields.isAuthorOfBlogPost) {
                 activity?.invalidateOptionsMenu() // isAuthor -> menu inflate
             }

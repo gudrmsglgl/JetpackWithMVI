@@ -53,6 +53,20 @@ class BlogListAdapter(
             AsyncDifferConfig.Builder(DIFF_CALLBACK).build()
         )
 
+    // Prepare the image that will be displayed in the RecyclerView.
+    // This also ensures if the network connection is lost, they will be in the cache
+    fun preloadGlideImages(
+        requestManager: RequestManager,
+        list: List<BlogPost>
+    ){
+        for (blogPost in list) {
+            requestManager
+                .load(blogPost.image)
+                .preload()
+        }
+    }
+
+
     fun submitList(
         blogList: List<BlogPost>?,
         isQueryExhausted: Boolean
