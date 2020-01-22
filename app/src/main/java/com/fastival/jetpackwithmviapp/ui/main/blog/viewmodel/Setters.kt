@@ -80,3 +80,26 @@ fun bvm.setUpdatedBlogFields(title: String?, body: String?, uri: Uri?) {
     update.updatedBlogFields = updatedBlogFields
     setViewState(update)
 }
+
+fun bvm.updateListItem(newBlogPost: BlogPost) {
+    val update = getCurrentViewStateOrNew()
+    val list = update.blogFields.blogList.toMutableList()
+    for (i in list.indices){
+        if (list[i].pk == newBlogPost.pk) {
+            list[i] = newBlogPost
+            break
+        }
+    }
+    update.blogFields.blogList = list
+    setViewState(update)
+}
+
+fun bvm.setSyncBlogsFromServer(updateBlogPost: BlogPost){
+    setUpdatedBlogFields(
+        uri = null,
+        title = updateBlogPost.title,
+        body = updateBlogPost.body
+    ) // update UpdateBlogFragment (not really necessary since navigating back)
+    setBlogPost(updateBlogPost)
+    updateListItem(updateBlogPost)
+}

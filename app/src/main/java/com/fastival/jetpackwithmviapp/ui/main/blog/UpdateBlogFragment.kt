@@ -3,8 +3,10 @@ package com.fastival.jetpackwithmviapp.ui.main.blog
 
 import android.os.Bundle
 import android.view.*
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.fastival.jetpackwithmviapp.BR
 
 import com.fastival.jetpackwithmviapp.R
@@ -13,6 +15,9 @@ import com.fastival.jetpackwithmviapp.ui.EmptyViewModel
 import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
 import com.fastival.jetpackwithmviapp.ui.main.blog.state.BlogStateEvent
 import com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel.BlogViewModel
+import com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel.getBlogPost
+import com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel.setSyncBlogsFromServer
+import com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel.setUpdatedBlogFields
 import kotlinx.android.synthetic.main.fragment_update_blog.*
 import okhttp3.MultipartBody
 
@@ -43,7 +48,11 @@ class UpdateBlogFragment : BaseMainFragment<FragmentUpdateBlogBinding, BlogViewM
             stateListener.onDataStateChange(dataState)
             dataState?.data?.data?.getContentIfNotHandled()?.let { viewState ->
                 viewState.viewBlogFields.blogPost?.let { blogPost ->
-                    // TODO ("onBlogPostUpdateSuccess")
+
+                    viewModel.setSyncBlogsFromServer(blogPost).run {
+                        findNavController().popBackStack()
+                    }
+
                 }
             }
         })
@@ -74,5 +83,14 @@ class UpdateBlogFragment : BaseMainFragment<FragmentUpdateBlogBinding, BlogViewM
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.setUpdatedBlogFields(
+            blog_title.text.toString(),
+            blog_body.text.toString(),
+            viewModel.getBlogPost().image.toUri()
+        )
     }
 }
