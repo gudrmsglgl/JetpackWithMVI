@@ -12,19 +12,22 @@ import androidx.annotation.NavigationRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.bumptech.glide.RequestManager
 import com.fastival.jetpackwithmviapp.R
+import com.fastival.jetpackwithmviapp.di.Injectable
 import com.fastival.jetpackwithmviapp.ui.DataStateChangeListener
 import com.fastival.jetpackwithmviapp.ui.UICommunicationListener
 import com.fastival.jetpackwithmviapp.viewmodels.ViewModelProviderFactory
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
-abstract class BaseMainFragment<vb: ViewDataBinding, vm: BaseViewModel<*,*>>: DaggerFragment() {
+abstract class BaseMainFragment<vb: ViewDataBinding, vm: BaseViewModel<*,*>>
+    : Fragment(), Injectable {
 
     val TAG = "AppDebug"
 

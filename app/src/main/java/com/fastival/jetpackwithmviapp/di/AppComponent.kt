@@ -14,7 +14,7 @@ import javax.inject.Singleton
     modules = [AndroidInjectionModule::class, AppModule::class,
         ActivityBuildersModule::class, ViewModelFactoryModule::class, EmptyViewModelModule::class]
 )
-interface AppComponent: AndroidInjector<BaseApplication>{
+interface AppComponent{
     val sessionManager: SessionManager
 
     @Component.Builder
@@ -25,4 +25,6 @@ interface AppComponent: AndroidInjector<BaseApplication>{
 
         fun build(): AppComponent
     }
+
+    fun inject(app: BaseApplication)
 }

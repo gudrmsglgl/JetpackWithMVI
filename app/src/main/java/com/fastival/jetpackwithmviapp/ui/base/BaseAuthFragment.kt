@@ -9,13 +9,16 @@ import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.fastival.jetpackwithmviapp.di.Injectable
 import com.fastival.jetpackwithmviapp.ui.DataStateChangeListener
 import com.fastival.jetpackwithmviapp.viewmodels.ViewModelProviderFactory
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
-abstract class BaseAuthFragment<vb: ViewDataBinding, vm: BaseViewModel<*,*>>: DaggerFragment() {
+abstract class BaseAuthFragment<vb: ViewDataBinding, vm: BaseViewModel<*,*>>
+    : Fragment(), Injectable {
 
     val TAG = "AppDebug"
 

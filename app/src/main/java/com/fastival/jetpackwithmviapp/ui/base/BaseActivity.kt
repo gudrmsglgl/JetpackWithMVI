@@ -9,27 +9,33 @@ import android.view.inputmethod.InputMethodManager
 import androidx.annotation.LayoutRes
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.getSystemService
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.fastival.jetpackwithmviapp.extension.*
 import com.fastival.jetpackwithmviapp.session.SessionManager
 import com.fastival.jetpackwithmviapp.ui.*
 import com.fastival.jetpackwithmviapp.util.Constants.Companion.PERMISSIONS_REQUEST_READ_STORAGE
 import com.fastival.jetpackwithmviapp.viewmodels.ViewModelProviderFactory
-import dagger.android.support.DaggerAppCompatActivity
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.util.jar.Manifest
 import javax.inject.Inject
 
-abstract class BaseActivity<vb: ViewDataBinding, vm: BaseViewModel<*, *>>: DaggerAppCompatActivity(),
+abstract class BaseActivity<vb: ViewDataBinding, vm: BaseViewModel<*, *>>
+    : AppCompatActivity(), HasSupportFragmentInjector,
 DataStateChangeListener,
 UICommunicationListener{
 
     val TAG: String = "AppDebug"
+
+    @Inject
+    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
     @Inject
     lateinit var provider: ViewModelProviderFactory
@@ -170,13 +176,18 @@ UICommunicationListener{
     }
 
     override fun isStoragePermissionGranted(): Boolean {
-        if (ContextCompat.checkSelfPermission(this,
-                permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+        if (ContextCompat.checkSelfPermission(
+                this,
+                permission.READ_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
             &&
-            ContextCompat.checkSelfPermission(this,
-                permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-        {
-            ActivityCompat.requestPermissions(this,
+            ContextCompat.checkSelfPermission(
+                this,
+                permission.WRITE_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
                 arrayOf(
                     permission.READ_EXTERNAL_STORAGE,
                     permission.WRITE_EXTERNAL_STORAGE
@@ -189,5 +200,9 @@ UICommunicationListener{
             // Permission has already been granted
             return true
         }
+    }
+
+    override fun supportFragmentInjector(): AndroidInjector<Fragment> {
+        return dispatchingAndroidInjector
     }
 }
