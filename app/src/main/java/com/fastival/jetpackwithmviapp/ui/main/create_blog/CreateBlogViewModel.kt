@@ -20,6 +20,9 @@ constructor(
     val repository: CreateBlogRepository
 ) : BaseViewModel<CreateBlogStateEvent, CreateBlogViewState>() {
 
+    override val viewState: LiveData<CreateBlogViewState>
+        get() = super.viewState
+
     override fun handleStateEvent(stateEvent: CreateBlogStateEvent): LiveData<DataState<CreateBlogViewState>> {
         return when(stateEvent){
             is CreateBlogStateEvent.CreateNewBlogEvent -> {
