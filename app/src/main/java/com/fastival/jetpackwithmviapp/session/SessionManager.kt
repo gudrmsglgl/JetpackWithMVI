@@ -67,8 +67,20 @@ constructor(
 
     fun isConnectedToTheInternet(): Boolean {
         val cm = application.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        var isWifiConn: Boolean = false
+        var isMobileConn: Boolean = false
         try {
-            return cm.activeNetworkInfo.isConnected
+            cm.allNetworks.forEach { network ->
+                cm.getNetworkInfo(network).apply {
+                    if (type == ConnectivityManager.TYPE_WIFI) {
+                        isWifiConn = isWifiConn or isConnected
+                    }
+                    if (type == ConnectivityManager.TYPE_MOBILE) {
+                        isMobileConn = isMobileConn or isConnected
+                    }
+                }
+            }
+            return isMobileConn or isWifiConn
         }catch (e: Exception){
             Log.e(TAG, "isConnectedToTheInternet: ${e.message}")
         }
