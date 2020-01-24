@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.customview.getCustomView
+import com.fastival.jetpackwithmviapp.BF
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.persistence.BlogQueryUtils.Companion.BLOG_FILTER_DATE_UPDATED
 import com.fastival.jetpackwithmviapp.persistence.BlogQueryUtils.Companion.BLOG_FILTER_USERNAME
@@ -28,20 +29,20 @@ import kotlinx.android.synthetic.main.fragment_blog.*
 
 
 
-fun BlogFragment.onBlogSearchOrFilter(){
+fun BF.onBlogSearchOrFilter(){
     viewModel.loadFirstPage().run {
         resetUI()
     }
 }
 
-private fun BlogFragment.resetUI(){
+private fun BF.resetUI(){
     blog_post_recyclerview.smoothScrollToPosition(0)
     stateListener.hideSoftKeyboard()
     focusable_view.requestFocus()
 }
 
 
-fun BlogFragment.initRecyclerView(){
+fun BF.initRecyclerView(){
     val context = this.context
 
     blog_post_recyclerview.also { rcv ->
@@ -72,7 +73,7 @@ fun BlogFragment.initRecyclerView(){
 
 }
 
-fun BlogFragment.initSearchView(menu: Menu){
+fun BF.initSearchView(menu: Menu){
     val searchManager: SearchManager =
         activity?.getSystemService(Context.SEARCH_SERVICE) as SearchManager
 
@@ -111,7 +112,7 @@ fun BlogFragment.initSearchView(menu: Menu){
 }
 
 
-fun BlogFragment.showFilterDialog(){
+fun BF.showFilterDialog(){
 
     activity?.let {
 

@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.fastival.jetpackwithmviapp.di.ViewModelKey
 import com.fastival.jetpackwithmviapp.ui.main.account.AccountViewModel
 import com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel.BlogViewModel
-import com.fastival.jetpackwithmviapp.ui.main.create_blog.CreateBlogViewModel
+import com.fastival.jetpackwithmviapp.ui.main.create_blog.viewmodel.CreateBlogViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap

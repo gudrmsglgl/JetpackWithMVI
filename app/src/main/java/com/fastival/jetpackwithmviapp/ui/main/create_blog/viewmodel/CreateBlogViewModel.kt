@@ -1,8 +1,9 @@
-package com.fastival.jetpackwithmviapp.ui.main.create_blog
+package com.fastival.jetpackwithmviapp.ui.main.create_blog.viewmodel
 
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
+import com.fastival.jetpackwithmviapp.extension.parseRequestBody
 import com.fastival.jetpackwithmviapp.repository.main.CreateBlogRepository
 import com.fastival.jetpackwithmviapp.session.SessionManager
 import com.fastival.jetpackwithmviapp.ui.DataState
@@ -11,6 +12,7 @@ import com.fastival.jetpackwithmviapp.ui.base.BaseViewModel
 import com.fastival.jetpackwithmviapp.ui.main.create_blog.state.CreateBlogStateEvent
 import com.fastival.jetpackwithmviapp.ui.main.create_blog.state.CreateBlogViewState
 import com.fastival.jetpackwithmviapp.util.AbsentLiveData
+import okhttp3.RequestBody
 import javax.inject.Inject
 
 class CreateBlogViewModel
@@ -26,7 +28,19 @@ constructor(
     override fun handleStateEvent(stateEvent: CreateBlogStateEvent): LiveData<DataState<CreateBlogViewState>> {
         return when(stateEvent){
             is CreateBlogStateEvent.CreateNewBlogEvent -> {
-                AbsentLiveData.create()
+                sessionManager.cachedToken.value?.let { authToken ->
+
+                    val title: RequestBody = stateEvent.title.parseRequestBody()
+
+                    val body: RequestBody = stateEvent.body.parseRequestBody()
+
+                    repository.createNewBlogPost(
+                        authToken,
+                        title,
+                        body,
+                        stateEvent.image
+                    )
+                }?: AbsentLiveData.create()
             }
 
             is CreateBlogStateEvent.None -> {
@@ -42,22 +56,6 @@ constructor(
             }
         }
 
-    }
-
-    fun setNewBlogFields(title: String?, body: String?, uri: Uri?) {
-        val update = getCurrentViewStateOrNew()
-        val newBlogFields = update.blogFields
-        title?.let { newBlogFields.newBlogTitle = it }
-        body?.let { newBlogFields.newBlogBody = it }
-        uri?.let { newBlogFields.newImageUri = it }
-        update.blogFields = newBlogFields
-        setViewState(update)
-    }
-
-    fun clearnewBlogFields(){
-        val update = getCurrentViewStateOrNew()
-        update.blogFields = CreateBlogViewState.NewBlogFields()
-        setViewState(update)
     }
 
     override fun initNewViewState(): CreateBlogViewState {

@@ -3,10 +3,12 @@ package com.fastival.jetpackwithmviapp.ui.main.create_blog
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -14,12 +16,16 @@ import com.fastival.jetpackwithmviapp.BR
 
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentCreateBlogBinding
+import com.fastival.jetpackwithmviapp.extension.*
 import com.fastival.jetpackwithmviapp.ui.*
 import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
+import com.fastival.jetpackwithmviapp.ui.main.create_blog.viewmodel.CreateBlogViewModel
+import com.fastival.jetpackwithmviapp.ui.main.create_blog.viewmodel.clearNewBlogFields
+import com.fastival.jetpackwithmviapp.ui.main.create_blog.viewmodel.setNewBlogFields
 import com.fastival.jetpackwithmviapp.util.Constants.Companion.GALLERY_REQUEST_CODE
 import com.fastival.jetpackwithmviapp.util.ErrorHandling.Companion.ERROR_SOMETHING_WRONG_WITH_IMAGE
+import com.fastival.jetpackwithmviapp.util.SuccessHandling.Companion.SUCCESS_BLOG_CREATED
 import com.theartofdev.edmodo.cropper.CropImage
-import com.theartofdev.edmodo.cropper.CropImageView
 
 /**
  * A simple [Fragment] subclass.
@@ -41,18 +47,28 @@ class CreateBlogFragment : BaseMainFragment<FragmentCreateBlogBinding, CreateBlo
 
         viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
             stateListener.onDataStateChange(dataState)
+            Log.d(TAG, dataState.toString())
+            // why peekContent()?
+            // baseActivity -> onDataStateChange() -> b/c Consume message (handled)
+            // so message confirm -> peekContent()
+            dataState.data?.response?.peekContent()?.let { response ->
+                if (response.message == SUCCESS_BLOG_CREATED) {
+                    viewModel.clearNewBlogFields()
+                }
+            }
         })
 
         viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
             viewState.blogFields.newImageUri?.let {
                 setCroppedImage(it)
-            }?:deFaultImage()
+            }?: deFaultImage()
         })
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setHasOptionsMenu(true)
         binding.fragment = this
     }
 
@@ -104,35 +120,6 @@ class CreateBlogFragment : BaseMainFragment<FragmentCreateBlogBinding, CreateBlo
         }
     }
 
-    private fun launchImageCrop(uri: Uri) {
-        context?.let {
-            CropImage.activity(uri)
-                .setGuidelines(CropImageView.Guidelines.ON)
-                .start(it, this)
-        }
-    }
-
-    private fun showErrorDialog(errorMessage: String) {
-        stateListener.onDataStateChange(
-           DataState(
-               error = Event(StateError(Response(errorMessage, ResponseType.Dialog()))),
-               loading = Loading(false),
-               data = Data(Event.dataEvent(null), null)
-           )
-        )
-    }
-    private fun setCroppedImage(image: Uri){
-        requestManager
-            .load(image)
-            .into(binding.blogImage)
-    }
-
-    private fun deFaultImage(){
-        requestManager
-            .load(R.drawable.default_image)
-            .into(binding.blogImage)
-    }
-
     override fun onPause() {
         super.onPause()
         viewModel.setNewBlogFields(
@@ -140,5 +127,34 @@ class CreateBlogFragment : BaseMainFragment<FragmentCreateBlogBinding, CreateBlo
             binding.blogBody.text.toString(),
             null
         )
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.publish_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+
+            R.id.publish -> {
+                uiCommunicationListener.onUIMessageReceived(
+                    UIMessage(
+                        message = getString(R.string.are_you_sure_publish),
+                        uiMessageType = UIMessageType.AreYouSureDialog(object: AreYouSureCallBack{
+                            override fun proceed() {
+                                publishNewBlog()
+                            }
+
+                            override fun cancel() {
+                                // ignore
+                            }
+                        })
+                    )
+                )
+            }
+
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 }

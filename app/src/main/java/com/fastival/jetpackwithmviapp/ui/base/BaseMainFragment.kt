@@ -40,7 +40,7 @@ abstract class BaseMainFragment<vb: ViewDataBinding, vm: BaseViewModel<*,*>>
     internal lateinit var stateListener: DataStateChangeListener
     internal lateinit var uiCommunicationListener: UICommunicationListener
 
-    protected lateinit var binding: vb
+    internal lateinit var binding: vb
     internal lateinit var viewModel: vm
 
     override fun onCreateView(

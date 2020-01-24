@@ -3,6 +3,7 @@ package com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel
 import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import com.bumptech.glide.RequestManager
+import com.fastival.jetpackwithmviapp.extension.parseRequestBody
 import com.fastival.jetpackwithmviapp.models.BlogPost
 import com.fastival.jetpackwithmviapp.persistence.BlogQueryUtils.Companion.BLOG_FILTER_DATE_UPDATED
 import com.fastival.jetpackwithmviapp.persistence.BlogQueryUtils.Companion.BLOG_ORDER_ASC
@@ -78,15 +79,9 @@ constructor(
             is BlogStateEvent.UpdateBlogPostEvent -> {
                 sessionManager.cachedToken.value?.let { authToken ->
 
-                    val title = RequestBody.create(
-                        MediaType.parse("text/plain"),
-                        stateEvent.title
-                    )
+                    val title = stateEvent.title.parseRequestBody()
 
-                    val body = RequestBody.create(
-                        MediaType.parse("text/plain"),
-                        stateEvent.body
-                    )
+                    val body = stateEvent.body.parseRequestBody()
 
                     blogRepository.updateBlogPost(
                         authToken = authToken,
