@@ -10,10 +10,12 @@ import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
+import id.zelory.compressor.Compressor
 
 fun UBF.launchCropImage(uri: Uri) = context?.let {
     CropImage.activity(uri)
         .setGuidelines(CropImageView.Guidelines.ON)
+        .setMaxCropResultSize(1280*2, 960*2)
         .start(it, this)
 }
 
@@ -29,34 +31,45 @@ fun UBF.showErrorDialog(message: String){
 fun UBF.saveChanges(){
     // 1) uri -> RequestBody -> MultiPartBody.Part
     // 2) event -> updateBlog
+    context?.let { context ->
 
-    var multipartBody: MultipartBody.Part? = null
-    val viewState = viewModel.getCurrentViewStateOrNew()
-    viewState.updatedBlogFields.updatedImageUri?.let { uri ->
-        uri.path?.let { path ->
+        var multipartBody: MultipartBody.Part? = null
+        val viewState = viewModel.getCurrentViewStateOrNew()
+        viewState.updatedBlogFields.updatedImageUri?.let { uri ->
+            uri.path?.let { path ->
 
-            val file = File(path)
-            val requestBody = RequestBody.create(
-                MediaType.parse("image/*"),
-                file
-            )
+                val file = File(path)
+                if (file.exists()) {
+                    val compressedImageFile: File
+                            = Compressor(context)
+                        .setMaxWidth(640)
+                        .setMaxHeight(480)
+                        .setQuality(75)
+                        .compressToFile(file)
 
-            multipartBody = MultipartBody.Part.createFormData(
-                "image",
-                file.name,
-                requestBody
-            )
+                    val requestBody = RequestBody.create(
+                        MediaType.parse("image/*"),
+                        compressedImageFile
+                    )
+
+                    multipartBody = MultipartBody.Part.createFormData(
+                        "image",
+                        compressedImageFile.name,
+                        requestBody
+                    )
+                }
+            }
         }
-    }
 
-    viewModel.setStateEvent(
-        BlogStateEvent.UpdateBlogPostEvent(
-            title = binding.blogTitle.text.toString(),
-            body = binding.blogBody.text.toString(),
-            image = multipartBody
+        viewModel.setStateEvent(
+            BlogStateEvent.UpdateBlogPostEvent(
+                title = binding.blogTitle.text.toString(),
+                body = binding.blogBody.text.toString(),
+                image = multipartBody
+            )
         )
-    )
 
-    stateListener.hideSoftKeyboard()
+        stateListener.hideSoftKeyboard()
 
+    }
 }

@@ -13,11 +13,14 @@ import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
+import id.zelory.compressor.Compressor
+
 
 fun CBF.launchImageCrop(uri: Uri) {
     context?.let {
         CropImage.activity(uri)
             .setGuidelines(CropImageView.Guidelines.ON)
+            .setMaxCropResultSize(1280*2, 960*2)
             .start(it, this)
     }
 }
@@ -45,37 +48,49 @@ fun CBF.deFaultImage(){
 }
 
 fun CBF.publishNewBlog(){
-    var multipartBody: MultipartBody.Part? = null
+    context?.let { context ->
 
-    viewModel.viewState.value?.blogFields?.newImageUri?.let { imgUri ->
-        imgUri.path?.let { path ->
+        var multipartBody: MultipartBody.Part? = null
 
-            val imageFile = File(path)
-            Log.d(TAG, "CreateBlogFragment, imageFile: file: $imageFile")
-            val requestBody = RequestBody.create(
-                MediaType.parse("image/*"),
-                imageFile
-            )
+        viewModel.viewState.value?.blogFields?.newImageUri?.let { imgUri ->
+            imgUri.path?.let { path ->
 
-            multipartBody = MultipartBody.Part.createFormData(
-                "image",
-                imageFile.name,
-                requestBody
-            ) // name, filename, requestBody
+                val imageFile = File(path)
+                Log.d(TAG, "CreateBlogFragment, imageFile: file: $imageFile , size: ${imageFile.length()}")
 
+                val compressedImageFile: File
+                        = Compressor(context)
+                    .setMaxWidth(640)
+                    .setMaxHeight(480)
+                    .setQuality(75)
+                    .compressToFile(imageFile)
+
+                Log.d(TAG, "CreateBlogFragment, compressedImageFile: $compressedImageFile , size: ${compressedImageFile.length()}")
+                val requestBody = RequestBody.create(
+                    MediaType.parse("image/*"),
+                    compressedImageFile
+                )
+
+                multipartBody = MultipartBody.Part.createFormData(
+                    "image",
+                    compressedImageFile.name,
+                    requestBody
+                ) // name, filename, requestBody
+
+            }
         }
-    }
 
-    multipartBody?.let {
+        multipartBody?.let {
 
-        viewModel.setStateEvent(
-            CreateBlogStateEvent.CreateNewBlogEvent(
-                binding.blogTitle.text.toString(),
-                binding.blogBody.text.toString(),
-                it
+            viewModel.setStateEvent(
+                CreateBlogStateEvent.CreateNewBlogEvent(
+                    binding.blogTitle.text.toString(),
+                    binding.blogBody.text.toString(),
+                    it
+                )
             )
-        )
-        stateListener.hideSoftKeyboard()
+            stateListener.hideSoftKeyboard()
 
-    }?: showErrorDialog(ErrorHandling.ERROR_MUST_SELECT_IMAGE)
+        }?: showErrorDialog(ErrorHandling.ERROR_MUST_SELECT_IMAGE)
+    }
 }

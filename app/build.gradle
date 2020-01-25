@@ -134,4 +134,6 @@ dependencies {
     // Android-Image-Cropper
     def android_image_cropper_version = "2.8.+"
     api "com.theartofdev.edmodo:android-image-cropper:$android_image_cropper_version"
+
+    implementation 'id.zelory:compressor:2.1.0'
 }
