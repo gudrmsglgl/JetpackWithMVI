@@ -1,39 +1,29 @@
 package com.fastival.jetpackwithmviapp.ui.main.blog
 
-import android.app.SearchManager
-import android.content.Context.SEARCH_SERVICE
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.inputmethod.EditorInfo
-import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.fastival.jetpackwithmviapp.BR
 
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentBlogBinding
-import com.fastival.jetpackwithmviapp.extension.initRecyclerView
-import com.fastival.jetpackwithmviapp.extension.initSearchView
-import com.fastival.jetpackwithmviapp.extension.onBlogSearchOrFilter
-import com.fastival.jetpackwithmviapp.extension.showFilterDialog
+import com.fastival.jetpackwithmviapp.extension.fragment.initRecyclerView
+import com.fastival.jetpackwithmviapp.extension.fragment.initSearchView
+import com.fastival.jetpackwithmviapp.extension.fragment.onBlogSearchOrFilter
+import com.fastival.jetpackwithmviapp.extension.fragment.showFilterDialog
 import com.fastival.jetpackwithmviapp.models.BlogPost
 import com.fastival.jetpackwithmviapp.ui.DataState
 import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
-import com.fastival.jetpackwithmviapp.ui.main.blog.state.BlogStateEvent
 import com.fastival.jetpackwithmviapp.ui.main.blog.state.BlogViewState
 import com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel.*
 import com.fastival.jetpackwithmviapp.util.ErrorHandling
-import com.fastival.jetpackwithmviapp.util.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.fragment_blog.*
 
 

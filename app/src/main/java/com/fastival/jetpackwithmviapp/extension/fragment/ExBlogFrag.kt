@@ -1,4 +1,4 @@
-package com.fastival.jetpackwithmviapp.extension
+package com.fastival.jetpackwithmviapp.extension.fragment
 
 import android.app.SearchManager
 import android.content.Context
@@ -21,7 +21,6 @@ import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.persistence.BlogQueryUtils.Companion.BLOG_FILTER_DATE_UPDATED
 import com.fastival.jetpackwithmviapp.persistence.BlogQueryUtils.Companion.BLOG_FILTER_USERNAME
 import com.fastival.jetpackwithmviapp.persistence.BlogQueryUtils.Companion.BLOG_ORDER_ASC
-import com.fastival.jetpackwithmviapp.ui.main.blog.BlogFragment
 import com.fastival.jetpackwithmviapp.ui.main.blog.BlogListAdapter
 import com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel.*
 import com.fastival.jetpackwithmviapp.util.TopSpacingItemDecoration

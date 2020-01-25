@@ -1,4 +1,4 @@
-package com.fastival.jetpackwithmviapp.extension
+package com.fastival.jetpackwithmviapp.extension.activity
 
 import android.app.Activity
 import android.content.Context

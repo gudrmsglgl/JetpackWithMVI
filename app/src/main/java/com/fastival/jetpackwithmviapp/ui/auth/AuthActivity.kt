@@ -10,10 +10,8 @@ import androidx.navigation.findNavController
 import com.fastival.jetpackwithmviapp.BR
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.ActivityAuthBinding
-import com.fastival.jetpackwithmviapp.extension.navActivity
-import com.fastival.jetpackwithmviapp.ui.ResponseType
+import com.fastival.jetpackwithmviapp.extension.activity.navActivity
 import com.fastival.jetpackwithmviapp.ui.auth.state.AuthStateEvent
-import com.fastival.jetpackwithmviapp.ui.auth.state.AuthViewState
 import com.fastival.jetpackwithmviapp.ui.base.BaseActivity
 import com.fastival.jetpackwithmviapp.ui.main.MainActivity
 import com.fastival.jetpackwithmviapp.util.SuccessHandling.Companion.RESPONSE_CHECK_PREVIOUS_AUTH_USER_DONE

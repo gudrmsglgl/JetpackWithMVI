@@ -12,16 +12,13 @@ import com.fastival.jetpackwithmviapp.BR
 
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentViewBlogBinding
-import com.fastival.jetpackwithmviapp.extension.AreYouSureCallBack
-import com.fastival.jetpackwithmviapp.extension.convertLongToStringDate
-import com.fastival.jetpackwithmviapp.models.BlogPost
+import com.fastival.jetpackwithmviapp.extension.activity.AreYouSureCallBack
 import com.fastival.jetpackwithmviapp.ui.UIMessage
 import com.fastival.jetpackwithmviapp.ui.UIMessageType
 import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
 import com.fastival.jetpackwithmviapp.ui.main.blog.state.BlogStateEvent
 import com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel.*
 import com.fastival.jetpackwithmviapp.util.SuccessHandling.Companion.SUCCESS_BLOG_DELETED
-import kotlinx.android.synthetic.main.fragment_view_blog.*
 
 /**
  * A simple [Fragment] subclass.
@@ -80,7 +77,8 @@ class ViewBlogFragment
     fun confirmDeleteRequest(view: View) {
         uiCommunicationListener.onUIMessageReceived(UIMessage(
             message = getString(R.string.are_you_sure_delete),
-            uiMessageType = UIMessageType.AreYouSureDialog(callback = object: AreYouSureCallBack{
+            uiMessageType = UIMessageType.AreYouSureDialog(callback = object:
+                AreYouSureCallBack {
                 override fun proceed() {
                     viewModel.setStateEvent(
                         BlogStateEvent.DeleteBlogPostEvent()

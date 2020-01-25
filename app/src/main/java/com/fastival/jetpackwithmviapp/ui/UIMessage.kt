@@ -1,6 +1,6 @@
 package com.fastival.jetpackwithmviapp.ui
 
-import com.fastival.jetpackwithmviapp.extension.AreYouSureCallBack
+import com.fastival.jetpackwithmviapp.extension.activity.AreYouSureCallBack
 
 data class UIMessage (
     val message: String,

@@ -16,7 +16,8 @@ import com.fastival.jetpackwithmviapp.BR
 
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentCreateBlogBinding
-import com.fastival.jetpackwithmviapp.extension.*
+import com.fastival.jetpackwithmviapp.extension.activity.AreYouSureCallBack
+import com.fastival.jetpackwithmviapp.extension.fragment.*
 import com.fastival.jetpackwithmviapp.ui.*
 import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
 import com.fastival.jetpackwithmviapp.ui.main.create_blog.viewmodel.CreateBlogViewModel
@@ -140,7 +141,8 @@ class CreateBlogFragment
                 uiCommunicationListener.onUIMessageReceived(
                     UIMessage(
                         message = getString(R.string.are_you_sure_publish),
-                        uiMessageType = UIMessageType.AreYouSureDialog(object: AreYouSureCallBack{
+                        uiMessageType = UIMessageType.AreYouSureDialog(object:
+                            AreYouSureCallBack {
                             override fun proceed() {
                                 publishNewBlog()
                             }

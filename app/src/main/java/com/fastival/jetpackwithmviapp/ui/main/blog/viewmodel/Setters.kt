@@ -94,7 +94,7 @@ fun bvm.updateListItem(newBlogPost: BlogPost) {
     setViewState(update)
 }
 
-fun bvm.setSyncBlogsFromServer(updateBlogPost: BlogPost){
+fun bvm.setSyncBlogFromServer(updateBlogPost: BlogPost){
     setUpdatedBlogFields(
         uri = null,
         title = updateBlogPost.title,

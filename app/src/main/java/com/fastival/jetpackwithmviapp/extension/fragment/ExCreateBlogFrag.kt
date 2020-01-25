@@ -1,4 +1,4 @@
-package com.fastival.jetpackwithmviapp.extension
+package com.fastival.jetpackwithmviapp.extension.fragment
 
 import android.net.Uri
 import android.util.Log

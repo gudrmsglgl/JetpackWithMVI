@@ -10,7 +10,7 @@ import androidx.navigation.NavController
 import com.fastival.jetpackwithmviapp.BR
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.ActivityMainBinding
-import com.fastival.jetpackwithmviapp.extension.navActivity
+import com.fastival.jetpackwithmviapp.extension.activity.navActivity
 import com.fastival.jetpackwithmviapp.ui.EmptyViewModel
 import com.fastival.jetpackwithmviapp.ui.auth.AuthActivity
 import com.fastival.jetpackwithmviapp.ui.base.BaseActivity
