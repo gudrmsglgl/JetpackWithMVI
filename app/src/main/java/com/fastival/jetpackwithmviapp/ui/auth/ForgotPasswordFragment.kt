@@ -29,7 +29,8 @@ import kotlinx.coroutines.launch
 /**
  * A simple [Fragment] subclass.
  */
-class ForgotPasswordFragment : BaseAuthFragment<FragmentForgotPasswordBinding, EmptyViewModel>() {
+class ForgotPasswordFragment
+    : BaseAuthFragment<FragmentForgotPasswordBinding, EmptyViewModel>(R.layout.fragment_forgot_password) {
 
     private val webView: WebView by lazy {
         binding.root.findViewById<WebView>(R.id.webview)
@@ -110,10 +111,6 @@ class ForgotPasswordFragment : BaseAuthFragment<FragmentForgotPasswordBinding, E
             password_reset_done_container.startAnimation(anim)
             password_reset_done_container.visibility = View.VISIBLE
         }
-    }
-
-    override fun getLayoutId(): Int {
-        return R.layout.fragment_forgot_password
     }
 
     override fun getViewModel(): Class<EmptyViewModel> {

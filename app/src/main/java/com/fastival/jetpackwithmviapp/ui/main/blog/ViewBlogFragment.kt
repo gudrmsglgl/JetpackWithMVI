@@ -26,7 +26,8 @@ import kotlinx.android.synthetic.main.fragment_view_blog.*
 /**
  * A simple [Fragment] subclass.
  */
-class ViewBlogFragment : BaseMainFragment<FragmentViewBlogBinding, BlogViewModel>() {
+class ViewBlogFragment
+    : BaseMainFragment<FragmentViewBlogBinding, BlogViewModel>(R.layout.fragment_view_blog) {
 
     override fun setTopLevelDesId(): Int = R.id.blogFragment
 
@@ -35,8 +36,6 @@ class ViewBlogFragment : BaseMainFragment<FragmentViewBlogBinding, BlogViewModel
     override fun initFunc() {
         checkIsAuthor()
     }
-
-    override fun getLayoutId(): Int = R.layout.fragment_view_blog
 
     override fun getViewModel(): Class<BlogViewModel> = BlogViewModel::class.java
 

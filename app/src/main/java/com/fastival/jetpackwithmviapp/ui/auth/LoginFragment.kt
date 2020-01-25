@@ -20,7 +20,8 @@ import kotlinx.android.synthetic.main.fragment_login.*
 /**
  * A simple [Fragment] subclass.
  */
-class LoginFragment : BaseAuthFragment<FragmentLoginBinding, AuthViewModel>() {
+class LoginFragment
+    : BaseAuthFragment<FragmentLoginBinding, AuthViewModel>(R.layout.fragment_login) {
 
     override fun getBindingVariable(): Int {
         return BR.authViewModel
@@ -33,10 +34,6 @@ class LoginFragment : BaseAuthFragment<FragmentLoginBinding, AuthViewModel>() {
                 input_password.text.toString()
             ))
         }
-    }
-
-    override fun getLayoutId(): Int {
-        return R.layout.fragment_login
     }
 
     override fun getViewModel(): Class<AuthViewModel> {

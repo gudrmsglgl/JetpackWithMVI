@@ -23,11 +23,13 @@ import com.fastival.jetpackwithmviapp.di.Injectable
 import com.fastival.jetpackwithmviapp.ui.DataStateChangeListener
 import com.fastival.jetpackwithmviapp.ui.UICommunicationListener
 import com.fastival.jetpackwithmviapp.viewmodels.ViewModelProviderFactory
+import com.wada811.databinding.dataBinding
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
 abstract class BaseMainFragment<vb: ViewDataBinding, vm: BaseViewModel<*,*>>
-    : Fragment(), Injectable {
+    (@LayoutRes contentLayoutId: Int)
+    : Fragment(contentLayoutId), Injectable {
 
     val TAG = "AppDebug"
 
@@ -40,7 +42,7 @@ abstract class BaseMainFragment<vb: ViewDataBinding, vm: BaseViewModel<*,*>>
     internal lateinit var stateListener: DataStateChangeListener
     internal lateinit var uiCommunicationListener: UICommunicationListener
 
-    internal lateinit var binding: vb
+    internal val binding: vb by dataBinding()
     internal lateinit var viewModel: vm
 
     override fun onCreateView(
@@ -48,19 +50,18 @@ abstract class BaseMainFragment<vb: ViewDataBinding, vm: BaseViewModel<*,*>>
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         viewModel = activity?.let {
             ViewModelProvider(it, provider).get(getViewModel())
         }?:throw Exception("Invalid Activity")
 
-        binding = DataBindingUtil.inflate(inflater, getLayoutId(), container, false)
-        binding.lifecycleOwner = viewLifecycleOwner
-        binding.setVariable(getBindingVariable(), viewModel)
-        return binding.root
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // You can use binding ( data_binding_ktx)
+        binding.setVariable(getBindingVariable(), viewModel)
 
         cancelActiveJobs()
 
@@ -104,9 +105,6 @@ abstract class BaseMainFragment<vb: ViewDataBinding, vm: BaseViewModel<*,*>>
     protected abstract fun getBindingVariable(): Int
 
     protected abstract fun initFunc()
-
-    @LayoutRes
-    protected abstract fun getLayoutId(): Int
 
     protected abstract fun getViewModel(): Class<vm>
 

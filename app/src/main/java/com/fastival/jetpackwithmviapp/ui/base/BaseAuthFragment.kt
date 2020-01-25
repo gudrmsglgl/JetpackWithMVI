@@ -14,11 +14,13 @@ import androidx.lifecycle.ViewModelProvider
 import com.fastival.jetpackwithmviapp.di.Injectable
 import com.fastival.jetpackwithmviapp.ui.DataStateChangeListener
 import com.fastival.jetpackwithmviapp.viewmodels.ViewModelProviderFactory
+import com.wada811.databinding.dataBinding
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
 abstract class BaseAuthFragment<vb: ViewDataBinding, vm: BaseViewModel<*,*>>
-    : Fragment(), Injectable {
+    (@LayoutRes contentId: Int)
+    : Fragment(contentId), Injectable {
 
     val TAG = "AppDebug"
 
@@ -27,24 +29,23 @@ abstract class BaseAuthFragment<vb: ViewDataBinding, vm: BaseViewModel<*,*>>
 
     protected lateinit var stateListener: DataStateChangeListener
 
-    protected lateinit var binding: vb
-    protected lateinit var viewModel: vm
+    internal val binding: vb by dataBinding()
+    internal lateinit var viewModel: vm
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater, getLayoutId(), container, false)
-        return binding.root
+        viewModel = activity?.let {
+            ViewModelProvider(it, provider).get(getViewModel())
+        }?:throw Exception("Invalid Activity")
+
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModel = activity?.let {
-            ViewModelProvider(it, provider).get(getViewModel())
-        }?:throw Exception("Invalid Activity")
 
         binding.setVariable(getBindingVariable(), viewModel)
 
@@ -72,9 +73,6 @@ abstract class BaseAuthFragment<vb: ViewDataBinding, vm: BaseViewModel<*,*>>
     protected abstract fun getBindingVariable(): Int
 
     protected abstract fun initFunc()
-
-    @LayoutRes
-    protected abstract fun getLayoutId(): Int
 
     protected abstract fun getViewModel(): Class<vm>
 

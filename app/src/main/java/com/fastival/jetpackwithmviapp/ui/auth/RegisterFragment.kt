@@ -24,7 +24,8 @@ import kotlinx.android.synthetic.main.fragment_register.*
 /**
  * A simple [Fragment] subclass.
  */
-class RegisterFragment : BaseAuthFragment<FragmentRegisterBinding, AuthViewModel>() {
+class RegisterFragment
+    : BaseAuthFragment<FragmentRegisterBinding, AuthViewModel>(R.layout.fragment_register) {
 
     override fun getBindingVariable(): Int {
         return BR.viewModel
@@ -43,10 +44,6 @@ class RegisterFragment : BaseAuthFragment<FragmentRegisterBinding, AuthViewModel
             )
         }
     }
-
-
-    override fun getLayoutId()= R.layout.fragment_register
-
 
     override fun getViewModel(): Class<AuthViewModel> {
         return AuthViewModel::class.java

@@ -30,7 +30,9 @@ import com.theartofdev.edmodo.cropper.CropImage
 /**
  * A simple [Fragment] subclass.
  */
-class CreateBlogFragment : BaseMainFragment<FragmentCreateBlogBinding, CreateBlogViewModel>() {
+class CreateBlogFragment
+    : BaseMainFragment<FragmentCreateBlogBinding, CreateBlogViewModel>(R.layout.fragment_create_blog)
+{
 
     override fun setTopLevelDesId(): Int = R.id.createBlogFragment
 
@@ -38,8 +40,6 @@ class CreateBlogFragment : BaseMainFragment<FragmentCreateBlogBinding, CreateBlo
 
     override fun initFunc() {
     }
-
-    override fun getLayoutId(): Int = R.layout.fragment_create_blog
 
     override fun getViewModel(): Class<CreateBlogViewModel> = CreateBlogViewModel::class.java
 

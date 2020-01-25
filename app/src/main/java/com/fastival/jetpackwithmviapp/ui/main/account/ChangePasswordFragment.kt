@@ -22,7 +22,8 @@ import kotlinx.android.synthetic.main.fragment_change_password.*
 /**
  * A simple [Fragment] subclass.
  */
-class ChangePasswordFragment : BaseMainFragment<FragmentChangePasswordBinding, AccountViewModel>() {
+class ChangePasswordFragment
+    : BaseMainFragment<FragmentChangePasswordBinding, AccountViewModel>(R.layout.fragment_change_password) {
 
     override fun setTopLevelDesId(): Int = R.id.accountFragment
 
@@ -40,10 +41,6 @@ class ChangePasswordFragment : BaseMainFragment<FragmentChangePasswordBinding, A
             ))
         }
 
-    }
-
-    override fun getLayoutId(): Int {
-        return R.layout.fragment_change_password
     }
 
     override fun getViewModel(): Class<AccountViewModel> {

@@ -37,7 +37,7 @@ import com.fastival.jetpackwithmviapp.util.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.fragment_blog.*
 
 
-class BlogFragment : BaseMainFragment<FragmentBlogBinding, BlogViewModel>(),
+class BlogFragment : BaseMainFragment<FragmentBlogBinding, BlogViewModel>(R.layout.fragment_blog),
  BlogListAdapter.Interaction,
  SwipeRefreshLayout.OnRefreshListener
 {
@@ -47,8 +47,6 @@ class BlogFragment : BaseMainFragment<FragmentBlogBinding, BlogViewModel>(),
     override fun setTopLevelDesId(): Int = R.id.blogFragment
 
     override fun getBindingVariable(): Int = BR.vm
-
-    override fun getLayoutId(): Int = R.layout.fragment_blog
 
     override fun getViewModel(): Class<BlogViewModel> = BlogViewModel::class.java
 

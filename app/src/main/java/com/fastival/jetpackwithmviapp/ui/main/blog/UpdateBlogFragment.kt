@@ -24,7 +24,8 @@ import okhttp3.MultipartBody
 /**
  * A simple [Fragment] subclass.
  */
-class UpdateBlogFragment : BaseMainFragment<FragmentUpdateBlogBinding, BlogViewModel>() {
+class UpdateBlogFragment
+    : BaseMainFragment<FragmentUpdateBlogBinding, BlogViewModel>(R.layout.fragment_update_blog) {
 
     override fun setTopLevelDesId(): Int = R.id.blogFragment
 
@@ -32,8 +33,6 @@ class UpdateBlogFragment : BaseMainFragment<FragmentUpdateBlogBinding, BlogViewM
 
     override fun initFunc() {
     }
-
-    override fun getLayoutId(): Int = R.layout.fragment_update_blog
 
     override fun getViewModel(): Class<BlogViewModel> = BlogViewModel::class.java
 

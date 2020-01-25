@@ -19,7 +19,8 @@ import kotlinx.android.synthetic.main.fragment_update_account.*
 /**
  * A simple [Fragment] subclass.
  */
-class UpdateAccountFragment : BaseMainFragment<FragmentUpdateAccountBinding, AccountViewModel>() {
+class UpdateAccountFragment
+    : BaseMainFragment<FragmentUpdateAccountBinding, AccountViewModel>(R.layout.fragment_update_account) {
 
     override fun setTopLevelDesId(): Int = R.id.accountFragment
 
@@ -29,8 +30,6 @@ class UpdateAccountFragment : BaseMainFragment<FragmentUpdateAccountBinding, Acc
 
     override fun initFunc() {
     }
-
-    override fun getLayoutId() = R.layout.fragment_update_account
 
     override fun getViewModel(): Class<AccountViewModel> {
         return AccountViewModel::class.java

@@ -18,9 +18,12 @@ import kotlinx.android.synthetic.main.fragment_launcher.*
 /**
  * A simple [Fragment] subclass.
  */
-class LauncherFragment : BaseAuthFragment<FragmentLauncherBinding, AuthViewModel>() {
+class LauncherFragment
+    : BaseAuthFragment<FragmentLauncherBinding, AuthViewModel>(R.layout.fragment_launcher) {
 
     override fun getBindingVariable() = BR.vm
+
+    override fun getViewModel(): Class<AuthViewModel> = AuthViewModel::class.java
 
     override fun initFunc() {
         register.setOnClickListener {
@@ -39,10 +42,6 @@ class LauncherFragment : BaseAuthFragment<FragmentLauncherBinding, AuthViewModel
 
         Log.d(TAG, "LauncherFragment: $viewModel")
     }
-
-    override fun getLayoutId() = R.layout.fragment_launcher
-
-    override fun getViewModel(): Class<AuthViewModel> = AuthViewModel::class.java
 
     override fun subscribeObservers() {
     }

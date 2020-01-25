@@ -22,7 +22,8 @@ import javax.inject.Inject
 /**
  * A simple [Fragment] subclass.
  */
-class AccountFragment : BaseMainFragment<FragmentAccountBinding, AccountViewModel>() {
+class AccountFragment
+    : BaseMainFragment<FragmentAccountBinding, AccountViewModel>(R.layout.fragment_account) {
 
     override fun setTopLevelDesId(): Int = R.id.accountFragment
 
@@ -31,10 +32,6 @@ class AccountFragment : BaseMainFragment<FragmentAccountBinding, AccountViewMode
     }
 
     override fun initFunc() {
-    }
-
-    override fun getLayoutId(): Int {
-        return R.layout.fragment_account
     }
 
     override fun getViewModel(): Class<AccountViewModel> {
