@@ -47,15 +47,19 @@ class CreateBlogFragment
     override fun subscribeObservers() {
 
         viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
-            stateListener.onDataStateChange(dataState)
-            Log.d(TAG, dataState.toString())
-            // why peekContent()?
-            // baseActivity -> onDataStateChange() -> b/c Consume message (handled)
-            // so message confirm -> peekContent()
-            dataState.data?.response?.peekContent()?.let { response ->
-                if (response.message == SUCCESS_BLOG_CREATED) {
-                    viewModel.clearNewBlogFields()
+            if (dataState != null) {
+
+                stateListener.onDataStateChange(dataState)
+
+                // why peekContent()?
+                // baseActivity -> onDataStateChange() -> b/c Consume message (handled)
+                // so message confirm -> peekContent()
+                dataState.data?.response?.peekContent()?.let { response ->
+                    if (response.message == SUCCESS_BLOG_CREATED) {
+                        viewModel.clearNewBlogFields()
+                    }
                 }
+
             }
         })
 

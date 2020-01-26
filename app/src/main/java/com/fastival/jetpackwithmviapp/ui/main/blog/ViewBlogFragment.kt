@@ -38,19 +38,22 @@ class ViewBlogFragment
 
     override fun subscribeObservers() {
         viewModel.dataState.observe(viewLifecycleOwner , Observer { dateState ->
-            stateListener.onDataStateChange(dateState)
+            if (dateState != null){
 
-            dateState.data?.data?.getContentIfNotHandled()?.let { viewState ->
-                viewModel.setIsAuthorOfBlogPost(
-                    viewState.viewBlogFields.isAuthorOfBlogPost
-                )
-            }
-
-            dateState.data?.response?.peekContent()?.let { response ->
-                if (response.message == SUCCESS_BLOG_DELETED) {
-                    viewModel.removeDeletedBlogPost()
-                    findNavController().popBackStack()
+                stateListener.onDataStateChange(dateState)
+                dateState.data?.data?.getContentIfNotHandled()?.let { viewState ->
+                    viewModel.setIsAuthorOfBlogPost(
+                        viewState.viewBlogFields.isAuthorOfBlogPost
+                    )
                 }
+
+                dateState.data?.response?.peekContent()?.let { response ->
+                    if (response.message == SUCCESS_BLOG_DELETED) {
+                        viewModel.removeDeletedBlogPost()
+                        findNavController().popBackStack()
+                    }
+                }
+
             }
         })
 

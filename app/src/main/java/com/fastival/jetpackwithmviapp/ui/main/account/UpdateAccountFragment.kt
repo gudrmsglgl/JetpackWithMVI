@@ -38,8 +38,12 @@ class UpdateAccountFragment
     override fun subscribeObservers() {
 
         viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
-            stateListener.onDataStateChange(dataState)
-            Log.d(TAG, "UpdateAccountFragment, DataState: ${dataState}")
+            if (dataState != null) {
+
+                Log.d(TAG, "UpdateAccountFragment, DataState: ${dataState}")
+                stateListener.onDataStateChange(dataState)
+
+            }
         })
 
     }

@@ -40,14 +40,16 @@ class AccountFragment
 
     override fun subscribeObservers() {
         viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState->
-            stateListener.onDataStateChange(dataState)
             if (dataState != null) {
+
+                stateListener.onDataStateChange(dataState)
                 dataState.data?.data?.let { event ->
                     event.getContentIfNotHandled()?.accountProperties?.let { accountProperties ->
                         Log.d(TAG, "AccountFragment, DataState: $accountProperties")
                         viewModel.setAccountPropertiesData(accountProperties)
                     }
                 }
+
             }
         })
 

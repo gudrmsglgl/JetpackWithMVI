@@ -52,15 +52,20 @@ class UpdateBlogFragment
 
     override fun subscribeObservers() {
         viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
-            stateListener.onDataStateChange(dataState)
-            dataState?.data?.data?.getContentIfNotHandled()?.let { viewState ->
-                viewState.viewBlogFields.blogPost?.let { blogPost ->
+            if (dataState != null) {
 
-                    viewModel.setSyncBlogFromServer(blogPost).run {
-                        findNavController().popBackStack()
+                stateListener.onDataStateChange(dataState)
+                dataState.data?.data?.getContentIfNotHandled()?.let { viewState ->
+
+                    viewState.viewBlogFields.blogPost?.let { blogPost ->
+
+                        viewModel.setSyncBlogFromServer(blogPost).run {
+                            findNavController().popBackStack()
+                        }
+
                     }
-
                 }
+
             }
         })
 

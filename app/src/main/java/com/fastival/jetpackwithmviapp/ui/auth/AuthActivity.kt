@@ -44,31 +44,32 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel>(),
         Log.d(TAG, "AuthActivityObserve__ viewModel: $viewModel")
 
         viewModel.dataState.observe(this, Observer {dataState->
+            if (dataState != null) {
 
-            onDataStateChange(dataState)
+                onDataStateChange(dataState)
 
-            dataState.data?.let { data ->
+                dataState.data?.let { data ->
 
-                data.data?.getContentIfNotHandled()?.let { authViewState ->
-                    authViewState.authToken?.let {
-                        Log.d(TAG, "AuthActivity, DataState: $it")
-                        viewModel.setAuthToken(it)
+                    data.data?.getContentIfNotHandled()?.let { authViewState ->
+                        authViewState.authToken?.let {
+                            Log.d(TAG, "AuthActivity, DataState: $it")
+                            viewModel.setAuthToken(it)
+                        }
                     }
-                }
 
-                data.response?.let { event->
-                    event.peekContent().let { response ->
-                        response.message?.let { message ->
-                            if (message.equals(RESPONSE_CHECK_PREVIOUS_AUTH_USER_DONE)){
-                                onFinishCheckPreviousAuthUser()
+                    data.response?.let { event->
+                        event.peekContent().let { response ->
+                            response.message?.let { message ->
+                                if (message.equals(RESPONSE_CHECK_PREVIOUS_AUTH_USER_DONE)){
+                                    onFinishCheckPreviousAuthUser()
+                                }
                             }
                         }
                     }
+
                 }
 
             }
-
-
         })
 
 

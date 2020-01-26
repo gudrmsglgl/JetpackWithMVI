@@ -49,15 +49,17 @@ class ChangePasswordFragment
 
     override fun subscribeObservers() {
         viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
-            stateListener.onDataStateChange(dataState)
             Log.d(TAG, "ChangePasswordFragment, DataState: $dataState")
             if (dataState != null) {
+
+                stateListener.onDataStateChange(dataState)
                 dataState.data?.response?.let { event ->
                     if (event.peekContent().message.equals(RESPONSE_PASSWORD_UPDATE_SUCCESS)) {
                         stateListener.hideSoftKeyboard()
                         findNavController().popBackStack()
                     }
                 }
+
             }
         })
     }
