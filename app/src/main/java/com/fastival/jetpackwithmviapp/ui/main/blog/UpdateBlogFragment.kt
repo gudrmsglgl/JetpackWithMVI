@@ -19,6 +19,7 @@ import com.fastival.jetpackwithmviapp.extension.fragment.saveChanges
 import com.fastival.jetpackwithmviapp.extension.fragment.showErrorDialog
 import com.fastival.jetpackwithmviapp.ui.EmptyViewModel
 import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
+import com.fastival.jetpackwithmviapp.ui.base.blog.BaseBlogFragment
 import com.fastival.jetpackwithmviapp.ui.main.blog.state.BlogStateEvent
 import com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel.*
 import com.fastival.jetpackwithmviapp.util.Constants.Companion.GALLERY_REQUEST_CODE
@@ -32,16 +33,10 @@ import okhttp3.MultipartBody
  * A simple [Fragment] subclass.
  */
 class UpdateBlogFragment
-    : BaseMainFragment<FragmentUpdateBlogBinding, BlogViewModel>(R.layout.fragment_update_blog) {
-
-    override fun setTopLevelDesId(): Int = R.id.blogFragment
+    : BaseBlogFragment<FragmentUpdateBlogBinding>(R.layout.fragment_update_blog)
+{
 
     override fun getBindingVariable(): Int = BR.vm
-
-    override fun initFunc() {
-    }
-
-    override fun getViewModel(): Class<BlogViewModel> = BlogViewModel::class.java
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

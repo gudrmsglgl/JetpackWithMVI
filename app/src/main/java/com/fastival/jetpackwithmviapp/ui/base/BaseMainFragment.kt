@@ -27,7 +27,7 @@ import com.wada811.databinding.dataBinding
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
-abstract class BaseMainFragment<vb: ViewDataBinding, vm: BaseViewModel<*,*>>
+abstract class BaseMainFragment<vm: BaseViewModel<*,*>>
     (@LayoutRes contentLayoutId: Int)
     : Fragment(contentLayoutId), Injectable {
 
@@ -42,7 +42,6 @@ abstract class BaseMainFragment<vb: ViewDataBinding, vm: BaseViewModel<*,*>>
     internal lateinit var stateListener: DataStateChangeListener
     internal lateinit var uiCommunicationListener: UICommunicationListener
 
-    internal val binding: vb by dataBinding()
     internal lateinit var viewModel: vm
 
     override fun onCreateView(
@@ -60,12 +59,8 @@ abstract class BaseMainFragment<vb: ViewDataBinding, vm: BaseViewModel<*,*>>
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // You can use binding ( data_binding_ktx)
-        binding.setVariable(getBindingVariable(), viewModel)
-
         cancelActiveJobs()
 
-        initFunc()
         subscribeObservers()
 
         setupActionBarWithNavController(setTopLevelDesId(), activity as AppCompatActivity)
@@ -103,8 +98,6 @@ abstract class BaseMainFragment<vb: ViewDataBinding, vm: BaseViewModel<*,*>>
     protected abstract fun setTopLevelDesId(): Int
 
     protected abstract fun getBindingVariable(): Int
-
-    protected abstract fun initFunc()
 
     protected abstract fun getViewModel(): Class<vm>
 

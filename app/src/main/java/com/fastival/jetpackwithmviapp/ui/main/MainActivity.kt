@@ -15,6 +15,9 @@ import com.fastival.jetpackwithmviapp.ui.EmptyViewModel
 import com.fastival.jetpackwithmviapp.ui.auth.AuthActivity
 import com.fastival.jetpackwithmviapp.ui.base.BaseActivity
 import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
+import com.fastival.jetpackwithmviapp.ui.base.account.BaseAccountFragment
+import com.fastival.jetpackwithmviapp.ui.base.blog.BaseBlogFragment
+import com.fastival.jetpackwithmviapp.ui.base.create_blog.BaseCreateBlogFragment
 import com.fastival.jetpackwithmviapp.ui.main.account.ChangePasswordFragment
 import com.fastival.jetpackwithmviapp.ui.main.account.UpdateAccountFragment
 import com.fastival.jetpackwithmviapp.ui.main.blog.UpdateBlogFragment
@@ -64,8 +67,16 @@ BottomNavController.OnNavigationReselectedListener{
         if (fragments != null) {
             for (fragment in fragments) {
                 when(fragment) {
-                    is BaseMainFragment<*, *> -> {
-                        Log.d(TAG, "MainActivity_cancelActiveJobs()_is_BaseMainFragment")
+                    is BaseAccountFragment<*> -> {
+                        Log.d(TAG, "MainActivity_cancelActiveJobs()_AccountSection")
+                        fragment.cancelActiveJobs()
+                    }
+                    is BaseBlogFragment<*> -> {
+                        Log.d(TAG, "MainActivity_cancelActiveJobs()_BlogSection")
+                        fragment.cancelActiveJobs()
+                    }
+                    is BaseCreateBlogFragment<*> -> {
+                        Log.d(TAG, "MainActivity_cancelActiveJobs()_CreateBlogSection")
                         fragment.cancelActiveJobs()
                     }
                 }

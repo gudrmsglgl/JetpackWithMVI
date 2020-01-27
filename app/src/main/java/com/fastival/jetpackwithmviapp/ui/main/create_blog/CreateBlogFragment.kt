@@ -20,6 +20,7 @@ import com.fastival.jetpackwithmviapp.extension.activity.AreYouSureCallBack
 import com.fastival.jetpackwithmviapp.extension.fragment.*
 import com.fastival.jetpackwithmviapp.ui.*
 import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
+import com.fastival.jetpackwithmviapp.ui.base.create_blog.BaseCreateBlogFragment
 import com.fastival.jetpackwithmviapp.ui.main.create_blog.viewmodel.CreateBlogViewModel
 import com.fastival.jetpackwithmviapp.ui.main.create_blog.viewmodel.clearNewBlogFields
 import com.fastival.jetpackwithmviapp.ui.main.create_blog.viewmodel.setNewBlogFields
@@ -32,17 +33,10 @@ import com.theartofdev.edmodo.cropper.CropImage
  * A simple [Fragment] subclass.
  */
 class CreateBlogFragment
-    : BaseMainFragment<FragmentCreateBlogBinding, CreateBlogViewModel>(R.layout.fragment_create_blog)
+    : BaseCreateBlogFragment<FragmentCreateBlogBinding>(R.layout.fragment_create_blog)
 {
 
-    override fun setTopLevelDesId(): Int = R.id.createBlogFragment
-
     override fun getBindingVariable() = BR.vm
-
-    override fun initFunc() {
-    }
-
-    override fun getViewModel(): Class<CreateBlogViewModel> = CreateBlogViewModel::class.java
 
     override fun subscribeObservers() {
 

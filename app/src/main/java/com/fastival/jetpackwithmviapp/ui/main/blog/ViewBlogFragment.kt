@@ -16,6 +16,7 @@ import com.fastival.jetpackwithmviapp.extension.activity.AreYouSureCallBack
 import com.fastival.jetpackwithmviapp.ui.UIMessage
 import com.fastival.jetpackwithmviapp.ui.UIMessageType
 import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
+import com.fastival.jetpackwithmviapp.ui.base.blog.BaseBlogFragment
 import com.fastival.jetpackwithmviapp.ui.main.blog.state.BlogStateEvent
 import com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel.*
 import com.fastival.jetpackwithmviapp.util.SuccessHandling.Companion.SUCCESS_BLOG_DELETED
@@ -24,17 +25,10 @@ import com.fastival.jetpackwithmviapp.util.SuccessHandling.Companion.SUCCESS_BLO
  * A simple [Fragment] subclass.
  */
 class ViewBlogFragment
-    : BaseMainFragment<FragmentViewBlogBinding, BlogViewModel>(R.layout.fragment_view_blog) {
-
-    override fun setTopLevelDesId(): Int = R.id.blogFragment
+    : BaseBlogFragment<FragmentViewBlogBinding>(R.layout.fragment_view_blog)
+{
 
     override fun getBindingVariable(): Int = BR.vm
-
-    override fun initFunc() {
-        checkIsAuthor()
-    }
-
-    override fun getViewModel(): Class<BlogViewModel> = BlogViewModel::class.java
 
     override fun subscribeObservers() {
         viewModel.dataState.observe(viewLifecycleOwner , Observer { dateState ->
@@ -70,6 +64,7 @@ class ViewBlogFragment
         stateListener.expandAppBar()
         binding.requestManager = requestManager
         binding.fragment = this
+        checkIsAuthor()
     }
 
     private fun checkIsAuthor() {

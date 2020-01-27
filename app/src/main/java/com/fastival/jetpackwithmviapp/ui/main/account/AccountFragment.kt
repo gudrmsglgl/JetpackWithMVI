@@ -15,6 +15,7 @@ import com.fastival.jetpackwithmviapp.models.AccountProperties
 import com.fastival.jetpackwithmviapp.session.SessionManager
 import com.fastival.jetpackwithmviapp.ui.EmptyViewModel
 import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
+import com.fastival.jetpackwithmviapp.ui.base.account.BaseAccountFragment
 import com.fastival.jetpackwithmviapp.ui.main.account.state.AccountStateEvent
 import kotlinx.android.synthetic.main.fragment_account.*
 import javax.inject.Inject
@@ -23,19 +24,10 @@ import javax.inject.Inject
  * A simple [Fragment] subclass.
  */
 class AccountFragment
-    : BaseMainFragment<FragmentAccountBinding, AccountViewModel>(R.layout.fragment_account) {
-
-    override fun setTopLevelDesId(): Int = R.id.accountFragment
+    : BaseAccountFragment<FragmentAccountBinding>(R.layout.fragment_account) {
 
     override fun getBindingVariable(): Int {
         return BR.vm
-    }
-
-    override fun initFunc() {
-    }
-
-    override fun getViewModel(): Class<AccountViewModel> {
-        return AccountViewModel::class.java
     }
 
     override fun subscribeObservers() {

@@ -13,6 +13,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.fastival.jetpackwithmviapp.di.Injectable
 import com.fastival.jetpackwithmviapp.ui.DataStateChangeListener
+import com.fastival.jetpackwithmviapp.ui.auth.AuthViewModel
+import com.fastival.jetpackwithmviapp.ui.auth.state.AUTH_VIEW_STATE_BUNDLE_KEY
+import com.fastival.jetpackwithmviapp.ui.auth.state.AuthViewState
 import com.fastival.jetpackwithmviapp.viewmodels.ViewModelProviderFactory
 import com.wada811.databinding.dataBinding
 import dagger.android.support.DaggerFragment
@@ -55,6 +58,29 @@ abstract class BaseAuthFragment<vb: ViewDataBinding, vm: BaseViewModel<*,*>>
         subscribeObservers()
 
     }
+
+    fun isViewModelInitialized() = ::viewModel.isInitialized
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        if (isViewModelInitialized()) {
+            outState.putParcelable(
+                AUTH_VIEW_STATE_BUNDLE_KEY,
+                viewModel.viewState.value as AuthViewState
+            )
+        }
+
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        savedInstanceState?.let { bundle ->
+            (bundle[AUTH_VIEW_STATE_BUNDLE_KEY] as AuthViewState ).let {
+                (viewModel as AuthViewModel).setViewState(it)
+            }
+        }
+    }
+
 
     private fun cancelActiveJobs(){
         viewModel.cancelActiveJobs()

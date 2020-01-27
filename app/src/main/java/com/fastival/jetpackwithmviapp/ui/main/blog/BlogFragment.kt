@@ -21,28 +21,21 @@ import com.fastival.jetpackwithmviapp.extension.fragment.showFilterDialog
 import com.fastival.jetpackwithmviapp.models.BlogPost
 import com.fastival.jetpackwithmviapp.ui.DataState
 import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
+import com.fastival.jetpackwithmviapp.ui.base.blog.BaseBlogFragment
 import com.fastival.jetpackwithmviapp.ui.main.blog.state.BlogViewState
 import com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel.*
 import com.fastival.jetpackwithmviapp.util.ErrorHandling
 import kotlinx.android.synthetic.main.fragment_blog.*
 
 
-class BlogFragment : BaseMainFragment<FragmentBlogBinding, BlogViewModel>(R.layout.fragment_blog),
+class BlogFragment : BaseBlogFragment<FragmentBlogBinding>(R.layout.fragment_blog),
  BlogListAdapter.Interaction,
  SwipeRefreshLayout.OnRefreshListener
 {
 
     internal lateinit var recyclerAdapter: BlogListAdapter
 
-    override fun setTopLevelDesId(): Int = R.id.blogFragment
-
     override fun getBindingVariable(): Int = BR.vm
-
-    override fun getViewModel(): Class<BlogViewModel> = BlogViewModel::class.java
-
-    override fun initFunc() {
-        initRecyclerView()
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -51,6 +44,7 @@ class BlogFragment : BaseMainFragment<FragmentBlogBinding, BlogViewModel>(R.layo
         swipe_refresh.setOnRefreshListener(this)
 
         Log.d(TAG, "blogFragment_ViewModel: $viewModel")
+        initRecyclerView()
 
         if (savedInstanceState == null) {
             viewModel.loadFirstPage()
