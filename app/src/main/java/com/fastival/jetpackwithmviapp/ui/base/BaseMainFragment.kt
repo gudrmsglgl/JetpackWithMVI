@@ -3,28 +3,20 @@ package com.fastival.jetpackwithmviapp.ui.base
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
-import androidx.annotation.NavigationRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.bumptech.glide.RequestManager
-import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.di.Injectable
 import com.fastival.jetpackwithmviapp.ui.DataStateChangeListener
 import com.fastival.jetpackwithmviapp.ui.UICommunicationListener
-import com.fastival.jetpackwithmviapp.viewmodels.ViewModelProviderFactory
-import com.wada811.databinding.dataBinding
-import dagger.android.support.DaggerFragment
+import com.fastival.jetpackwithmviapp.viewmodels.InjectingSavedStateViewModelFactory
 import javax.inject.Inject
 
 abstract class BaseMainFragment<vm: BaseViewModel<*,*>>
@@ -36,30 +28,37 @@ abstract class BaseMainFragment<vm: BaseViewModel<*,*>>
     @Inject
     lateinit var requestManager: RequestManager
 
+    /*@Inject
+    lateinit var provider: ViewModelProviderFactory*/
     @Inject
-    lateinit var provider: ViewModelProviderFactory
+    lateinit var defaultViewModelFactory: InjectingSavedStateViewModelFactory
 
     internal lateinit var stateListener: DataStateChangeListener
     internal lateinit var uiCommunicationListener: UICommunicationListener
 
     internal lateinit var viewModel: vm
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        viewModel = activity?.let {
-            ViewModelProvider(it, provider).get(getViewModel())
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        activity?.run {
+
+            val factory =
+                defaultViewModelFactory.create(this, arguments)
+
+            viewModel = if (isViewModelInitialized()) {
+                viewModel
+            } else {
+                ViewModelProvider(this, factory).get(getViewModel())
+            }
         }?:throw Exception("Invalid Activity")
 
-        return super.onCreateView(inflater, container, savedInstanceState)
+        cancelActiveJobs()
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        cancelActiveJobs()
 
         subscribeObservers()
 
@@ -67,7 +66,9 @@ abstract class BaseMainFragment<vm: BaseViewModel<*,*>>
     }
 
     fun cancelActiveJobs() {
-        viewModel.cancelActiveJobs()
+        if (isViewModelInitialized()) {
+            viewModel.cancelActiveJobs()
+        }
     }
 
     override fun onAttach(context: Context) {
@@ -93,6 +94,9 @@ abstract class BaseMainFragment<vm: BaseViewModel<*,*>>
             appBarConfiguration
         )
     }
+
+    fun isViewModelInitialized() = ::viewModel.isInitialized
+
 
     @IdRes
     protected abstract fun setTopLevelDesId(): Int

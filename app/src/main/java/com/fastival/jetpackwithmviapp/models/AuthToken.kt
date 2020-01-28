@@ -10,7 +10,7 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
-const val AUTH_TOKEN_BUDLE_KEY = "com.fastival.jetpackwithmviapp.models.AuthToken"
+const val AUTH_TOKEN_BUNDLE_KEY = "com.fastival.jetpackwithmviapp.models.AuthToken"
 
 @Entity(
     tableName = "auth_token",

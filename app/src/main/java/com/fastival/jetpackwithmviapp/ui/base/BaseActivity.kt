@@ -18,6 +18,7 @@ import com.fastival.jetpackwithmviapp.extension.activity.*
 import com.fastival.jetpackwithmviapp.session.SessionManager
 import com.fastival.jetpackwithmviapp.ui.*
 import com.fastival.jetpackwithmviapp.util.Constants.Companion.PERMISSIONS_REQUEST_READ_STORAGE
+import com.fastival.jetpackwithmviapp.viewmodels.InjectingSavedStateViewModelFactory
 import com.fastival.jetpackwithmviapp.viewmodels.ViewModelProviderFactory
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -37,8 +38,11 @@ UICommunicationListener{
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
+    /*@Inject
+    lateinit var provider: ViewModelProviderFactory*/
+
     @Inject
-    lateinit var provider: ViewModelProviderFactory
+    lateinit var abstractViewModelFactory: InjectingSavedStateViewModelFactory
 
     @Inject
     lateinit var sessionManager: SessionManager
@@ -49,13 +53,14 @@ UICommunicationListener{
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val factory = abstractViewModelFactory.create(this)
 
         this.viewModel = if(::viewModel.isInitialized){
             Log.d(TAG, "reuse viewModel")
             viewModel
         } else {
             Log.d(TAG, "init viewModel")
-            ViewModelProvider(this, provider).get(getViewModel())
+            ViewModelProvider(this, factory).get(getViewModel())
         }
 
         Log.d(TAG, "viewModel: $viewModel")

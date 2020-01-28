@@ -2,7 +2,9 @@ package com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel
 
 import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.SavedStateHandle
 import com.bumptech.glide.RequestManager
+import com.fastival.jetpackwithmviapp.di.SavedStateViewModelFactory
 import com.fastival.jetpackwithmviapp.extension.parseRequestBody
 import com.fastival.jetpackwithmviapp.models.BlogPost
 import com.fastival.jetpackwithmviapp.persistence.BlogQueryUtils.Companion.BLOG_FILTER_DATE_UPDATED
@@ -18,21 +20,27 @@ import com.fastival.jetpackwithmviapp.ui.main.blog.state.BlogViewState
 import com.fastival.jetpackwithmviapp.util.AbsentLiveData
 import com.fastival.jetpackwithmviapp.util.PreferenceKeys.Companion.BLOG_FILTER
 import com.fastival.jetpackwithmviapp.util.PreferenceKeys.Companion.BLOG_ORDER
+import com.squareup.inject.assisted.Assisted
+import com.squareup.inject.assisted.AssistedInject
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import javax.inject.Inject
 
 class BlogViewModel
-@Inject
+@AssistedInject
 constructor(
     private val sessionManager: SessionManager,
     private val blogRepository: BlogRepository,
     private val sharedPreferences: SharedPreferences,
-    private val editor: SharedPreferences.Editor
+    private val editor: SharedPreferences.Editor,
+    @Assisted private val savedStateHandle: SavedStateHandle
 ): BaseViewModel<BlogStateEvent, BlogViewState>() {
 
+    @AssistedInject.Factory
+    interface Factory: SavedStateViewModelFactory<BlogViewModel>
+
     override val viewState: LiveData<BlogViewState>
-        get() = super.viewState
+        get() = savedStateHandle.getLiveData("BlogViewModel")
 
     init {
         // viewState init filter & order
@@ -113,7 +121,9 @@ constructor(
         apply()
     }
 
-
+    override fun setViewState(viewState: BlogViewState) {
+        savedStateHandle.set("BlogViewModel", viewState)
+    }
 
     override fun initNewViewState(): BlogViewState {
         return BlogViewState()

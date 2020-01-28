@@ -7,6 +7,8 @@ import androidx.databinding.ViewDataBinding
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
 import com.fastival.jetpackwithmviapp.ui.main.account.AccountViewModel
+import com.fastival.jetpackwithmviapp.ui.main.account.state.ACCOUNT_VIEW_STATE_BUNDLE_KEY
+import com.fastival.jetpackwithmviapp.ui.main.account.state.AccountViewState
 import com.wada811.databinding.dataBinding
 
 abstract class BaseAccountFragment<vb: ViewDataBinding>
@@ -20,6 +22,25 @@ abstract class BaseAccountFragment<vb: ViewDataBinding>
 
         // You can use binding ( data_binding_ktx)
         binding.setVariable(getBindingVariable(), viewModel)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        if (isViewModelInitialized()) {
+            outState.putParcelable(
+                ACCOUNT_VIEW_STATE_BUNDLE_KEY,
+                viewModel.viewState.value
+            )
+        }
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        savedInstanceState?.let { bundle ->
+            (bundle[ACCOUNT_VIEW_STATE_BUNDLE_KEY] as AccountViewState?)?.let { viewState ->
+                viewModel.setViewState(viewState)
+            }
+        }
     }
 
     override fun setTopLevelDesId()= R.id.accountFragment

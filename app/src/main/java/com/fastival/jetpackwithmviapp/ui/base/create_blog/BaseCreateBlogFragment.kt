@@ -6,6 +6,8 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.ViewDataBinding
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
+import com.fastival.jetpackwithmviapp.ui.main.create_blog.state.CREATE_BLOG_VIEW_STATE_BUNDLE_KEY
+import com.fastival.jetpackwithmviapp.ui.main.create_blog.state.CreateBlogViewState
 import com.fastival.jetpackwithmviapp.ui.main.create_blog.viewmodel.CreateBlogViewModel
 import com.wada811.databinding.dataBinding
 
@@ -19,6 +21,25 @@ abstract class BaseCreateBlogFragment<vb: ViewDataBinding>(@LayoutRes layoutId: 
 
         // You can use binding ( data_binding_ktx)
         binding.setVariable(getBindingVariable(), viewModel)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        if (isViewModelInitialized()) {
+            outState.putParcelable(
+                CREATE_BLOG_VIEW_STATE_BUNDLE_KEY,
+                viewModel.viewState.value
+            )
+        }
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        savedInstanceState?.let { inState ->
+            (inState[CREATE_BLOG_VIEW_STATE_BUNDLE_KEY] as CreateBlogViewState?)?.let { viewState ->
+                viewModel.setViewState(viewState)
+            }
+        }
     }
 
     // nav_create_blog_startDes_id

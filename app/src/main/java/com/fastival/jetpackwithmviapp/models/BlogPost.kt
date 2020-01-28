@@ -1,9 +1,12 @@
 package com.fastival.jetpackwithmviapp.models
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 @Entity(tableName = "blog_post")
 data class BlogPost(
     @PrimaryKey(autoGenerate = false)
@@ -27,7 +30,7 @@ data class BlogPost(
 
     @ColumnInfo(name = "username")
     var username: String
-) {
+):Parcelable {
     override fun toString(): String {
         return "BlogPost(pk=$pk, " +
                 "title='$title', " +

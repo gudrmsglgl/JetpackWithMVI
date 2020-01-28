@@ -11,8 +11,13 @@ import javax.inject.Singleton
 
 @Singleton
 @Component(
-    modules = [AndroidInjectionModule::class, AppModule::class,
-        ActivityBuildersModule::class, ViewModelFactoryModule::class, EmptyViewModelModule::class]
+    modules = [
+        AndroidInjectionModule::class,
+        AppModule::class,
+        ActivityBuildersModule::class,
+        EmptyViewModelModule::class,
+        CommonUiModule::class
+    ]
 )
 interface AppComponent{
     val sessionManager: SessionManager

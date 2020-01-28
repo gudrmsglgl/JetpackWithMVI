@@ -16,6 +16,7 @@ import com.fastival.jetpackwithmviapp.ui.DataStateChangeListener
 import com.fastival.jetpackwithmviapp.ui.auth.AuthViewModel
 import com.fastival.jetpackwithmviapp.ui.auth.state.AUTH_VIEW_STATE_BUNDLE_KEY
 import com.fastival.jetpackwithmviapp.ui.auth.state.AuthViewState
+import com.fastival.jetpackwithmviapp.viewmodels.InjectingSavedStateViewModelFactory
 import com.fastival.jetpackwithmviapp.viewmodels.ViewModelProviderFactory
 import com.wada811.databinding.dataBinding
 import dagger.android.support.DaggerFragment
@@ -27,32 +28,40 @@ abstract class BaseAuthFragment<vb: ViewDataBinding, vm: BaseViewModel<*,*>>
 
     val TAG = "AppDebug"
 
+    /*@Inject
+    lateinit var provider: ViewModelProviderFactory*/
     @Inject
-    lateinit var provider: ViewModelProviderFactory
+    lateinit var defaultFactory: InjectingSavedStateViewModelFactory
 
     protected lateinit var stateListener: DataStateChangeListener
 
     internal val binding: vb by dataBinding()
     internal lateinit var viewModel: vm
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        viewModel = activity?.let {
-            ViewModelProvider(it, provider).get(getViewModel())
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        activity?.run {
+
+            val factory =
+                defaultFactory.create(this, arguments)
+
+            viewModel = if (isViewModelInitialized()) {
+                viewModel
+            } else {
+                ViewModelProvider(this, factory).get(getViewModel())
+            }
+
         }?:throw Exception("Invalid Activity")
 
-        return super.onCreateView(inflater, container, savedInstanceState)
+        cancelActiveJobs()
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.setVariable(getBindingVariable(), viewModel)
-
-        cancelActiveJobs()
 
         initFunc()
         subscribeObservers()
@@ -61,29 +70,10 @@ abstract class BaseAuthFragment<vb: ViewDataBinding, vm: BaseViewModel<*,*>>
 
     fun isViewModelInitialized() = ::viewModel.isInitialized
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        if (isViewModelInitialized()) {
-            outState.putParcelable(
-                AUTH_VIEW_STATE_BUNDLE_KEY,
-                viewModel.viewState.value as AuthViewState
-            )
-        }
-
-        super.onSaveInstanceState(outState)
-    }
-
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        savedInstanceState?.let { bundle ->
-            (bundle[AUTH_VIEW_STATE_BUNDLE_KEY] as AuthViewState ).let {
-                (viewModel as AuthViewModel).setViewState(it)
-            }
-        }
-    }
-
-
     private fun cancelActiveJobs(){
-        viewModel.cancelActiveJobs()
+        if (isViewModelInitialized()) {
+            viewModel.cancelActiveJobs()
+        }
     }
 
     override fun onAttach(context: Context) {
