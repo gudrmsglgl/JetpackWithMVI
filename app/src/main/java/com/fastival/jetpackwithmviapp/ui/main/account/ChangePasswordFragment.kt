@@ -27,12 +27,11 @@ class ChangePasswordFragment
     : BaseAccountFragment<FragmentChangePasswordBinding>(R.layout.fragment_change_password)
 {
 
-    override fun getBindingVariable(): Int {
-        return BR.vm
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        subscribeObservers()
 
         update_password_button.setOnClickListener {
             viewModel.setStateEvent(AccountStateEvent.ChangePasswordEvent(
@@ -43,7 +42,7 @@ class ChangePasswordFragment
         }
     }
 
-    override fun subscribeObservers() {
+    fun subscribeObservers() {
         viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
             Log.d(TAG, "ChangePasswordFragment, DataState: $dataState")
             if (dataState != null) {
@@ -59,4 +58,6 @@ class ChangePasswordFragment
             }
         })
     }
+
+    override fun getVariableId(): Int = BR.vm
 }

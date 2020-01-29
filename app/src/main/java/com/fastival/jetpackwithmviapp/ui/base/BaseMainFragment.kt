@@ -19,9 +19,9 @@ import com.fastival.jetpackwithmviapp.ui.UICommunicationListener
 import com.fastival.jetpackwithmviapp.viewmodels.InjectingSavedStateViewModelFactory
 import javax.inject.Inject
 
-abstract class BaseMainFragment<vm: BaseViewModel<*,*>>
-    (@LayoutRes contentLayoutId: Int)
-    : Fragment(contentLayoutId), Injectable {
+abstract class BaseMainFragment(@LayoutRes contentLayoutId: Int)
+    : Fragment(contentLayoutId), Injectable
+{
 
     val TAG = "AppDebug"
 
@@ -30,46 +30,18 @@ abstract class BaseMainFragment<vm: BaseViewModel<*,*>>
 
     /*@Inject
     lateinit var provider: ViewModelProviderFactory*/
-    @Inject
-    lateinit var defaultViewModelFactory: InjectingSavedStateViewModelFactory
+
 
     internal lateinit var stateListener: DataStateChangeListener
     internal lateinit var uiCommunicationListener: UICommunicationListener
 
-    internal lateinit var viewModel: vm
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        activity?.run {
-
-            val factory =
-                defaultViewModelFactory.create(this, arguments)
-
-            viewModel = if (isViewModelInitialized()) {
-                viewModel
-            } else {
-                ViewModelProvider(this, factory).get(getViewModel())
-            }
-        }?:throw Exception("Invalid Activity")
-
-        cancelActiveJobs()
-
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        subscribeObservers()
-
         setupActionBarWithNavController(setTopLevelDesId(), activity as AppCompatActivity)
     }
 
-    fun cancelActiveJobs() {
-        if (isViewModelInitialized()) {
-            viewModel.cancelActiveJobs()
-        }
-    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -95,15 +67,7 @@ abstract class BaseMainFragment<vm: BaseViewModel<*,*>>
         )
     }
 
-    fun isViewModelInitialized() = ::viewModel.isInitialized
-
-
     @IdRes
     protected abstract fun setTopLevelDesId(): Int
 
-    protected abstract fun getBindingVariable(): Int
-
-    protected abstract fun getViewModel(): Class<vm>
-
-    protected abstract fun subscribeObservers()
 }

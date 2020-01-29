@@ -26,12 +26,13 @@ import javax.inject.Inject
 class AccountFragment
     : BaseAccountFragment<FragmentAccountBinding>(R.layout.fragment_account) {
 
-    override fun getBindingVariable(): Int {
-        return BR.vm
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        subscribeObservers()
     }
 
-    override fun subscribeObservers() {
-        viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState->
+    fun subscribeObservers() {
+        viewModel.dataState.observe(this, Observer { dataState->
             if (dataState != null) {
 
                 stateListener.onDataStateChange(dataState)
@@ -84,4 +85,7 @@ class AccountFragment
         }
         return super.onOptionsItemSelected(item)
     }
+
+    override fun getVariableId(): Int = BR.vm
+
 }

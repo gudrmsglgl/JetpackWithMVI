@@ -8,7 +8,9 @@ import android.provider.MediaStore
 import android.view.*
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
 import androidx.navigation.fragment.findNavController
 import com.fastival.jetpackwithmviapp.BR
 
@@ -36,16 +38,16 @@ class UpdateBlogFragment
     : BaseBlogFragment<FragmentUpdateBlogBinding>(R.layout.fragment_update_blog)
 {
 
-    override fun getBindingVariable(): Int = BR.vm
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
         binding.requestManager = requestManager
         binding.fragment = this
+
+        subscribeObservers()
     }
 
-    override fun subscribeObservers() {
+    fun subscribeObservers() {
         viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
             if (dataState != null) {
 
@@ -134,4 +136,5 @@ class UpdateBlogFragment
             null
         )
     }
+    override fun getVariableId(): Int = BR.vm
 }

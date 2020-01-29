@@ -23,11 +23,7 @@ import kotlinx.android.synthetic.main.fragment_update_account.*
 class UpdateAccountFragment
     : BaseAccountFragment<FragmentUpdateAccountBinding>(R.layout.fragment_update_account) {
 
-    override fun getBindingVariable(): Int {
-        return BR.vm
-    }
-
-    override fun subscribeObservers() {
+    fun subscribeObservers() {
 
         viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
             if (dataState != null) {
@@ -43,6 +39,7 @@ class UpdateAccountFragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
+        subscribeObservers()
     }
 
     private fun saveChange(){
@@ -68,4 +65,7 @@ class UpdateAccountFragment
         }
         return super.onOptionsItemSelected(item)
     }
+
+    override fun getVariableId(): Int = BR.vm
+
 }

@@ -36,9 +36,7 @@ class CreateBlogFragment
     : BaseCreateBlogFragment<FragmentCreateBlogBinding>(R.layout.fragment_create_blog)
 {
 
-    override fun getBindingVariable() = BR.vm
-
-    override fun subscribeObservers() {
+    fun subscribeObservers() {
 
         viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
             if (dataState != null) {
@@ -69,6 +67,7 @@ class CreateBlogFragment
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
         binding.fragment = this
+        subscribeObservers()
     }
 
     fun pickFromGallery(view: View){
@@ -157,4 +156,7 @@ class CreateBlogFragment
 
         return super.onOptionsItemSelected(item)
     }
+
+    override fun getVariableId() = BR.vm
+
 }

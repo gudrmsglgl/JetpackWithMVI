@@ -1,7 +1,7 @@
 package com.fastival.jetpackwithmviapp.viewmodels
 
 import android.os.Bundle
-import androidx.lifecycle.AbstractSavedStateVMFactory
+import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.savedstate.SavedStateRegistryOwner
@@ -23,7 +23,7 @@ constructor(
      * Creates instance of ViewModel either annotated with @AssistedInject or @Inject and passes dependencies it needs.
      */
     fun create(owner: SavedStateRegistryOwner, defaultArgs: Bundle? = null) =
-        object: AbstractSavedStateVMFactory(owner, defaultArgs) {
+        object: AbstractSavedStateViewModelFactory(owner, defaultArgs) {
             override fun <T : ViewModel?> create(
                 key: String,
                 modelClass: Class<T>,

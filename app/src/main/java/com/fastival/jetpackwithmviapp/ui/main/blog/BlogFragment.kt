@@ -7,7 +7,9 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
 import androidx.navigation.fragment.findNavController
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.fastival.jetpackwithmviapp.BR
@@ -35,46 +37,45 @@ class BlogFragment : BaseBlogFragment<FragmentBlogBinding>(R.layout.fragment_blo
 
     internal lateinit var recyclerAdapter: BlogListAdapter
 
-    override fun getBindingVariable(): Int = BR.vm
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         setHasOptionsMenu(true)
         swipe_refresh.setOnRefreshListener(this)
 
         Log.d(TAG, "blogFragment_ViewModel: $viewModel")
         initRecyclerView()
+        subscribeObservers()
 
         if (savedInstanceState == null) {
             viewModel.loadFirstPage()
         }
     }
 
-    override fun subscribeObservers() {
-        viewModel.dataState.observe(viewLifecycleOwner, Observer {dataState ->
-            if (dataState != null) {
-                handlePagination(dataState)
-                stateListener.onDataStateChange(dataState)
-            }
-        })
+     fun subscribeObservers() {
+         viewModel.dataState.observe(viewLifecycleOwner, Observer {dataState ->
+             if (dataState != null) {
+                 handlePagination(dataState)
+                 stateListener.onDataStateChange(dataState)
+             }
+         })
 
-        viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
-            Log.d(TAG, "BlogFragment, ViewState: $viewState")
-            if (viewState != null ) {
-                recyclerAdapter.apply {
+         viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
+             Log.d(TAG, "BlogFragment, ViewState: $viewState")
+             if (viewState != null ) {
+                 recyclerAdapter.apply {
 
-                    preloadGlideImages(
-                        requestManager = requestManager,
-                        list = viewState.blogFields.blogList)
+                     preloadGlideImages(
+                         requestManager = requestManager,
+                         list = viewState.blogFields.blogList)
 
-                    submitList(
-                        viewState.blogFields.blogList,
-                        viewState.blogFields.isQueryExhausted)
-                }
-            }
+                     submitList(
+                         viewState.blogFields.blogList,
+                         viewState.blogFields.isQueryExhausted)
+                 }
+             }
 
-        })
+         })
     }
 
     private fun handlePagination(dataState: DataState<BlogViewState>) {
@@ -135,5 +136,7 @@ class BlogFragment : BaseBlogFragment<FragmentBlogBinding>(R.layout.fragment_blo
         onBlogSearchOrFilter()
         swipe_refresh.isRefreshing = false
     }
+
+    override fun getVariableId(): Int = BR.vm
 
 }

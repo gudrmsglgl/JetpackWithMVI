@@ -8,6 +8,7 @@ import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.savedstate.SavedStateRegistryOwner
 import com.fastival.jetpackwithmviapp.BR
 
 import com.fastival.jetpackwithmviapp.R
@@ -28,9 +29,7 @@ class ViewBlogFragment
     : BaseBlogFragment<FragmentViewBlogBinding>(R.layout.fragment_view_blog)
 {
 
-    override fun getBindingVariable(): Int = BR.vm
-
-    override fun subscribeObservers() {
+    fun subscribeObservers() {
         viewModel.dataState.observe(viewLifecycleOwner , Observer { dateState ->
             if (dateState != null){
 
@@ -64,6 +63,8 @@ class ViewBlogFragment
         stateListener.expandAppBar()
         binding.requestManager = requestManager
         binding.fragment = this
+
+        subscribeObservers()
         checkIsAuthor()
     }
 
@@ -120,4 +121,7 @@ class ViewBlogFragment
             Log.e(TAG, "Exception: ${e.message}")
         }
     }
+
+    override fun getVariableId(): Int = BR.vm
+
 }
