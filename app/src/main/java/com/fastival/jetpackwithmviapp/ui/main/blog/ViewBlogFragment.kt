@@ -113,7 +113,8 @@ class ViewBlogFragment
             viewModel.setUpdatedBlogFields(
                 title = viewModel.getBlogPost().title,
                 body = viewModel.getBlogPost().body,
-                uri = viewModel.getBlogPost().image.toUri()
+                uri = viewModel.getBlogPost().image.toUri(),
+                isViewStateUpdate = true
             )
             findNavController().navigate(R.id.action_viewBlogFragment_to_updateBlogFragment)
         } catch (e: Exception){

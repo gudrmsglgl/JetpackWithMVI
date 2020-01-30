@@ -161,8 +161,7 @@ fun BF.showFilterDialog(){
 
             viewModel.saveFilterOptions(filter,order).let {
                 with(viewModel) {
-                    setBlogFilter(filter)
-                    setBlogOrder(order)
+                    setBlogFilterOrder(filter, order)
                 }
                 this.onBlogSearchOrFilter()
             }
@@ -180,3 +179,8 @@ fun BF.showFilterDialog(){
 
 }
 
+
+fun BF.saveLayoutManagerState() =
+    blog_post_recyclerview.layoutManager?.onSaveInstanceState()?.let { lmState ->
+        viewModel.setLayoutManagerState(lmState)
+    }

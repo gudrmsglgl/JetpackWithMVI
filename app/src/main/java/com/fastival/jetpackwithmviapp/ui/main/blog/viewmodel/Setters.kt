@@ -1,8 +1,10 @@
 package com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel
 
 import android.net.Uri
+import android.os.Parcelable
 import com.fastival.jetpackwithmviapp.bvm
 import com.fastival.jetpackwithmviapp.models.BlogPost
+import com.fastival.jetpackwithmviapp.ui.main.blog.state.BlogViewState
 
 fun bvm.setQuery(query: String) {
     val update = getCurrentViewStateOrNew()
@@ -16,10 +18,21 @@ fun bvm.setBlogListData(blogList: List<BlogPost>) {
     setViewState(update)
 }
 
-fun bvm.setBlogPost(blogPost: BlogPost) {
-    val update = getCurrentViewStateOrNew()
-    update.viewBlogFields.blogPost = blogPost
-    setViewState(update)
+fun bvm.setBlogPost(
+    blogPost: BlogPost,
+    isViewStateUpdate: Boolean
+): BlogViewState.ViewBlogFields? {
+
+    val update = getCurrentViewStateOrNew().apply {
+        viewBlogFields.blogPost = blogPost
+    }
+
+    return if (isViewStateUpdate) {
+        setViewState(update)
+        null
+    } else {
+        update.viewBlogFields
+    }
 }
 
 fun bvm.setIsAuthorOfBlogPost(isAuthorOfBlogPost: Boolean){
@@ -34,30 +47,27 @@ fun bvm.setQueryExhausted(isExhauted: Boolean) {
     setViewState(update)
 }
 
-fun bvm.setQueryInProgress(isInProgress: Boolean) {
-    val update = getCurrentViewStateOrNew()
-    update.blogFields.isQueryInProgress = isInProgress
+/**
+ *    Filter
+ *    - Filter can be "date_updated" or "username"
+ *
+ *    Order
+ *    - Order can be "-" or ""
+ *    - "-" = DESC, "" = ASC
+ */
+fun bvm.setBlogFilterOrder(
+    DialogFilter: String?,
+    DialogOrder: String?
+){
+    val update = getCurrentViewStateOrNew().apply {
+        blogFields.apply {
+            DialogFilter?.let { this.filter = it }
+            DialogOrder?.let { this.order = it }
+        }
+    }
     setViewState(update)
 }
 
-// Filter can be "date_updated" or "username"
-fun bvm.setBlogFilter(filter: String?) {
-    filter?.let {
-        val update = getCurrentViewStateOrNew()
-        update.blogFields.filter = filter
-        setViewState(update)
-    }
-}
-
-// Order can be "-" or ""
-// Note: "-" = DESC, "" = ASC
-fun bvm.setBlogOrder(order: String?) {
-    order?.let {
-        val update = getCurrentViewStateOrNew()
-        update.blogFields.order = order
-        setViewState(update)
-    }
-}
 
 fun bvm.removeDeletedBlogPost() {
     val update = getCurrentViewStateOrNew()
@@ -71,17 +81,34 @@ fun bvm.removeDeletedBlogPost() {
     setBlogListData(list)
 }
 
-fun bvm.setUpdatedBlogFields(title: String?, body: String?, uri: Uri?) {
-    val update = getCurrentViewStateOrNew()
-    val updatedBlogFields = update.updatedBlogFields
-    title?.let{ updatedBlogFields.updatedBlogTitle = it }
-    body?.let{ updatedBlogFields.updatedBlogBody = it }
-    uri?.let{ updatedBlogFields.updatedImageUri = it }
-    update.updatedBlogFields = updatedBlogFields
-    setViewState(update)
+fun bvm.setUpdatedBlogFields(
+    title: String?,
+    body: String?,
+    uri: Uri?,
+    isViewStateUpdate: Boolean
+): BlogViewState.UpdatedBlogFields? {
+
+    val update = getCurrentViewStateOrNew().apply {
+        updatedBlogFields.apply {
+            title?.let { updatedBlogTitle = it }
+            body?.let { updatedBlogBody = it }
+            uri?.let { updatedImageUri = it }
+        }
+    }
+
+    return if (isViewStateUpdate) {
+        setViewState(update)
+        null
+    } else {
+        update.updatedBlogFields
+    }
 }
 
-fun bvm.updateListItem(newBlogPost: BlogPost) {
+fun bvm.updateListItem(
+    newBlogPost: BlogPost,
+    isViewStateUpdate: Boolean
+): BlogViewState.BlogFields? {
+
     val update = getCurrentViewStateOrNew()
     val list = update.blogFields.blogList.toMutableList()
     for (i in list.indices){
@@ -91,15 +118,44 @@ fun bvm.updateListItem(newBlogPost: BlogPost) {
         }
     }
     update.blogFields.blogList = list
-    setViewState(update)
+
+    return if (isViewStateUpdate){
+        setViewState(update)
+        return null
+    } else {
+        update.blogFields
+    }
 }
 
 fun bvm.setSyncBlogFromServer(updateBlogPost: BlogPost){
-    setUpdatedBlogFields(
-        uri = null,
-        title = updateBlogPost.title,
-        body = updateBlogPost.body
-    ) // update UpdateBlogFragment (not really necessary since navigating back)
-    setBlogPost(updateBlogPost)
-    updateListItem(updateBlogPost)
+    val update = getCurrentViewStateOrNew().apply {
+
+        updatedBlogFields = setUpdatedBlogFields(
+            uri = null,
+            title = updateBlogPost.title,
+            body = updateBlogPost.body,
+            isViewStateUpdate = false
+        )!!
+
+        viewBlogFields = setBlogPost(
+            updateBlogPost,
+            false)!!
+
+        blogFields = updateListItem(
+            updateBlogPost,
+            false)!!
+    }
+    setViewState(update)
+}
+
+fun bvm.setLayoutManagerState(state: Parcelable) {
+    val update = getCurrentViewStateOrNew()
+    update.blogFields.layoutManagerState = state
+    setViewState(update)
+}
+
+fun bvm.clearLayoutManagerState(){
+    val update = getCurrentViewStateOrNew()
+    update.blogFields.layoutManagerState = null
+    setViewState(update)
 }

@@ -2,6 +2,7 @@ package com.fastival.jetpackwithmviapp.repository.main
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.liveData
 import androidx.lifecycle.switchMap
 import com.fastival.jetpackwithmviapp.api.GenericResponse
 import com.fastival.jetpackwithmviapp.api.main.OpenApiMainService
@@ -157,6 +158,71 @@ constructor(
             }
         }.asLiveData()
 
+    }
+
+    fun restoreBlogListFromCache(
+        query: String,
+        filterAndOrder: String,
+        page: Int
+    ): LiveData<DataState<BlogViewState>>{
+        return object: NetworkBoundResource<BlogListSearchResponse, List<BlogPost>, BlogViewState>(
+            isNetworkAvailable = sessionManager.isConnectedToTheInternet(),
+            isNetworkRequest = false,
+            shouldCancelIfNoInternet = false,
+            shouldLoadFromCache = true
+        ){
+            // not used in this case
+            override suspend fun handleApiSuccessResponse(response: ApiSuccessResponse<BlogListSearchResponse>) {
+            }
+
+            // not used in this case
+            override fun createCall(): LiveData<GenericApiResponse<BlogListSearchResponse>> {
+                return AbsentLiveData.create()
+            }
+
+            override fun loadFromCache(): LiveData<BlogViewState> {
+                return blogPostDao.returnOrderedBlogQuery(
+                    query, filterAndOrder, page
+                ).switchMap { list ->
+                    liveData {
+                        emit(
+                            BlogViewState(
+                                blogFields = BlogViewState.BlogFields(
+                                    blogList = list,
+                                    isQueryInProgress = true
+                                )
+                            )
+                        )
+                    }
+                }
+            }
+
+            // not used in this case
+            override suspend fun updateLocalDb(cacheObject: List<BlogPost>?) {
+            }
+
+            override suspend fun createCacheRequestAndReturn() {
+                withContext(Dispatchers.Main){
+                    result.addSource(loadFromCache()){ blogViewState ->
+
+                        blogViewState.blogFields.isQueryInProgress = false
+                        if (page * PAGINATION_PAGE_SIZE > blogViewState.blogFields.blogList.size) {
+                            blogViewState.blogFields.isQueryExhausted = true
+                        }
+
+                        onCompleteJob(
+                            DataState.data(
+                                data = blogViewState
+                            )
+                        )
+                    }
+                }
+            }
+
+            override fun setJob(job: Job) {
+                addJob("restoreBlogListFromCache", job)
+            }
+        }.asLiveData()
     }
 
     fun isAuthorOfBlogPost(

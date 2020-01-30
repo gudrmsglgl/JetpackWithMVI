@@ -44,11 +44,8 @@ constructor(
 
     init {
         // viewState init filter & order
-        setBlogFilter(
-            sharedPreferences.getString(BLOG_FILTER, BLOG_FILTER_DATE_UPDATED)
-        )
-
-        setBlogOrder(
+        setBlogFilterOrder(
+            sharedPreferences.getString(BLOG_FILTER, BLOG_FILTER_DATE_UPDATED),
             sharedPreferences.getString(BLOG_ORDER, BLOG_ORDER_ASC)
         )
     }
@@ -57,7 +54,16 @@ constructor(
     override fun handleStateEvent(stateEvent: BlogStateEvent): LiveData<DataState<BlogViewState>> {
         return when(stateEvent) {
 
+            is BlogStateEvent.RestoreBlogListFromCache -> {
+                blogRepository.restoreBlogListFromCache(
+                    getSearchQuery(),
+                    getOrder() + getFilter(),
+                    getPage()
+                )
+            }
+
             is BlogStateEvent.BlogSearchEvent -> {
+                clearLayoutManagerState()
                 sessionManager.cachedToken.value?.let {authToken ->
                     blogRepository.searchBlogPosts(
                         authToken,

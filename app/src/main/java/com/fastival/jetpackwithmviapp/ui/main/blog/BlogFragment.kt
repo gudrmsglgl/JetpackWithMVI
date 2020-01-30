@@ -16,10 +16,7 @@ import com.fastival.jetpackwithmviapp.BR
 
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentBlogBinding
-import com.fastival.jetpackwithmviapp.extension.fragment.initRecyclerView
-import com.fastival.jetpackwithmviapp.extension.fragment.initSearchView
-import com.fastival.jetpackwithmviapp.extension.fragment.onBlogSearchOrFilter
-import com.fastival.jetpackwithmviapp.extension.fragment.showFilterDialog
+import com.fastival.jetpackwithmviapp.extension.fragment.*
 import com.fastival.jetpackwithmviapp.models.BlogPost
 import com.fastival.jetpackwithmviapp.ui.DataState
 import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
@@ -37,6 +34,16 @@ class BlogFragment : BaseBlogFragment<FragmentBlogBinding>(R.layout.fragment_blo
 
     internal lateinit var recyclerAdapter: BlogListAdapter
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        subscribeObservers()
+        viewModel.loadFirstPage()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        //viewModel.refreshFromCache()
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -45,22 +52,17 @@ class BlogFragment : BaseBlogFragment<FragmentBlogBinding>(R.layout.fragment_blo
 
         Log.d(TAG, "blogFragment_ViewModel: $viewModel")
         initRecyclerView()
-        subscribeObservers()
-
-        if (savedInstanceState == null) {
-            viewModel.loadFirstPage()
-        }
     }
 
      fun subscribeObservers() {
-         viewModel.dataState.observe(viewLifecycleOwner, Observer {dataState ->
+         viewModel.dataState.observe(this, Observer {dataState ->
              if (dataState != null) {
                  handlePagination(dataState)
                  stateListener.onDataStateChange(dataState)
              }
          })
 
-         viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
+         viewModel.viewState.observe(this, Observer { viewState ->
              Log.d(TAG, "BlogFragment, ViewState: $viewState")
              if (viewState != null ) {
                  recyclerAdapter.apply {
@@ -123,8 +125,20 @@ class BlogFragment : BaseBlogFragment<FragmentBlogBinding>(R.layout.fragment_blo
 
     override fun onItemSelected(position: Int, item: BlogPost) {
         Log.d(TAG, "onItemSelected: position, BlogPost: $position, $item")
-        viewModel.setBlogPost(item)
+        viewModel.setBlogPost(item, true)
         findNavController().navigate(R.id.action_blogFragment_to_viewBlogFragment)
+    }
+
+    override fun restoreListPosition() {
+        val viewState = viewModel.getCurrentViewStateOrNew()
+        viewState.blogFields.layoutManagerState?.let { layoutManagerState ->
+            blog_post_recyclerview?.layoutManager?.onRestoreInstanceState(layoutManagerState)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        saveLayoutManagerState()
     }
 
     override fun onDestroyView() {

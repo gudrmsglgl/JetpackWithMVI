@@ -101,7 +101,8 @@ class UpdateBlogFragment
                     viewModel.setUpdatedBlogFields(
                         title = null,
                         body = null,
-                        uri = resultUri
+                        uri = resultUri,
+                        isViewStateUpdate = true
                     )
                 }
 
@@ -133,7 +134,8 @@ class UpdateBlogFragment
         viewModel.setUpdatedBlogFields(
             blog_title.text.toString(),
             blog_body.text.toString(),
-            null
+            null,
+            isViewStateUpdate = true
         )
     }
     override fun getVariableId(): Int = BR.vm
