@@ -184,3 +184,6 @@ fun BF.saveLayoutManagerState() =
     blog_post_recyclerview.layoutManager?.onSaveInstanceState()?.let { lmState ->
         viewModel.setLayoutManagerState(lmState)
     }
+
+fun BF.setPositionTopRecyclerView(): Unit =
+    blog_post_recyclerview.smoothScrollToPosition(0)

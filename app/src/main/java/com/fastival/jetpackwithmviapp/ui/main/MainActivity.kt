@@ -11,6 +11,7 @@ import com.fastival.jetpackwithmviapp.BR
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.ActivityMainBinding
 import com.fastival.jetpackwithmviapp.extension.activity.navActivity
+import com.fastival.jetpackwithmviapp.extension.fragment.setPositionTopRecyclerView
 import com.fastival.jetpackwithmviapp.ui.EmptyViewModel
 import com.fastival.jetpackwithmviapp.ui.auth.AuthActivity
 import com.fastival.jetpackwithmviapp.ui.base.BaseActivity
@@ -20,6 +21,7 @@ import com.fastival.jetpackwithmviapp.ui.base.blog.BaseBlogFragment
 import com.fastival.jetpackwithmviapp.ui.base.create_blog.BaseCreateBlogFragment
 import com.fastival.jetpackwithmviapp.ui.main.account.ChangePasswordFragment
 import com.fastival.jetpackwithmviapp.ui.main.account.UpdateAccountFragment
+import com.fastival.jetpackwithmviapp.ui.main.blog.BlogFragment
 import com.fastival.jetpackwithmviapp.ui.main.blog.UpdateBlogFragment
 import com.fastival.jetpackwithmviapp.ui.main.blog.ViewBlogFragment
 import com.fastival.jetpackwithmviapp.util.BottomNavController
@@ -89,6 +91,7 @@ BottomNavController.OnNavigationReselectedListener{
     override fun onReselectNavItem(
         navController: NavController, fragment: Fragment
     ) = when(fragment){
+        is BlogFragment -> fragment.setPositionTopRecyclerView()
         is ViewBlogFragment -> navController.navigate(R.id.action_viewBlogFragment_to_blogFragment)
         is UpdateBlogFragment -> navController.navigate(R.id.action_updateBlogFragment_to_blogFragment)
         is UpdateAccountFragment -> navController.navigate(R.id.action_updateAccountFragment_to_accountFragment)

@@ -40,10 +40,6 @@ class BlogFragment : BaseBlogFragment<FragmentBlogBinding>(R.layout.fragment_blo
         viewModel.loadFirstPage()
     }
 
-    override fun onResume() {
-        super.onResume()
-        //viewModel.refreshFromCache()
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -52,6 +48,11 @@ class BlogFragment : BaseBlogFragment<FragmentBlogBinding>(R.layout.fragment_blo
 
         Log.d(TAG, "blogFragment_ViewModel: $viewModel")
         initRecyclerView()
+
+        // restore view
+        if (viewModel.getCurrentViewStateOrNew().blogFields.blogList.isNotEmpty()) {
+            viewModel.refreshFromCache()
+        }
     }
 
      fun subscribeObservers() {
