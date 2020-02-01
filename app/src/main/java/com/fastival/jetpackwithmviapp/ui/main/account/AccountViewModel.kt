@@ -1,6 +1,7 @@
 package com.fastival.jetpackwithmviapp.ui.main.account
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.liveData
 import com.fastival.jetpackwithmviapp.models.AccountProperties
 import com.fastival.jetpackwithmviapp.repository.main.AccountRepository
 import com.fastival.jetpackwithmviapp.session.SessionManager
@@ -59,11 +60,13 @@ constructor(
             }
 
             is AccountStateEvent.None -> {
-                return object: LiveData<DataState<AccountViewState>>(){
-                    override fun onActive() {
-                        super.onActive()
-                        value = DataState(null, Loading(false), null)
-                    }
+                return liveData {
+                    emit(
+                        DataState(
+                            error = null,
+                            loading = Loading(false),
+                            data = null)
+                    )
                 }
             }
         }

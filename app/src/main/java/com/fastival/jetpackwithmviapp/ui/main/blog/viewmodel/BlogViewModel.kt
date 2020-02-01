@@ -3,13 +3,11 @@ package com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel
 import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
-import com.bumptech.glide.RequestManager
+import androidx.lifecycle.liveData
 import com.fastival.jetpackwithmviapp.di.SavedStateViewModelFactory
 import com.fastival.jetpackwithmviapp.extension.parseRequestBody
-import com.fastival.jetpackwithmviapp.models.BlogPost
 import com.fastival.jetpackwithmviapp.persistence.BlogQueryUtils.Companion.BLOG_FILTER_DATE_UPDATED
 import com.fastival.jetpackwithmviapp.persistence.BlogQueryUtils.Companion.BLOG_ORDER_ASC
-import com.fastival.jetpackwithmviapp.persistence.BlogQueryUtils.Companion.BLOG_ORDER_DESC
 import com.fastival.jetpackwithmviapp.repository.main.BlogRepository
 import com.fastival.jetpackwithmviapp.session.SessionManager
 import com.fastival.jetpackwithmviapp.ui.DataState
@@ -22,9 +20,6 @@ import com.fastival.jetpackwithmviapp.util.PreferenceKeys.Companion.BLOG_FILTER
 import com.fastival.jetpackwithmviapp.util.PreferenceKeys.Companion.BLOG_ORDER
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
-import okhttp3.MediaType
-import okhttp3.RequestBody
-import javax.inject.Inject
 
 class BlogViewModel
 @AssistedInject
@@ -108,11 +103,13 @@ constructor(
             }
 
             is BlogStateEvent.None -> {
-                return object : LiveData<DataState<BlogViewState>>(){
-                    override fun onActive() {
-                        super.onActive()
-                        value = DataState(null, Loading(false), null)
-                    }
+                return liveData {
+                    emit(
+                        DataState(
+                        error = null,
+                        loading = Loading(false),
+                        data = null)
+                    )
                 }
             }
         }
