@@ -23,6 +23,11 @@ class ErrorHandling{
         const val ERROR_CHECK_NETWORK_CONNECTION = "Check network connection."
         const val ERROR_UNKNOWN = "Unknown error"
 
+        const val NETWORK_ERROR = "Network error"
+        const val NETWORK_ERROR_TIMEOUT = "Network timeout"
+        const val CACHE_ERROR_TIMEOUT = "Cache timeout"
+        const val UNKNOWN_ERROR = "Unknown error"
+
 
         fun isNetworkError(msg: String): Boolean{
             when{
