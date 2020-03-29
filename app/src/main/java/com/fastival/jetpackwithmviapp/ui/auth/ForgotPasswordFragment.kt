@@ -13,11 +13,13 @@ import android.view.animation.TranslateAnimation
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.fastival.jetpackwithmviapp.BR
 
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentForgotPasswordBinding
+import com.fastival.jetpackwithmviapp.di.auth.AuthScope
 import com.fastival.jetpackwithmviapp.ui.*
 import com.fastival.jetpackwithmviapp.ui.base.BaseAuthFragment
 import com.fastival.jetpackwithmviapp.util.Constants
@@ -25,12 +27,17 @@ import kotlinx.android.synthetic.main.fragment_forgot_password.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass.
  */
 class ForgotPasswordFragment
-    : BaseAuthFragment<FragmentForgotPasswordBinding, EmptyViewModel>(R.layout.fragment_forgot_password) {
+@Inject
+constructor(
+    private val viewModelFactory: ViewModelProvider.Factory
+) : BaseAuthFragment<FragmentForgotPasswordBinding>(R.layout.fragment_forgot_password, viewModelFactory)
+{
 
     private val webView: WebView by lazy {
         binding.root.findViewById<WebView>(R.id.webview)
@@ -113,9 +120,6 @@ class ForgotPasswordFragment
         }
     }
 
-    override fun getViewModel(): Class<EmptyViewModel> {
-        return EmptyViewModel::class.java
-    }
 
     override fun subscribeObservers() {
     }

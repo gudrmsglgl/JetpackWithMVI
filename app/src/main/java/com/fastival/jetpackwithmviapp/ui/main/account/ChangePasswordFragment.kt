@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.fastival.jetpackwithmviapp.BR
 
@@ -19,12 +20,16 @@ import com.fastival.jetpackwithmviapp.ui.base.account.BaseAccountFragment
 import com.fastival.jetpackwithmviapp.ui.main.account.state.AccountStateEvent
 import com.fastival.jetpackwithmviapp.util.SuccessHandling.Companion.RESPONSE_PASSWORD_UPDATE_SUCCESS
 import kotlinx.android.synthetic.main.fragment_change_password.*
+import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass.
  */
 class ChangePasswordFragment
-    : BaseAccountFragment<FragmentChangePasswordBinding>(R.layout.fragment_change_password)
+@Inject
+constructor(
+    private val provider: ViewModelProvider.Factory
+): BaseAccountFragment<FragmentChangePasswordBinding>(R.layout.fragment_change_password, provider)
 {
 
 

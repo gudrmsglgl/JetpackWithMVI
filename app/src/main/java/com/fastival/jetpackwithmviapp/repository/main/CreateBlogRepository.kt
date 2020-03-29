@@ -3,6 +3,7 @@ package com.fastival.jetpackwithmviapp.repository.main
 import androidx.lifecycle.LiveData
 import com.fastival.jetpackwithmviapp.api.main.OpenApiMainService
 import com.fastival.jetpackwithmviapp.api.main.response.BlogCreateUpdateResponse
+import com.fastival.jetpackwithmviapp.di.main.MainScope
 import com.fastival.jetpackwithmviapp.extension.convertServerStringDateToLong
 import com.fastival.jetpackwithmviapp.models.AuthToken
 import com.fastival.jetpackwithmviapp.models.BlogPost
@@ -25,6 +26,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import javax.inject.Inject
 
+@MainScope
 class CreateBlogRepository
 @Inject
 constructor(

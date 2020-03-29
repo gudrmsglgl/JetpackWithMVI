@@ -7,6 +7,7 @@ import androidx.lifecycle.switchMap
 import com.fastival.jetpackwithmviapp.api.auth.OpenApiAuthService
 import com.fastival.jetpackwithmviapp.api.auth.network_response.LoginResponse
 import com.fastival.jetpackwithmviapp.api.auth.network_response.RegistrationResponse
+import com.fastival.jetpackwithmviapp.di.auth.AuthScope
 import com.fastival.jetpackwithmviapp.models.AccountProperties
 import com.fastival.jetpackwithmviapp.models.AuthToken
 import com.fastival.jetpackwithmviapp.persistence.AccountPropertiesDao
@@ -29,6 +30,7 @@ import com.fastival.jetpackwithmviapp.util.SuccessHandling.Companion.RESPONSE_CH
 import kotlinx.coroutines.Job
 import javax.inject.Inject
 
+@AuthScope
 class AuthRepository
 @Inject
 constructor(

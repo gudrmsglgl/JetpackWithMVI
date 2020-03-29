@@ -5,9 +5,11 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import com.fastival.jetpackwithmviapp.BR
+import com.fastival.jetpackwithmviapp.BaseApplication
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.ActivityMainBinding
 import com.fastival.jetpackwithmviapp.extension.activity.navActivity
@@ -29,29 +31,36 @@ import com.fastival.jetpackwithmviapp.util.setUpNavigation
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
+import javax.inject.Inject
+import javax.inject.Named
 
-class MainActivity : BaseActivity<ActivityMainBinding, EmptyViewModel>(),
-BottomNavController.NavGraphProvider,
+class MainActivity : BaseActivity<ActivityMainBinding>(),
 BottomNavController.OnNavigationGraphChanged,
 BottomNavController.OnNavigationReselectedListener{
 
     private lateinit var bottomNavigationView: BottomNavigationView
+
+    @Inject
+    @Named("AccountFragmentFactory")
+    lateinit var accountFragmentFactory: FragmentFactory
+
+    @Inject
+    @Named("BlogFragmentFactory")
+    lateinit var blogFragmentFactory: FragmentFactory
+
+    @Inject
+    @Named("CreateBlogFragmentFactory")
+    lateinit var createBlogFragmentFactory: FragmentFactory
+
 
     private val bottomNavController by lazy(LazyThreadSafetyMode.NONE) {
         BottomNavController(
             this,
             R.id.main_nav_host_fragment,
             R.id.nav_blog,
-            this,
             this)
     }
 
-    override fun getNavGraphId(itemId: Int) = when(itemId){
-        R.id.nav_blog -> R.navigation.nav_blog
-        R.id.nav_create_blog -> R.navigation.nav_create_blog
-        R.id.nav_account -> R.navigation.nav_account
-        else -> R.navigation.nav_blog
-    }
 
     override fun onGraphChange() {
         cancelActiveJobs()
@@ -126,16 +135,9 @@ BottomNavController.OnNavigationReselectedListener{
 
     }
 
-    override fun getBindingVariable(): Int {
-        return BR.emptyViewModel
-    }
 
     override fun getLayoutId(): Int {
         return R.layout.activity_main
-    }
-
-    override fun getViewModel(): Class<EmptyViewModel> {
-        return EmptyViewModel::class.java
     }
 
     override fun subscribeObservers() {
@@ -145,13 +147,17 @@ BottomNavController.OnNavigationReselectedListener{
 
             if (authToken == null) {
                 Log.d(TAG, "authToken == null")
-                navActivity<AuthActivity>(true){}
+                navActivity<AuthActivity>(true){}.run {
+                    (application as BaseApplication).releaseMainComponent()
+                }
             }
 
             authToken?.let {
                 if (it.token == null || it.account_pk == -1) {
                     Log.d(TAG, "authToken.token == null || authToken.account_pk == -1")
-                    navActivity<AuthActivity>(true){}
+                    navActivity<AuthActivity>(true){}.run {
+                        (application as BaseApplication).releaseMainComponent()
+                    }
                 }
             }
 
@@ -169,5 +175,9 @@ BottomNavController.OnNavigationReselectedListener{
 
     override fun expandAppBar() {
         findViewById<AppBarLayout>(R.id.app_bar).setExpanded(true)
+    }
+
+    override fun inject() {
+        (application as BaseApplication).mainComponent().inject(this)
     }
 }

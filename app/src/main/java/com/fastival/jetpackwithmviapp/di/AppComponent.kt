@@ -1,22 +1,21 @@
 package com.fastival.jetpackwithmviapp.di
 
 import android.app.Application
+import androidx.databinding.ViewDataBinding
 import com.fastival.jetpackwithmviapp.BaseApplication
+import com.fastival.jetpackwithmviapp.di.auth.AuthComponent
+import com.fastival.jetpackwithmviapp.di.main.MainComponent
 import com.fastival.jetpackwithmviapp.session.SessionManager
+import com.fastival.jetpackwithmviapp.ui.base.BaseActivity
 import dagger.BindsInstance
 import dagger.Component
-import dagger.android.AndroidInjectionModule
-import dagger.android.AndroidInjector
 import javax.inject.Singleton
 
 @Singleton
 @Component(
     modules = [
-        AndroidInjectionModule::class,
         AppModule::class,
-        ActivityBuildersModule::class,
-        EmptyViewModelModule::class,
-        CommonUiModule::class
+        SubComponentsModule::class
     ]
 )
 interface AppComponent{
@@ -31,5 +30,10 @@ interface AppComponent{
         fun build(): AppComponent
     }
 
-    fun inject(app: BaseApplication)
+    fun inject(baseActivity: BaseActivity<ViewDataBinding>)
+
+    fun authComponent(): AuthComponent.Factory
+
+    fun mainComponent(): MainComponent.Factory
+
 }

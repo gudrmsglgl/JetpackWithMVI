@@ -12,6 +12,8 @@ import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.RequestManager
 import com.fastival.jetpackwithmviapp.BR
 
 import com.fastival.jetpackwithmviapp.R
@@ -28,12 +30,17 @@ import com.fastival.jetpackwithmviapp.util.Constants.Companion.GALLERY_REQUEST_C
 import com.fastival.jetpackwithmviapp.util.ErrorHandling.Companion.ERROR_SOMETHING_WRONG_WITH_IMAGE
 import com.fastival.jetpackwithmviapp.util.SuccessHandling.Companion.SUCCESS_BLOG_CREATED
 import com.theartofdev.edmodo.cropper.CropImage
+import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass.
  */
 class CreateBlogFragment
-    : BaseCreateBlogFragment<FragmentCreateBlogBinding>(R.layout.fragment_create_blog)
+@Inject
+constructor(
+    private val provider: ViewModelProvider.Factory,
+    val requestManager: RequestManager
+): BaseCreateBlogFragment<FragmentCreateBlogBinding>(R.layout.fragment_create_blog, provider)
 {
 
     fun subscribeObservers() {

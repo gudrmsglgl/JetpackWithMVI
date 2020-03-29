@@ -24,17 +24,14 @@
         app:layout_constraintTop_toTopOf="parent"
         android:visibility="gone">
 
-        <fragment
+        <androidx.fragment.app.FragmentContainerView
             android:id="@+id/auth_nav_host_fragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:name="androidx.navigation.fragment.NavHostFragment"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:defaultNavHost="true"
-            app:navGraph="@navigation/auth_nav_graph"
             />
 
     </FrameLayout>

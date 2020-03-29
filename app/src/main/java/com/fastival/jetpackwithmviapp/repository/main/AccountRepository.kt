@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.switchMap
 import com.fastival.jetpackwithmviapp.api.GenericResponse
 import com.fastival.jetpackwithmviapp.api.main.OpenApiMainService
+import com.fastival.jetpackwithmviapp.di.main.MainScope
 import com.fastival.jetpackwithmviapp.models.AccountProperties
 import com.fastival.jetpackwithmviapp.models.AuthToken
 import com.fastival.jetpackwithmviapp.persistence.AccountPropertiesDao
@@ -23,6 +24,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+@MainScope
 class AccountRepository
 @Inject
 constructor(

@@ -7,8 +7,10 @@ import android.view.*
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.savedstate.SavedStateRegistryOwner
+import com.bumptech.glide.RequestManager
 import com.fastival.jetpackwithmviapp.BR
 
 import com.fastival.jetpackwithmviapp.R
@@ -21,12 +23,17 @@ import com.fastival.jetpackwithmviapp.ui.base.blog.BaseBlogFragment
 import com.fastival.jetpackwithmviapp.ui.main.blog.state.BlogStateEvent
 import com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel.*
 import com.fastival.jetpackwithmviapp.util.SuccessHandling.Companion.SUCCESS_BLOG_DELETED
+import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass.
  */
 class ViewBlogFragment
-    : BaseBlogFragment<FragmentViewBlogBinding>(R.layout.fragment_view_blog)
+@Inject
+constructor(
+    private val provider: ViewModelProvider.Factory,
+    private val requestManager: RequestManager
+): BaseBlogFragment<FragmentViewBlogBinding>(R.layout.fragment_view_blog, provider)
 {
 
     fun subscribeObservers() {

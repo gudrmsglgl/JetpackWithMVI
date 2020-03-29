@@ -4,12 +4,14 @@ import androidx.lifecycle.LiveData
 import com.fastival.jetpackwithmviapp.api.GenericResponse
 import com.fastival.jetpackwithmviapp.api.main.response.BlogCreateUpdateResponse
 import com.fastival.jetpackwithmviapp.api.main.response.BlogListSearchResponse
+import com.fastival.jetpackwithmviapp.di.main.MainScope
 import com.fastival.jetpackwithmviapp.models.AccountProperties
 import com.fastival.jetpackwithmviapp.util.GenericApiResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.*
 
+@MainScope
 interface OpenApiMainService {
 
     @GET("account/properties")

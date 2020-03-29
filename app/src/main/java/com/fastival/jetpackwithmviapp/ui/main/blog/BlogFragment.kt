@@ -10,8 +10,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.bumptech.glide.RequestManager
 import com.fastival.jetpackwithmviapp.BR
 
 import com.fastival.jetpackwithmviapp.R
@@ -25,11 +27,15 @@ import com.fastival.jetpackwithmviapp.ui.main.blog.state.BlogViewState
 import com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel.*
 import com.fastival.jetpackwithmviapp.util.ErrorHandling
 import kotlinx.android.synthetic.main.fragment_blog.*
+import javax.inject.Inject
 
 
-class BlogFragment : BaseBlogFragment<FragmentBlogBinding>(R.layout.fragment_blog),
- BlogListAdapter.Interaction,
- SwipeRefreshLayout.OnRefreshListener
+class BlogFragment
+@Inject
+constructor(
+    private val provider: ViewModelProvider.Factory,
+    val requestManager: RequestManager
+): BaseBlogFragment<FragmentBlogBinding>(R.layout.fragment_blog, provider), BlogListAdapter.Interaction, SwipeRefreshLayout.OnRefreshListener
 {
 
     internal lateinit var recyclerAdapter: BlogListAdapter

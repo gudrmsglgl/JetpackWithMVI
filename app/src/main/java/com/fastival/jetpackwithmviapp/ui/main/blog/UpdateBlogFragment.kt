@@ -11,7 +11,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.RequestManager
 import com.fastival.jetpackwithmviapp.BR
 
 import com.fastival.jetpackwithmviapp.R
@@ -30,12 +32,17 @@ import com.fastival.jetpackwithmviapp.util.ErrorHandling.Companion.ERROR_SOMETHI
 import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.fragment_update_blog.*
 import okhttp3.MultipartBody
+import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass.
  */
 class UpdateBlogFragment
-    : BaseBlogFragment<FragmentUpdateBlogBinding>(R.layout.fragment_update_blog)
+@Inject
+constructor(
+    private val provider: ViewModelProvider.Factory,
+    private val requestManager: RequestManager
+) : BaseBlogFragment<FragmentUpdateBlogBinding>(R.layout.fragment_update_blog, provider)
 {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

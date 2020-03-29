@@ -7,23 +7,27 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.fastival.jetpackwithmviapp.BR
 
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentLauncherBinding
+import com.fastival.jetpackwithmviapp.di.auth.AuthScope
 import com.fastival.jetpackwithmviapp.ui.base.BaseAuthFragment
 import kotlinx.android.synthetic.main.fragment_launcher.*
+import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass.
  */
 class LauncherFragment
-    : BaseAuthFragment<FragmentLauncherBinding, AuthViewModel>(R.layout.fragment_launcher) {
+@Inject constructor(
+    private val viewModelFactory: ViewModelProvider.Factory
+): BaseAuthFragment<FragmentLauncherBinding>(R.layout.fragment_launcher, viewModelFactory) {
 
     override fun getBindingVariable() = BR.vm
 
-    override fun getViewModel(): Class<AuthViewModel> = AuthViewModel::class.java
 
     override fun initFunc() {
         register.setOnClickListener {

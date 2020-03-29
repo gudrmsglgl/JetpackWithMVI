@@ -1,4 +1,4 @@
-package com.fastival.jetpackwithmviapp.di
+package com.fastival.jetpackwithmviapp.di.auth.key
 
 import androidx.lifecycle.ViewModel
 import dagger.MapKey
@@ -12,4 +12,4 @@ import kotlin.reflect.KClass
 )
 @Retention(AnnotationRetention.RUNTIME)
 @MapKey
-annotation class ViewModelKey(val value: KClass<out ViewModel>)
+annotation class AuthViewModelKey(val value: KClass<out ViewModel>)

@@ -6,11 +6,13 @@ import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.fastival.jetpackwithmviapp.BR
 
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentAccountBinding
+import com.fastival.jetpackwithmviapp.di.main.MainScope
 import com.fastival.jetpackwithmviapp.models.AccountProperties
 import com.fastival.jetpackwithmviapp.session.SessionManager
 import com.fastival.jetpackwithmviapp.ui.EmptyViewModel
@@ -24,7 +26,11 @@ import javax.inject.Inject
  * A simple [Fragment] subclass.
  */
 class AccountFragment
-    : BaseAccountFragment<FragmentAccountBinding>(R.layout.fragment_account) {
+@Inject
+constructor(
+    private val provider: ViewModelProvider.Factory
+): BaseAccountFragment<FragmentAccountBinding>(R.layout.fragment_account, provider)
+{
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -19,67 +19,39 @@ import com.fastival.jetpackwithmviapp.session.SessionManager
 import com.fastival.jetpackwithmviapp.ui.*
 import com.fastival.jetpackwithmviapp.util.Constants.Companion.PERMISSIONS_REQUEST_READ_STORAGE
 import com.fastival.jetpackwithmviapp.viewmodels.InjectingSavedStateViewModelFactory
-import com.fastival.jetpackwithmviapp.viewmodels.ViewModelProviderFactory
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.support.HasSupportFragmentInjector
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-abstract class BaseActivity<vb: ViewDataBinding, vm: BaseViewModel<*, *>>
-    : AppCompatActivity(), HasSupportFragmentInjector,
-DataStateChangeListener,
-UICommunicationListener{
+abstract class BaseActivity<vb: ViewDataBinding>
+    : AppCompatActivity(), DataStateChangeListener, UICommunicationListener
+{
 
     val TAG: String = "AppDebug"
 
-    @Inject
-    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
-
-    /*@Inject
-    lateinit var provider: ViewModelProviderFactory*/
-
-    @Inject
-    lateinit var abstractViewModelFactory: InjectingSavedStateViewModelFactory
+    abstract fun inject()
 
     @Inject
     lateinit var sessionManager: SessionManager
 
-    protected lateinit var viewModel: vm
     protected lateinit var binding: vb
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        inject()
         super.onCreate(savedInstanceState)
 
-        val factory = abstractViewModelFactory.create(this)
-
-        this.viewModel = if(::viewModel.isInitialized){
-            Log.d(TAG, "reuse viewModel")
-            viewModel
-        } else {
-            Log.d(TAG, "init viewModel")
-            ViewModelProvider(this, factory).get(getViewModel())
-        }
-
-        Log.d(TAG, "viewModel: $viewModel")
         initVariables()
-        initFunc()
         subscribeObservers()
     }
 
     protected open fun initVariables(){
         binding = DataBindingUtil.setContentView(this, getLayoutId())
         binding.lifecycleOwner = this
-        binding.setVariable(getBindingVariable(), viewModel)
         binding.executePendingBindings()
         Log.d(TAG, "baseActivity_initBinding()")
     }
 
-    protected open fun initFunc(){
-
-    }
 
     override fun onUIMessageReceived(uiMessage: UIMessage) {
         when(uiMessage.uiMessageType){
@@ -160,12 +132,8 @@ UICommunicationListener{
         }
     }
 
-    protected abstract fun getBindingVariable(): Int
-
     @LayoutRes
     protected abstract fun getLayoutId(): Int
-
-    protected abstract fun getViewModel(): Class<vm>
 
     protected abstract fun subscribeObservers()
 
@@ -207,7 +175,5 @@ UICommunicationListener{
         }
     }
 
-    override fun supportFragmentInjector(): AndroidInjector<Fragment> {
-        return dispatchingAndroidInjector
-    }
+
 }

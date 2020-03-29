@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.fastival.jetpackwithmviapp.BR
 
 import com.fastival.jetpackwithmviapp.R
@@ -16,12 +17,17 @@ import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
 import com.fastival.jetpackwithmviapp.ui.base.account.BaseAccountFragment
 import com.fastival.jetpackwithmviapp.ui.main.account.state.AccountStateEvent
 import kotlinx.android.synthetic.main.fragment_update_account.*
+import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass.
  */
 class UpdateAccountFragment
-    : BaseAccountFragment<FragmentUpdateAccountBinding>(R.layout.fragment_update_account) {
+@Inject
+constructor(
+    private val provider: ViewModelProvider.Factory
+): BaseAccountFragment<FragmentUpdateAccountBinding>(R.layout.fragment_update_account, provider)
+{
 
     fun subscribeObservers() {
 

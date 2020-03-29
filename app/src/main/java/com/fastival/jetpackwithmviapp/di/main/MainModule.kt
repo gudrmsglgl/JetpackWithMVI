@@ -14,14 +14,16 @@ import retrofit2.Retrofit
 import retrofit2.create
 
 @Module
-class MainModule {
+object MainModule {
 
+    @JvmStatic
     @MainScope
     @Provides
     fun provideOpenApiMainService(builder: Retrofit.Builder): OpenApiMainService {
         return builder.build().create(OpenApiMainService::class.java)
     }
 
+    @JvmStatic
     @MainScope
     @Provides
     fun provideAccountRepository(
@@ -32,12 +34,14 @@ class MainModule {
         return AccountRepository(openApiMainService, accountPropertiesDao, sessionManager)
     }
 
+    @JvmStatic
     @MainScope
     @Provides
     fun provideBlogPostDao(db: AppDatabase): BlogPostDao{
         return db.getBlogPostDao()
     }
 
+    @JvmStatic
     @MainScope
     @Provides
     fun provideBlogPostRepository(
@@ -48,6 +52,7 @@ class MainModule {
         return BlogRepository(openApiMainService, blogPostDao, sessionManager)
     }
 
+    @JvmStatic
     @MainScope
     @Provides
     fun provideCreateBlogPostRepository(

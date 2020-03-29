@@ -5,34 +5,26 @@ import android.view.View
 import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
 import androidx.databinding.ViewDataBinding
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
 import com.fastival.jetpackwithmviapp.ui.main.create_blog.viewmodel.CreateBlogViewModel
-import com.fastival.jetpackwithmviapp.viewmodels.InjectingSavedStateViewModelFactory
 import com.wada811.databinding.dataBinding
-import javax.inject.Inject
 
-abstract class BaseCreateBlogFragment<vb: ViewDataBinding>(@LayoutRes layoutId: Int)
-    : BaseMainFragment(layoutId)
+abstract class BaseCreateBlogFragment<vb: ViewDataBinding>(
+    @LayoutRes layoutId: Int,
+    private val viewModelFactory: ViewModelProvider.Factory
+): BaseMainFragment(layoutId)
 {
-    @Inject
-    lateinit var defaultProvider: InjectingSavedStateViewModelFactory
-    lateinit var viewModel: CreateBlogViewModel
+
+    val viewModel: CreateBlogViewModel by viewModels { viewModelFactory }
+
     internal val binding: vb by dataBinding()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activity?.run {
-            val factory = defaultProvider.create(this, arguments)
-            viewModel = if (::viewModel.isInitialized){
-                viewModel
-            } else {
-                ViewModelProvider(this, factory).get(CreateBlogViewModel::class.java)
-            }
-
-            cancelActiveJobs()
-        }
+        cancelActiveJobs()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

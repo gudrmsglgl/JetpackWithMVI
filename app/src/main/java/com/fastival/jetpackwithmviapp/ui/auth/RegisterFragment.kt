@@ -8,10 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.fastival.jetpackwithmviapp.BR
 
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentRegisterBinding
+import com.fastival.jetpackwithmviapp.di.auth.AuthScope
 import com.fastival.jetpackwithmviapp.ui.auth.state.AuthStateEvent
 import com.fastival.jetpackwithmviapp.ui.auth.state.AuthStateEvent.RegisterAttemptEvent
 import com.fastival.jetpackwithmviapp.ui.auth.state.RegistrationFields
@@ -20,12 +22,15 @@ import com.fastival.jetpackwithmviapp.util.ApiEmptyResponse
 import com.fastival.jetpackwithmviapp.util.ApiErrorResponse
 import com.fastival.jetpackwithmviapp.util.ApiSuccessResponse
 import kotlinx.android.synthetic.main.fragment_register.*
+import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass.
  */
 class RegisterFragment
-    : BaseAuthFragment<FragmentRegisterBinding, AuthViewModel>(R.layout.fragment_register) {
+@Inject constructor(
+    private val viewModelFactory: ViewModelProvider.Factory
+): BaseAuthFragment<FragmentRegisterBinding>(R.layout.fragment_register, viewModelFactory) {
 
     override fun getBindingVariable(): Int {
         return BR.viewModel
@@ -43,10 +48,6 @@ class RegisterFragment
                 )
             )
         }
-    }
-
-    override fun getViewModel(): Class<AuthViewModel> {
-        return AuthViewModel::class.java
     }
 
     override fun subscribeObservers(){

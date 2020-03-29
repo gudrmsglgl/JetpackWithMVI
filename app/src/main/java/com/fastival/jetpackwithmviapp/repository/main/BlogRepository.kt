@@ -8,6 +8,7 @@ import com.fastival.jetpackwithmviapp.api.GenericResponse
 import com.fastival.jetpackwithmviapp.api.main.OpenApiMainService
 import com.fastival.jetpackwithmviapp.api.main.response.BlogCreateUpdateResponse
 import com.fastival.jetpackwithmviapp.api.main.response.BlogListSearchResponse
+import com.fastival.jetpackwithmviapp.di.main.MainScope
 import com.fastival.jetpackwithmviapp.extension.convertServerStringDateToLong
 import com.fastival.jetpackwithmviapp.models.AuthToken
 import com.fastival.jetpackwithmviapp.models.BlogPost
@@ -38,6 +39,7 @@ import okhttp3.RequestBody
 import java.lang.Exception
 import javax.inject.Inject
 
+@MainScope
 class BlogRepository
 @Inject
 constructor(

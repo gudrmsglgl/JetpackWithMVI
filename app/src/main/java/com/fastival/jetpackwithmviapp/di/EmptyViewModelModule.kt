@@ -1,8 +1,8 @@
 package com.fastival.jetpackwithmviapp.di
 
 import androidx.lifecycle.ViewModel
+import com.fastival.jetpackwithmviapp.di.auth.key.AuthViewModelKey
 import com.fastival.jetpackwithmviapp.ui.EmptyViewModel
-import com.fastival.jetpackwithmviapp.ui.auth.AuthViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -12,6 +12,6 @@ abstract class EmptyViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(EmptyViewModel::class)
+    @AuthViewModelKey(EmptyViewModel::class)
     abstract fun bindAuthViewModel(viewModel: EmptyViewModel): ViewModel
 }

@@ -3,41 +3,64 @@ package com.fastival.jetpackwithmviapp.ui.auth
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.activity.viewModels
+import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.Observer
-import androidx.navigation.NavController
-import androidx.navigation.NavDestination
-import androidx.navigation.findNavController
-import com.fastival.jetpackwithmviapp.BR
+import androidx.lifecycle.ViewModelProvider
+import com.fastival.jetpackwithmviapp.BaseApplication
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.ActivityAuthBinding
 import com.fastival.jetpackwithmviapp.extension.activity.navActivity
+import com.fastival.jetpackwithmviapp.fragments.auth.AuthNavHostFragment
 import com.fastival.jetpackwithmviapp.ui.auth.state.AuthStateEvent
 import com.fastival.jetpackwithmviapp.ui.base.BaseActivity
 import com.fastival.jetpackwithmviapp.ui.main.MainActivity
 import com.fastival.jetpackwithmviapp.util.SuccessHandling.Companion.RESPONSE_CHECK_PREVIOUS_AUTH_USER_DONE
 import kotlinx.android.synthetic.main.activity_auth.*
+import javax.inject.Inject
 
-class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel>(),
-    NavController.OnDestinationChangedListener {
+class AuthActivity : BaseActivity<ActivityAuthBinding>()
+{
+
+    @Inject
+    lateinit var fragmentFactory: FragmentFactory
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    val viewModel: AuthViewModel by viewModels { viewModelFactory }
 
     override fun getLayoutId() = R.layout.activity_auth
 
-    override fun getViewModel(): Class<AuthViewModel> {
-        return AuthViewModel::class.java
+    override fun inject() {
+        (application as BaseApplication).authComponent().inject(this)
     }
 
-    override fun getBindingVariable(): Int {
-        return BR.authViewModel
-    }
-
-    override fun initVariables() {
-        super.initVariables()
-        findNavController(R.id.auth_nav_host_fragment).addOnDestinationChangedListener(this)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        onRestoreInstanceState()
     }
 
     override fun onResume() {
         super.onResume()
         emitCheckPreviousAuthUser()
+    }
+
+    private fun onRestoreInstanceState(){
+        val host = supportFragmentManager.findFragmentById(R.id.auth_nav_host_fragment)
+        host?.let {  }?: createNavHost()
+    }
+
+    private fun createNavHost() {
+        val navHost = AuthNavHostFragment.create(R.navigation.auth_nav_graph)
+        supportFragmentManager.beginTransaction()
+            .replace(
+                R.id.auth_nav_host_fragment,
+                navHost,
+                getString(R.string.AuthNavHost)
+            )
+            .setPrimaryNavigationFragment(navHost)
+            .commit()
     }
 
     override fun subscribeObservers() {
@@ -83,6 +106,7 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel>(),
             authToken.let {
                 if (it != null && it.account_pk != -1 && it.token != null){
                     navActivity<MainActivity>(true){}
+                    (application as BaseApplication).releaseAuthComponent()
                 }
             }
         })
@@ -92,14 +116,6 @@ class AuthActivity : BaseActivity<ActivityAuthBinding, AuthViewModel>(),
         viewModel.setStateEvent(AuthStateEvent.CheckPreviousAuthEvent())
     }
 
-    // Navigation Changed -> JobCancel()
-    override fun onDestinationChanged(
-        controller: NavController,
-        destination: NavDestination,
-        arguments: Bundle?
-    ) {
-        viewModel.cancelActiveJobs()
-    }
 
     override fun expandAppBar() {
         // ignore

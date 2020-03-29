@@ -8,29 +8,20 @@ import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.bumptech.glide.RequestManager
-import com.fastival.jetpackwithmviapp.di.Injectable
 import com.fastival.jetpackwithmviapp.ui.DataStateChangeListener
 import com.fastival.jetpackwithmviapp.ui.UICommunicationListener
-import com.fastival.jetpackwithmviapp.viewmodels.InjectingSavedStateViewModelFactory
 import javax.inject.Inject
 
-abstract class BaseMainFragment(@LayoutRes contentLayoutId: Int)
-    : Fragment(contentLayoutId), Injectable
+abstract class BaseMainFragment(
+    @LayoutRes contentLayoutId: Int
+): Fragment(contentLayoutId)
 {
 
     val TAG = "AppDebug"
-
-    @Inject
-    lateinit var requestManager: RequestManager
-
-    /*@Inject
-    lateinit var provider: ViewModelProviderFactory*/
-
 
     internal lateinit var stateListener: DataStateChangeListener
     internal lateinit var uiCommunicationListener: UICommunicationListener

@@ -20,22 +20,25 @@ import com.fastival.jetpackwithmviapp.util.PreferenceKeys.Companion.BLOG_FILTER
 import com.fastival.jetpackwithmviapp.util.PreferenceKeys.Companion.BLOG_ORDER
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import javax.inject.Inject
 
 class BlogViewModel
-@AssistedInject
+//@AssistedInject
+@Inject
 constructor(
     private val sessionManager: SessionManager,
     private val blogRepository: BlogRepository,
     private val sharedPreferences: SharedPreferences,
-    private val editor: SharedPreferences.Editor,
-    @Assisted private val savedStateHandle: SavedStateHandle
+    private val editor: SharedPreferences.Editor
+    //@Assisted private val savedStateHandle: SavedStateHandle
 ): BaseViewModel<BlogStateEvent, BlogViewState>() {
 
-    @AssistedInject.Factory
-    interface Factory: SavedStateViewModelFactory<BlogViewModel>
+    /*@AssistedInject.Factory
+    interface Factory: SavedStateViewModelFactory<BlogViewModel>*/
 
     override val viewState: LiveData<BlogViewState>
-        get() = savedStateHandle.getLiveData("BlogViewModel")
+        //get() = savedStateHandle.getLiveData("BlogViewModel")
+        get() = super.viewState
 
     init {
         // viewState init filter & order
@@ -124,9 +127,9 @@ constructor(
         apply()
     }
 
-    override fun setViewState(viewState: BlogViewState) {
+    /*override fun setViewState(viewState: BlogViewState) {
         savedStateHandle.set("BlogViewModel", viewState)
-    }
+    }*/
 
     override fun initNewViewState(): BlogViewState {
         return BlogViewState()
