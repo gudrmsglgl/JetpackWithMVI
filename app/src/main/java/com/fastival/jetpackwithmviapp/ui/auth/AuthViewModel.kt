@@ -1,56 +1,74 @@
 package com.fastival.jetpackwithmviapp.ui.auth
 
-import android.util.Log
-import androidx.lifecycle.LiveData
+import com.fastival.jetpackwithmviapp.di.auth.AuthScope
 import com.fastival.jetpackwithmviapp.models.AuthToken
 import com.fastival.jetpackwithmviapp.repository.auth.AuthRepository
 import com.fastival.jetpackwithmviapp.ui.base.BaseViewModel
-import com.fastival.jetpackwithmviapp.ui.DataState
-import com.fastival.jetpackwithmviapp.ui.Loading
-import com.fastival.jetpackwithmviapp.ui.auth.state.AuthStateEvent
 import com.fastival.jetpackwithmviapp.ui.auth.state.AuthStateEvent.*
 import com.fastival.jetpackwithmviapp.ui.auth.state.AuthViewState
 import com.fastival.jetpackwithmviapp.ui.auth.state.LoginFields
 import com.fastival.jetpackwithmviapp.ui.auth.state.RegistrationFields
-import com.fastival.jetpackwithmviapp.util.AbsentLiveData
+import com.fastival.jetpackwithmviapp.util.StateEvent
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
+@ExperimentalCoroutinesApi
+@FlowPreview
+@AuthScope
 class AuthViewModel
-@Inject constructor(val authRepository: AuthRepository): BaseViewModel<AuthStateEvent, AuthViewState>()
+@Inject
+constructor(
+    val authRepository: AuthRepository
+): BaseViewModel<AuthViewState>()
 {
 
-    override fun handleStateEvent(stateEvent: AuthStateEvent): LiveData<DataState<AuthViewState>> {
-        return when(stateEvent) {
-            is LoginAttemptEvent -> {
-               authRepository.attemptLogin(stateEvent.email, stateEvent.password)
-            }
+    override fun setStateEvent(stateEvent: StateEvent) =
+        launchJob(
+            stateEvent = stateEvent,
+            jobFunc = when (stateEvent){
 
-            is RegisterAttemptEvent -> {
-               authRepository.attemptRegistration(
-                   stateEvent.email,
-                   stateEvent.username,
-                   stateEvent.password,
-                   stateEvent.confirm_password)
-            }
+                is LoginAttemptEvent -> {
+                    authRepository.attemptLogin(
+                        stateEvent = stateEvent,
+                        email = stateEvent.email,
+                        password = stateEvent.password
+                    )
+                }
 
-            is CheckPreviousAuthEvent -> {
-                authRepository.checkPreviousAuthUser()
-            }
+                is RegisterAttemptEvent -> {
+                    authRepository.attemptRegistration(
+                        stateEvent = stateEvent,
+                        email = stateEvent.email,
+                        username = stateEvent.username,
+                        password = stateEvent.password,
+                        confirmPassword = stateEvent.confirm_password
+                    )
+                }
 
-            is None -> {
-                object: LiveData<DataState<AuthViewState>>(){
-                    override fun onActive() {
-                        super.onActive()
-                        value = DataState.data(null, null)
+                is CheckPreviousAuthEvent -> {
+                    authRepository.checkPreviousAuthUser(stateEvent)
+                }
+
+                else -> {
+                    flow {
+                        emit(retInvalidEvent(stateEvent))
                     }
                 }
+
             }
+        )
+
+    override fun handleViewState(data: AuthViewState) {
+        data.authToken?.let { authToken ->
+            setViewStateAuthToken(authToken)
         }
     }
 
     override fun initNewViewState(): AuthViewState = AuthViewState()
 
-    fun setRegistrationFields(registrationFields: RegistrationFields) {
+    fun setViewStateRegistrationFields(registrationFields: RegistrationFields) {
         val update = getCurrentViewStateOrNew()
         if (update.registrationFields == registrationFields){
             return
@@ -59,7 +77,7 @@ class AuthViewModel
         setViewState(update)
     }
 
-    fun setLoginFields(loginFields: LoginFields) {
+    fun setViewStateLoginFields(loginFields: LoginFields) {
         val update = getCurrentViewStateOrNew()
         if (update.loginFields == loginFields) {
             return
@@ -68,21 +86,11 @@ class AuthViewModel
         setViewState(update)
     }
 
-    fun setAuthToken(authToken: AuthToken) {
-        Log.d(TAG, "authToken: $authToken")
+    fun setViewStateAuthToken(authToken: AuthToken) {
         val update = getCurrentViewStateOrNew()
         if (update.authToken == authToken) return
         update.authToken = authToken
         setViewState(update)
-    }
-
-    override fun cancelActiveJobs() {
-        handlePendingData()
-        authRepository.cancelActiveJobs()
-    }
-
-    private fun handlePendingData(){
-        setStateEvent(None())
     }
 
 }

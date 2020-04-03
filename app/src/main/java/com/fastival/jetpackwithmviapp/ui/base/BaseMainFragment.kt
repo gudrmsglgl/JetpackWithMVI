@@ -11,10 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
-import com.bumptech.glide.RequestManager
-import com.fastival.jetpackwithmviapp.ui.DataStateChangeListener
 import com.fastival.jetpackwithmviapp.ui.UICommunicationListener
-import javax.inject.Inject
 
 abstract class BaseMainFragment(
     @LayoutRes contentLayoutId: Int

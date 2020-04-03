@@ -2,6 +2,7 @@ package com.fastival.jetpackwithmviapp.di
 
 import android.app.Application
 import androidx.databinding.ViewDataBinding
+import androidx.viewbinding.ViewBinding
 import com.fastival.jetpackwithmviapp.BaseApplication
 import com.fastival.jetpackwithmviapp.di.auth.AuthComponent
 import com.fastival.jetpackwithmviapp.di.main.MainComponent
@@ -30,7 +31,7 @@ interface AppComponent{
         fun build(): AppComponent
     }
 
-    fun inject(baseActivity: BaseActivity<ViewDataBinding>)
+    fun inject(baseActivity: BaseActivity)
 
     fun authComponent(): AuthComponent.Factory
 

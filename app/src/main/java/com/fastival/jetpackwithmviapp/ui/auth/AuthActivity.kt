@@ -9,17 +9,17 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.fastival.jetpackwithmviapp.BaseApplication
 import com.fastival.jetpackwithmviapp.R
-import com.fastival.jetpackwithmviapp.databinding.ActivityAuthBinding
 import com.fastival.jetpackwithmviapp.extension.activity.navActivity
 import com.fastival.jetpackwithmviapp.fragments.auth.AuthNavHostFragment
 import com.fastival.jetpackwithmviapp.ui.auth.state.AuthStateEvent
 import com.fastival.jetpackwithmviapp.ui.base.BaseActivity
 import com.fastival.jetpackwithmviapp.ui.main.MainActivity
+import com.fastival.jetpackwithmviapp.util.StateMessageCallback
 import com.fastival.jetpackwithmviapp.util.SuccessHandling.Companion.RESPONSE_CHECK_PREVIOUS_AUTH_USER_DONE
 import kotlinx.android.synthetic.main.activity_auth.*
 import javax.inject.Inject
 
-class AuthActivity : BaseActivity<ActivityAuthBinding>()
+class AuthActivity : BaseActivity()
 {
 
     @Inject
@@ -30,14 +30,16 @@ class AuthActivity : BaseActivity<ActivityAuthBinding>()
 
     val viewModel: AuthViewModel by viewModels { viewModelFactory }
 
-    override fun getLayoutId() = R.layout.activity_auth
 
     override fun inject() {
         (application as BaseApplication).authComponent().inject(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        inject()
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_auth)
+        subscribeObservers()
         onRestoreInstanceState()
     }
 
@@ -52,7 +54,8 @@ class AuthActivity : BaseActivity<ActivityAuthBinding>()
     }
 
     private fun createNavHost() {
-        val navHost = AuthNavHostFragment.create(R.navigation.auth_nav_graph)
+        val navHost =
+            AuthNavHostFragment.create(R.navigation.auth_nav_graph)
         supportFragmentManager.beginTransaction()
             .replace(
                 R.id.auth_nav_host_fragment,
@@ -63,43 +66,38 @@ class AuthActivity : BaseActivity<ActivityAuthBinding>()
             .commit()
     }
 
-    override fun subscribeObservers() {
-        Log.d(TAG, "AuthActivityObserve__ viewModel: $viewModel")
+    fun subscribeObservers() {
 
-        viewModel.dataState.observe(this, Observer {dataState->
-            if (dataState != null) {
 
-                onDataStateChange(dataState)
-
-                dataState.data?.let { data ->
-
-                    data.data?.getContentIfNotHandled()?.let { authViewState ->
-                        authViewState.authToken?.let {
-                            Log.d(TAG, "AuthActivity, DataState: $it")
-                            viewModel.setAuthToken(it)
-                        }
-                    }
-
-                    data.response?.let { event->
-                        event.peekContent().let { response ->
-                            response.message?.let { message ->
-                                if (message.equals(RESPONSE_CHECK_PREVIOUS_AUTH_USER_DONE)){
-                                    onFinishCheckPreviousAuthUser()
-                                }
-                            }
-                        }
-                    }
-
-                }
-
+        viewModel.viewState.observe(this, Observer { viewState ->
+            Log.d(TAG, "AuthActivity, subscribeObservers: AuthViewState: $viewState")
+            viewState.authToken?.let {
+                sessionManager.login(it)
             }
         })
 
+        viewModel.numActiveJobs.observe(this, Observer {
+            displayProgressBar(viewModel.areAnyJobActive())
+        })
 
-        viewModel.viewState.observe(this, Observer {viewState->
-            viewState.authToken?.let { authToken ->
-                sessionManager.login(authToken)
+        viewModel.stateMessage.observe(this, Observer { stateMessage ->
+
+            stateMessage?.let {
+
+                if (stateMessage.response.message == RESPONSE_CHECK_PREVIOUS_AUTH_USER_DONE)
+                    onFinishCheckPreviousAuthUser()
+
+                onResponseReceived(
+                    response = it.response,
+                    stateMessageCallback = object : StateMessageCallback {
+                        override fun removeMessageFromStack() {
+                            viewModel.removeStateMessage()
+                        }
+                    }
+                )
+
             }
+
         })
 
         sessionManager.cachedToken.observe(this, Observer {authToken->
@@ -112,21 +110,22 @@ class AuthActivity : BaseActivity<ActivityAuthBinding>()
         })
     }
 
-    private fun emitCheckPreviousAuthUser(){
+    private fun emitCheckPreviousAuthUser() =
         viewModel.setStateEvent(AuthStateEvent.CheckPreviousAuthEvent())
-    }
+
 
 
     override fun expandAppBar() {
         // ignore
     }
 
-    override fun displayProgressBar(bool: Boolean) {
-        if (bool) progress_bar.visibility = View.VISIBLE
+    override fun displayProgressBar(isAnyJobActive: Boolean) {
+        if (isAnyJobActive) progress_bar.visibility = View.VISIBLE
         else progress_bar.visibility = View.GONE
     }
 
     private fun onFinishCheckPreviousAuthUser(){
         fragment_container.visibility = View.VISIBLE
+        splash_logo.visibility = View.INVISIBLE
     }
 }

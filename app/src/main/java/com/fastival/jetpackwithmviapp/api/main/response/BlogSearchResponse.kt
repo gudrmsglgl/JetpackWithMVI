@@ -1,5 +1,7 @@
 package com.fastival.jetpackwithmviapp.api.main.response
 
+import com.fastival.jetpackwithmviapp.extension.convertServerStringDateToLong
+import com.fastival.jetpackwithmviapp.models.BlogPost
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
@@ -35,6 +37,17 @@ class BlogSearchResponse(
 
 
 ) {
+
+    fun toBlogPost(): BlogPost =
+        BlogPost(
+            pk = pk,
+            title = title,
+            slug = slug,
+            body = body,
+            image = image,
+            date_updated =  date_updated.convertServerStringDateToLong(),
+            username = username
+        )
 
     override fun toString(): String {
         return "BlogSearchResponse(pk=$pk, title='$title', slug='$slug',  image='$image', date_updated='$date_updated', username='$username')"

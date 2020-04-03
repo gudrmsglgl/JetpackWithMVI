@@ -1,6 +1,5 @@
 package com.fastival.jetpackwithmviapp.persistence
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.fastival.jetpackwithmviapp.models.BlogPost
 import com.fastival.jetpackwithmviapp.util.Constants.Companion.PAGINATION_PAGE_SIZE
@@ -18,7 +17,7 @@ interface BlogPostDao {
         UPDATE blog_post SET title = :title, body = :body, image = :image 
         WHERE pk = :pk
     """)
-    fun updateBlogPost(pk: Int, title: String, body: String, image: String)
+    suspend fun updateBlogPost(pk: Int, title: String, body: String, image: String)
 
     // || is string concatenate operator in SQLite. Think of it as + in Java String
     // https://stackoverflow.com/questions/44184769/android-room-select-query-with-like
@@ -29,11 +28,11 @@ interface BlogPostDao {
         OR username LIKE '%' || :query || '%' 
         LIMIT (:page * :pageSize)
     """)
-    fun getAllBlogPosts(
+    suspend fun getAllBlogPosts(
         query: String,
         page: Int,
         pageSize: Int = PAGINATION_PAGE_SIZE
-    ): LiveData<List<BlogPost>>
+    ): List<BlogPost>
 
     @Query("""
         SELECT * FROM blog_post 
@@ -42,11 +41,11 @@ interface BlogPostDao {
         OR username LIKE '%' || :query || '%' 
         ORDER BY date_updated DESC LIMIT (:page * :pageSize)
     """)
-    fun searchBlogPostsOrderByDateDESC(
+    suspend fun searchBlogPostsOrderByDateDESC(
         query: String,
         page: Int,
         pageSize: Int = PAGINATION_PAGE_SIZE
-    ): LiveData<List<BlogPost>>
+    ): List<BlogPost>
 
     @Query("""
         SELECT * FROM blog_post 
@@ -55,11 +54,11 @@ interface BlogPostDao {
         OR username LIKE '%' || :query || '%' 
         ORDER BY date_updated ASC LIMIT (:page * :pageSize)
     """)
-    fun searchBlogPostsOrderByDateASC(
+    suspend fun searchBlogPostsOrderByDateASC(
         query: String,
         page: Int,
         pageSize: Int = PAGINATION_PAGE_SIZE
-    ): LiveData<List<BlogPost>>
+    ): List<BlogPost>
 
     @Query("""
         SELECT * FROM blog_post 
@@ -68,11 +67,11 @@ interface BlogPostDao {
         OR username LIKE '%' || :query || '%' 
         ORDER BY username DESC LIMIT (:page * :pageSize)
     """)
-    fun searchBlogPostsOrderByAuthorDESC(
+    suspend fun searchBlogPostsOrderByAuthorDESC(
         query: String,
         page: Int,
         pageSize: Int = PAGINATION_PAGE_SIZE
-    ): LiveData<List<BlogPost>>
+    ): List<BlogPost>
 
     @Query("""
         SELECT * FROM blog_post 
@@ -81,11 +80,11 @@ interface BlogPostDao {
         OR username LIKE '%' || :query || '%' 
         ORDER BY username ASC LIMIT (:page * :pageSize)
     """)
-    fun searchBlogPostsOrderByAuthorASC(
+    suspend fun searchBlogPostsOrderByAuthorASC(
         query: String,
         page: Int,
         pageSize: Int = PAGINATION_PAGE_SIZE
-    ): LiveData<List<BlogPost>>
+    ): List<BlogPost>
 
 
 

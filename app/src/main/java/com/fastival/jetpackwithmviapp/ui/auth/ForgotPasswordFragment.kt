@@ -21,17 +21,20 @@ import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentForgotPasswordBinding
 import com.fastival.jetpackwithmviapp.di.auth.AuthScope
 import com.fastival.jetpackwithmviapp.ui.*
+import com.fastival.jetpackwithmviapp.ui.DataState
 import com.fastival.jetpackwithmviapp.ui.base.BaseAuthFragment
-import com.fastival.jetpackwithmviapp.util.Constants
+import com.fastival.jetpackwithmviapp.util.*
+import com.fastival.jetpackwithmviapp.util.Response
 import kotlinx.android.synthetic.main.fragment_forgot_password.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass.
  */
+@FlowPreview
+@ExperimentalCoroutinesApi
+@AuthScope
 class ForgotPasswordFragment
 @Inject
 constructor(
@@ -53,29 +56,29 @@ constructor(
         override fun onError(errorMessage: String) {
             Log.e(TAG, "WebAppInterface.onError: $errorMessage")
 
-            val dataState = DataState.error<Any>(
-                response = Response(errorMessage, ResponseType.Dialog())
-            )
-            stateListener.onDataStateChange(
-                dataState = dataState
-            )
+            uiCommunicationListener
+                .onResponseReceived(
+                    response = Response(
+                        message = errorMessage,
+                        uiComponentType = UIComponentType.Dialog,
+                        messageType = MessageType.Error
+                    ),
+                    stateMessageCallback = object : StateMessageCallback{
+                        override fun removeMessageFromStack() {
+                            viewModel.removeStateMessage()
+                        }
+                    })
         }
 
         override fun onLoading(isLoading: Boolean) {
             Log.e(TAG, "WebAppInterface.onLoading...")
-            CoroutineScope(Dispatchers.Main).launch {
-                stateListener.onDataStateChange(
-                    DataState.loading(isLoading, null)
-                )
-            }
+            uiCommunicationListener.displayProgressBar(isLoading)
         }
     }
 
-    override fun getBindingVariable(): Int {
-        return BR.empty
-    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    override fun initFunc() {
         loadPasswordResetWebView()
 
         return_to_launcher_fragment.setOnClickListener {
@@ -83,20 +86,19 @@ constructor(
         }
     }
 
+
     @SuppressLint("SetJavaScriptEnabled")
     private fun loadPasswordResetWebView() {
 
-        stateListener.onDataStateChange(
-            DataState.loading(true,null)
-        )
+        uiCommunicationListener.displayProgressBar(true)
+
         webView.webViewClient = object : WebViewClient(){
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
-                stateListener.onDataStateChange(
-                    DataState.loading(false, null)
-                )
+                uiCommunicationListener.displayProgressBar(false)
             }
         }
+
         webView.loadUrl(Constants.PASSWORD_RESET_URL)
         webView.settings.javaScriptEnabled = true
         webView.addJavascriptInterface(WebAppInterface(webInteractionCallback), "AndroidTextListener")
@@ -120,9 +122,6 @@ constructor(
         }
     }
 
-
-    override fun subscribeObservers() {
-    }
 
     class WebAppInterface
     constructor(private val callback: OnWebInteractionCallback){

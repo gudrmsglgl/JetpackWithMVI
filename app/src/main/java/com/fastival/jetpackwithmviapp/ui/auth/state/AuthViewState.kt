@@ -8,8 +8,8 @@ const val AUTH_VIEW_STATE_BUNDLE_KEY = "com.fastival.jetpackwithmviapp.ui.auth.s
 
 @Parcelize
 data class AuthViewState(
-    var registrationFields: RegistrationFields? = RegistrationFields(),
-    var loginFields: LoginFields? = LoginFields(),
+    var registrationFields: RegistrationFields? = null,
+    var loginFields: LoginFields? = null,
     var authToken: AuthToken? = null
 ): Parcelable
 

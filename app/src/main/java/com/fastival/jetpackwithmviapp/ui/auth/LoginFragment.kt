@@ -1,6 +1,8 @@
 package com.fastival.jetpackwithmviapp.ui.auth
 
 
+import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -18,31 +20,45 @@ import com.fastival.jetpackwithmviapp.util.ApiEmptyResponse
 import com.fastival.jetpackwithmviapp.util.ApiErrorResponse
 import com.fastival.jetpackwithmviapp.util.ApiSuccessResponse
 import kotlinx.android.synthetic.main.fragment_login.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass.
  */
+@FlowPreview
+@ExperimentalCoroutinesApi
+@AuthScope
 class LoginFragment
 @Inject
 constructor(
     private val viewModelFactory: ViewModelProvider.Factory
 ) : BaseAuthFragment<FragmentLoginBinding>(R.layout.fragment_login, viewModelFactory) {
 
-    override fun getBindingVariable(): Int {
-        return BR.authViewModel
-    }
 
-    override fun initFunc() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        subscribeObservers()
+
         login_button.setOnClickListener {
-            viewModel.setStateEvent(LoginAttemptEvent(
-                input_email.text.toString(),
-                input_password.text.toString()
-            ))
+            login()
         }
     }
 
-    override fun subscribeObservers(){
+    private fun login(){
+        saveLoginFields()
+        viewModel.setStateEvent(
+            LoginAttemptEvent(
+                binding.inputEmail.text.toString(),
+                binding.inputPassword.text.toString()
+            )
+        )
+    }
+
+
+    fun subscribeObservers(){
         viewModel.viewState.observe(viewLifecycleOwner, Observer {viewState->
             viewState.loginFields?.let { loginFields ->
                 loginFields.login_email?.let { input_email.setText(it) }
@@ -53,11 +69,15 @@ constructor(
 
     override fun onDestroyView() {
         super.onDestroyView()
-        viewModel.setLoginFields(
-            LoginFields(
-                input_email.text.toString(),
-                input_password.text.toString()
-            )
-        )
+        saveLoginFields()
     }
+
+    private fun saveLoginFields() =
+        viewModel
+            .setViewStateLoginFields(
+                LoginFields(
+                    binding.inputEmail.text.toString(),
+                    binding.inputPassword.text.toString()
+                )
+            )
 }

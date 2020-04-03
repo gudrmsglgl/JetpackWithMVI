@@ -1,143 +1,101 @@
 package com.fastival.jetpackwithmviapp.ui.base
 
+import UICommunicationListener
 import android.Manifest.*
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.inputmethod.InputMethodManager
-import androidx.annotation.LayoutRes
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import com.fastival.jetpackwithmviapp.extension.activity.*
+import com.afollestad.materialdialogs.MaterialDialog
+import com.fastival.jetpackwithmviapp.BaseApplication
+import com.fastival.jetpackwithmviapp.extension.activity.areYouSureDialog
+import com.fastival.jetpackwithmviapp.extension.activity.displayDialog
+import com.fastival.jetpackwithmviapp.extension.activity.displayToast
 import com.fastival.jetpackwithmviapp.session.SessionManager
-import com.fastival.jetpackwithmviapp.ui.*
 import com.fastival.jetpackwithmviapp.util.Constants.Companion.PERMISSIONS_REQUEST_READ_STORAGE
-import com.fastival.jetpackwithmviapp.viewmodels.InjectingSavedStateViewModelFactory
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import com.fastival.jetpackwithmviapp.util.Response
+import com.fastival.jetpackwithmviapp.util.StateMessageCallback
+import com.fastival.jetpackwithmviapp.util.UIComponentType
 import javax.inject.Inject
 
-abstract class BaseActivity<vb: ViewDataBinding>
-    : AppCompatActivity(), DataStateChangeListener, UICommunicationListener
+abstract class BaseActivity
+    : AppCompatActivity(), UICommunicationListener
 {
 
     val TAG: String = "AppDebug"
 
-    abstract fun inject()
+    internal var dialogInView: MaterialDialog? = null
 
     @Inject
     lateinit var sessionManager: SessionManager
 
-    protected lateinit var binding: vb
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        inject()
+
+        (application as BaseApplication).appComponent
+            .inject(this)
+
         super.onCreate(savedInstanceState)
 
-        initVariables()
-        subscribeObservers()
-    }
-
-    protected open fun initVariables(){
-        binding = DataBindingUtil.setContentView(this, getLayoutId())
-        binding.lifecycleOwner = this
-        binding.executePendingBindings()
-        Log.d(TAG, "baseActivity_initBinding()")
     }
 
 
-    override fun onUIMessageReceived(uiMessage: UIMessage) {
-        when(uiMessage.uiMessageType){
+    override fun onResponseReceived(
+        response: Response,
+        stateMessageCallback: StateMessageCallback
+    ){
+        when(response.uiComponentType) {
 
-            is UIMessageType.AreYouSureDialog -> {
-                areYouSureDialog(
-                    message = uiMessage.message,
-                    callback = uiMessage.uiMessageType.callback
+            is UIComponentType.AreYouSureDialog -> {
+
+                response.message?.let {
+                    areYouSureDialog(
+                        message = it,
+                        callback = response.uiComponentType.callback,
+                        stateMessageCallback = stateMessageCallback
+                    )
+                }
+
+            }
+
+            is UIComponentType.Toast -> {
+                response.message?.let {
+                    displayToast(
+                        message = it,
+                        stateMessageCallback = stateMessageCallback
+                    )
+                }
+            }
+
+            is UIComponentType.Dialog -> {
+                displayDialog(
+                    response = response,
+                    stateMessageCallback = stateMessageCallback
                 )
             }
 
-            is UIMessageType.Dialog -> {
-                displayInfoDialog(uiMessage.message)
-            }
-
-            is UIMessageType.Toast -> {
-                displayToast(uiMessage.message)
-            }
-
-            is UIMessageType.None -> {
-                Log.i(TAG, "onUIMessageReceived: ${uiMessage.message}")
+            is UIComponentType.None -> {
+                // This would be a good place to send to your Error Reporting
+                // software of choice (ex: Firebase crash reporting)
+                Log.i(TAG, "onResponseReceived: ${response.message}")
+                stateMessageCallback.removeMessageFromStack()
             }
         }
     }
 
-    override fun onDataStateChange(dataState: DataState<*>?) {
-        dataState?.let {
-            GlobalScope.launch(Dispatchers.Main){
-                displayProgressBar(it.loading.isLoading)
 
-                it.error?.let { errorEvent ->
-                    handleStateError(errorEvent)
-                }
-
-                it.data?.response?.let {
-                    handleStateResponse(it)
-                }
-
-            }
+    override fun onPause() {
+        super.onPause()
+        if (dialogInView != null) {
+            (dialogInView as MaterialDialog).dismiss()
+            dialogInView = null
         }
     }
 
-    private fun handleStateError(event: Event<StateError>){
-        event.getContentIfNotHandled()?.let {
-            when(it.response.responseType) {
-                is ResponseType.Dialog -> {
-                    it.response.message?.let {msg-> displayErrorDialog(msg) }
-                }
-
-                is ResponseType.Toast -> {
-                    it.response.message?.let { msg -> displayToast(msg) }
-                }
-
-                is ResponseType.None -> {
-                    Log.i(TAG, "handleStateError: ${it.response.message}")
-                }
-
-            }
-        }
-    }
-
-    private fun handleStateResponse(event: Event<Response>) {
-        event.getContentIfNotHandled()?.let {
-
-            when(it.responseType) {
-                is ResponseType.Toast -> {
-                    it.message?.let { msg -> displayToast(msg) }
-                }
-
-                is ResponseType.Dialog -> {
-                    it.message?.let { msg -> displaySuccessDialog(msg) }
-                }
-
-                is ResponseType.None -> {
-                    Log.i(TAG, "handleStateResponse: ${it.message}")
-                }
-            }
-        }
-    }
-
-    @LayoutRes
-    protected abstract fun getLayoutId(): Int
-
-    protected abstract fun subscribeObservers()
-
-    abstract fun displayProgressBar(bool: Boolean)
 
     override fun hideSoftKeyboard() {
         if (currentFocus != null) {
@@ -147,6 +105,7 @@ abstract class BaseActivity<vb: ViewDataBinding>
                 .hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
         }
     }
+
 
     override fun isStoragePermissionGranted(): Boolean {
         if (ContextCompat.checkSelfPermission(
@@ -175,5 +134,8 @@ abstract class BaseActivity<vb: ViewDataBinding>
         }
     }
 
+    abstract override fun displayProgressBar(isLoading: Boolean)
+
+    abstract fun inject()
 
 }

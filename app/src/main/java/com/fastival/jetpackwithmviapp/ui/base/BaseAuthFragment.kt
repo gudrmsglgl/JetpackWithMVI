@@ -1,5 +1,6 @@
 package com.fastival.jetpackwithmviapp.ui.base
 
+import UICommunicationListener
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -9,60 +10,41 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import com.fastival.jetpackwithmviapp.ui.DataStateChangeListener
 import com.fastival.jetpackwithmviapp.ui.auth.AuthViewModel
-import com.fastival.jetpackwithmviapp.viewmodels.InjectingSavedStateViewModelFactory
 import com.wada811.databinding.dataBinding
-import javax.inject.Inject
 
 abstract class BaseAuthFragment<vb: ViewDataBinding>(
-    @LayoutRes contentId: Int,
+    @LayoutRes layoutRes: Int,
     private val viewModelFactory: ViewModelProvider.Factory
-): Fragment(contentId)
+): Fragment(layoutRes)
 {
 
     val TAG = "AppDebug"
-
-    protected lateinit var stateListener: DataStateChangeListener
 
     internal val binding: vb by dataBinding()
 
     val viewModel: AuthViewModel by viewModels { viewModelFactory }
 
+    lateinit var uiCommunicationListener: UICommunicationListener
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        cancelActiveJobs()
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.setVariable(getBindingVariable(), viewModel)
-
-        initFunc()
-        subscribeObservers()
-
+        setupChannel()
     }
 
+    private fun setupChannel() = viewModel.setUpChannel()
 
-    private fun cancelActiveJobs(){
-        viewModel.cancelActiveJobs()
-    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         try{
-            stateListener = context as DataStateChangeListener
+            uiCommunicationListener = context as UICommunicationListener
         }catch (e: ClassCastException) {
-            Log.e(TAG, "$context must implement DataStateChangeListener" )
+            Log.e(TAG, "$context must implement UICommunicationListener" )
         }
     }
 
 
-    protected abstract fun getBindingVariable(): Int
-
-    protected abstract fun initFunc()
-
-    protected abstract fun subscribeObservers()
 }

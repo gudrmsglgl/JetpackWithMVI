@@ -34,7 +34,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 import javax.inject.Named
 
-class MainActivity : BaseActivity<ActivityMainBinding>(),
+class MainActivity : BaseActivity(),
 BottomNavController.OnNavigationGraphChanged,
 BottomNavController.OnNavigationReselectedListener{
 

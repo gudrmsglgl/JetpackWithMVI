@@ -5,6 +5,7 @@ import com.fastival.jetpackwithmviapp.api.auth.OpenApiAuthService
 import com.fastival.jetpackwithmviapp.persistence.AccountPropertiesDao
 import com.fastival.jetpackwithmviapp.persistence.AuthTokenDao
 import com.fastival.jetpackwithmviapp.repository.auth.AuthRepository
+import com.fastival.jetpackwithmviapp.repository.auth.AuthRepositoryImpl
 import com.fastival.jetpackwithmviapp.session.SessionManager
 import dagger.Module
 import dagger.Provides
@@ -33,7 +34,7 @@ object AuthModule {
         preferences: SharedPreferences,
         editor: SharedPreferences.Editor
     ): AuthRepository {
-        return AuthRepository(
+        return AuthRepositoryImpl(
             authTokenDao,
             accountPropertiesDao,
             openApiAuthService,

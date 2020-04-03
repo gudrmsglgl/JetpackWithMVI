@@ -14,6 +14,7 @@ import com.fastival.jetpackwithmviapp.BR
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentRegisterBinding
 import com.fastival.jetpackwithmviapp.di.auth.AuthScope
+import com.fastival.jetpackwithmviapp.extension.editToString
 import com.fastival.jetpackwithmviapp.ui.auth.state.AuthStateEvent
 import com.fastival.jetpackwithmviapp.ui.auth.state.AuthStateEvent.RegisterAttemptEvent
 import com.fastival.jetpackwithmviapp.ui.auth.state.RegistrationFields
@@ -22,35 +23,43 @@ import com.fastival.jetpackwithmviapp.util.ApiEmptyResponse
 import com.fastival.jetpackwithmviapp.util.ApiErrorResponse
 import com.fastival.jetpackwithmviapp.util.ApiSuccessResponse
 import kotlinx.android.synthetic.main.fragment_register.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass.
  */
+@FlowPreview
+@ExperimentalCoroutinesApi
+@AuthScope
 class RegisterFragment
 @Inject constructor(
     private val viewModelFactory: ViewModelProvider.Factory
 ): BaseAuthFragment<FragmentRegisterBinding>(R.layout.fragment_register, viewModelFactory) {
 
-    override fun getBindingVariable(): Int {
-        return BR.viewModel
-    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
+        subscribeObservers()
 
-    override fun initFunc() {
-        register_button.setOnClickListener {
-            viewModel.setStateEvent(
-                RegisterAttemptEvent(
-                    input_email.text.toString(),
-                    input_username.text.toString(),
-                    input_password.text.toString(),
-                    input_password_confirm.text.toString()
-                )
-            )
+        binding.registerButton.setOnClickListener {
+            register()
         }
     }
 
-    override fun subscribeObservers(){
+    private fun register() =
+        viewModel.setStateEvent(
+            RegisterAttemptEvent(
+                binding.inputEmail.editToString(),
+                binding.inputUsername.editToString(),
+                binding.inputPassword.editToString(),
+                binding.inputPasswordConfirm.editToString()
+            )
+        )
+
+
+    private fun subscribeObservers(){
         viewModel.viewState.observe(viewLifecycleOwner, Observer {viewState->
             viewState.registrationFields?.let {regField->
                 regField.registration_email?.let { input_email.setText(it) }
@@ -63,13 +72,14 @@ class RegisterFragment
 
     override fun onDestroyView() {
         super.onDestroyView()
-        viewModel.setRegistrationFields(
-            RegistrationFields(
-                input_email.text.toString(),
-                input_username.text.toString(),
-                input_password.text.toString(),
-                input_password_confirm.text.toString()
+        viewModel
+            .setViewStateRegistrationFields(
+                RegistrationFields(
+                    input_email.editToString(),
+                    input_username.editToString(),
+                    input_password.editToString(),
+                    input_password_confirm.editToString()
+                )
             )
-        )
     }
 }

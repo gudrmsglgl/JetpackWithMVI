@@ -3,10 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-    <data>
-        <import type="android.view.View"/>
-        <variable name="authViewModel" type="com.fastival.jetpackwithmviapp.ui.auth.AuthViewModel"/>
-    </data>
+
     
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
@@ -36,6 +33,18 @@
 
     </FrameLayout>
 
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="75dp"
+        android:id="@+id/splash_logo"
+        android:src="@drawable/codingwithmitch_logo"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias=".4"
+        />
+
     <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -45,7 +54,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintVertical_bias="0.10"
-        android:visibility="invisible" />
+        android:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
