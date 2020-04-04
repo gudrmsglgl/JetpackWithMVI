@@ -31,7 +31,7 @@ constructor(
     private val sharedPreferences: SharedPreferences,
     private val editor: SharedPreferences.Editor
     //@Assisted private val savedStateHandle: SavedStateHandle
-): BaseViewModel<BlogStateEvent, BlogViewState>() {
+): BaseViewModel<BlogViewState>() {
 
     /*@AssistedInject.Factory
     interface Factory: SavedStateViewModelFactory<BlogViewModel>*/

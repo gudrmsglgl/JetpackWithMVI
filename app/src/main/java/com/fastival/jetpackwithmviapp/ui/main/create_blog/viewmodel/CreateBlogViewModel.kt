@@ -20,7 +20,7 @@ class CreateBlogViewModel
 constructor(
     val sessionManager: SessionManager,
     val repository: CreateBlogRepository
-) : BaseViewModel<CreateBlogStateEvent, CreateBlogViewState>() {
+) : BaseViewModel<CreateBlogViewState>() {
 
     override val viewState: LiveData<CreateBlogViewState>
         get() = super.viewState

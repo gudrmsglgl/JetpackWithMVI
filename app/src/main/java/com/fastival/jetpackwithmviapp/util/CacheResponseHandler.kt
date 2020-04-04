@@ -30,12 +30,15 @@ abstract class CacheResponseHandler<ViewState, Data>(
                         stateEvent = stateEvent
                     )
                 } else {
-                    handleSuccess(resultObj = response.value)
+                    cacheResultSuccess(cacheObj = response.value, stateEvent = stateEvent)
                 }
             }
 
         }
     }
 
-    abstract suspend fun handleSuccess(resultObj: Data): DataState<ViewState>
+    abstract suspend fun cacheResultSuccess(
+        cacheObj: Data,
+        stateEvent: StateEvent?
+    ): DataState<ViewState>
 }

@@ -3,7 +3,6 @@ package com.fastival.jetpackwithmviapp.repository.main
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
-import androidx.lifecycle.switchMap
 import com.fastival.jetpackwithmviapp.api.GenericResponse
 import com.fastival.jetpackwithmviapp.api.main.OpenApiMainService
 import com.fastival.jetpackwithmviapp.api.main.response.BlogCreateUpdateResponse
@@ -15,9 +14,7 @@ import com.fastival.jetpackwithmviapp.models.BlogPost
 import com.fastival.jetpackwithmviapp.persistence.BlogPostDao
 import com.fastival.jetpackwithmviapp.persistence.returnOrderedBlogQuery
 import com.fastival.jetpackwithmviapp.repository.JobManager
-import com.fastival.jetpackwithmviapp.repository.NetworkBoundResource
 import com.fastival.jetpackwithmviapp.session.SessionManager
-import com.fastival.jetpackwithmviapp.ui.Data
 import com.fastival.jetpackwithmviapp.ui.DataState
 import com.fastival.jetpackwithmviapp.ui.Response
 import com.fastival.jetpackwithmviapp.ui.ResponseType

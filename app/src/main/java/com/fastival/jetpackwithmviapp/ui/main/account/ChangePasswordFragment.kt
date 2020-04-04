@@ -14,10 +14,12 @@ import com.fastival.jetpackwithmviapp.BR
 
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentChangePasswordBinding
+import com.fastival.jetpackwithmviapp.extension.editToString
 import com.fastival.jetpackwithmviapp.ui.EmptyViewModel
 import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
 import com.fastival.jetpackwithmviapp.ui.base.account.BaseAccountFragment
 import com.fastival.jetpackwithmviapp.ui.main.account.state.AccountStateEvent
+import com.fastival.jetpackwithmviapp.util.StateMessageCallback
 import com.fastival.jetpackwithmviapp.util.SuccessHandling.Companion.RESPONSE_PASSWORD_UPDATE_SUCCESS
 import kotlinx.android.synthetic.main.fragment_change_password.*
 import javax.inject.Inject
@@ -36,33 +38,44 @@ constructor(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        subscribeObservers()
-
         update_password_button.setOnClickListener {
+
             viewModel.setStateEvent(AccountStateEvent.ChangePasswordEvent(
-                input_current_password.text.toString(),
-                input_new_password.text.toString(),
-                input_confirm_new_password.text.toString()
+                input_current_password.editToString(),
+                input_new_password.editToString(),
+                input_confirm_new_password.editToString()
             ))
+
         }
     }
 
-    fun subscribeObservers() {
-        viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
-            Log.d(TAG, "ChangePasswordFragment, DataState: $dataState")
-            if (dataState != null) {
+    override fun observeStateMessage() =
+        viewModel
+            .stateMessage
+            .observe( viewLifecycleOwner, Observer { stateMessage ->
 
-                stateListener.onDataStateChange(dataState)
-                dataState.data?.response?.let { event ->
-                    if (event.peekContent().message.equals(RESPONSE_PASSWORD_UPDATE_SUCCESS)) {
-                        stateListener.hideSoftKeyboard()
+                stateMessage?.let {
+
+                    if (it.response.message == RESPONSE_PASSWORD_UPDATE_SUCCESS){
+
+                        uiCommunicationListener.hideSoftKeyboard()
                         findNavController().popBackStack()
+
                     }
+
+                    uiCommunicationListener
+                        .onResponseReceived(
+                            response = it.response,
+                            stateMessageCallback = object: StateMessageCallback{
+
+                                override fun removeMessageFromStack() {
+                                    viewModel.removeStateMessage()
+                                }
+
+                            }
+                        )
+
                 }
 
-            }
-        })
-    }
-
-    override fun getVariableId(): Int = BR.vm
+            })
 }

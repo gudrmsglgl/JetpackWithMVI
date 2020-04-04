@@ -5,6 +5,7 @@ import com.fastival.jetpackwithmviapp.persistence.AccountPropertiesDao
 import com.fastival.jetpackwithmviapp.persistence.AppDatabase
 import com.fastival.jetpackwithmviapp.persistence.BlogPostDao
 import com.fastival.jetpackwithmviapp.repository.main.AccountRepository
+import com.fastival.jetpackwithmviapp.repository.main.AccountRepositoryImpl
 import com.fastival.jetpackwithmviapp.repository.main.BlogRepository
 import com.fastival.jetpackwithmviapp.repository.main.CreateBlogRepository
 import com.fastival.jetpackwithmviapp.session.SessionManager
@@ -30,9 +31,9 @@ object MainModule {
         openApiMainService: OpenApiMainService,
         accountPropertiesDao: AccountPropertiesDao,
         sessionManager: SessionManager
-    ): AccountRepository{
-        return AccountRepository(openApiMainService, accountPropertiesDao, sessionManager)
-    }
+    ): AccountRepository =
+        AccountRepositoryImpl(openApiMainService, accountPropertiesDao, sessionManager)
+
 
     @JvmStatic
     @MainScope

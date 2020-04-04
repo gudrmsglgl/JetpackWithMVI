@@ -45,12 +45,12 @@ abstract class ApiResponseHandler<ViewState, Data>(
                         stateEvent = stateEvent
                     )
                 } else {
-                    handleSuccess(resultObj = response.value)
+                    handleApiResultSuccess(networkObj = response.value)
                 }
             }
 
         }
     }
 
-    abstract suspend fun handleSuccess(resultObj: Data): DataState<ViewState>
+    abstract suspend fun handleApiResultSuccess(networkObj: Data): DataState<ViewState>
 }

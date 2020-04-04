@@ -16,6 +16,7 @@ import com.fastival.jetpackwithmviapp.ui.EmptyViewModel
 import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
 import com.fastival.jetpackwithmviapp.ui.base.account.BaseAccountFragment
 import com.fastival.jetpackwithmviapp.ui.main.account.state.AccountStateEvent
+import com.fastival.jetpackwithmviapp.util.StateMessageCallback
 import kotlinx.android.synthetic.main.fragment_update_account.*
 import javax.inject.Inject
 
@@ -29,38 +30,41 @@ constructor(
 ): BaseAccountFragment<FragmentUpdateAccountBinding>(R.layout.fragment_update_account, provider)
 {
 
-    fun subscribeObservers() {
-
-        viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
-            if (dataState != null) {
-
-                Log.d(TAG, "UpdateAccountFragment, DataState: ${dataState}")
-                stateListener.onDataStateChange(dataState)
-
-            }
-        })
-
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setHasOptionsMenu(true)
-        subscribeObservers()
+
+        binding.vm = viewModel
+
     }
 
-    private fun saveChange(){
-        viewModel.setStateEvent(
-            AccountStateEvent.UpdateAccountPropertiesEvent(
-                input_email.text.toString(),
-                input_username.text.toString()
-            )
-        )
-        stateListener.hideSoftKeyboard()
-    }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    override fun observeStateMessage() =
+        viewModel
+            .stateMessage
+            .observe( viewLifecycleOwner, Observer { stateMessage ->
+
+                stateMessage?.let {
+
+                    uiCommunicationListener
+                        .onResponseReceived(
+                            response = it.response,
+                            stateMessageCallback = object: StateMessageCallback{
+
+                                override fun removeMessageFromStack() {
+                                    viewModel.removeStateMessage()
+                                }
+
+                            }
+                        )
+
+                }
+
+            })
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) =
         inflater.inflate(R.menu.update_menu, menu)
-    }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
@@ -72,6 +76,15 @@ constructor(
         return super.onOptionsItemSelected(item)
     }
 
-    override fun getVariableId(): Int = BR.vm
+
+    private fun saveChange(){
+        viewModel.setStateEvent(
+            AccountStateEvent.UpdateAccountPropertiesEvent(
+                input_email.text.toString(),
+                input_username.text.toString()
+            )
+        )
+        uiCommunicationListener.hideSoftKeyboard()
+    }
 
 }

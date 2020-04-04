@@ -4,19 +4,20 @@ import com.fastival.jetpackwithmviapp.util.*
 import com.fastival.jetpackwithmviapp.util.ErrorHandling.Companion.NETWORK_ERROR
 import com.fastival.jetpackwithmviapp.util.ErrorHandling.Companion.UNKNOWN_ERROR
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 
 @FlowPreview
-class NetworkBoundResource<NetworkObj, CacheObj, ViewState>(
-    private val dispatcher: CoroutineDispatcher,
+open class NetworkBoundResource<NetworkObj, CacheObj, ViewState>(
+    val dispatcher: CoroutineDispatcher,
     private val stateEvent: StateEvent,
     private val dbQuery: suspend () -> CacheObj?,
-    private val fetchCacheData: (CacheObj) -> DataState<ViewState>,
+    private val fetchCacheData: (CacheObj, StateEvent?) -> DataState<ViewState>,
     private val apiCall: suspend () -> NetworkObj?,
-    private val updateCache: suspend (NetworkObj) -> Unit
+    private val updateCache: suspend (NetworkObj, CoroutineDispatcher) -> Unit
 )
 {
 
@@ -57,7 +58,7 @@ class NetworkBoundResource<NetworkObj, CacheObj, ViewState>(
                 }
 
                 else {
-                    updateCache.invoke(apiResult.value as NetworkObj)
+                    updateCache.invoke(apiResult.value, dispatcher)
                 }
 
             }
@@ -96,8 +97,11 @@ class NetworkBoundResource<NetworkObj, CacheObj, ViewState>(
             response = cacheResult,
             stateEvent = jobCompleteMarker
         ){
-            override suspend fun cacheResultSuccess(resultObj: CacheObj): DataState<ViewState> {
-                return fetchCacheData.invoke(resultObj)
+            override suspend fun cacheResultSuccess(
+                cacheObj: CacheObj,
+                stateEvent: StateEvent?
+            ): DataState<ViewState> {
+                return fetchCacheData.invoke(cacheObj, stateEvent)
             }
         }.getResult()
 

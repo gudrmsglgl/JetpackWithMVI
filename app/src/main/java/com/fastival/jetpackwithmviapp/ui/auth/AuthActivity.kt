@@ -49,16 +49,18 @@ class AuthActivity : BaseActivity()
     }
 
     private fun onRestoreInstanceState(){
-        val host = supportFragmentManager.findFragmentById(R.id.auth_nav_host_fragment)
+        val host = supportFragmentManager.findFragmentById(R.id.auth_fragments_container)
         host?.let {  }?: createNavHost()
     }
 
     private fun createNavHost() {
+
         val navHost =
             AuthNavHostFragment.create(R.navigation.auth_nav_graph)
+
         supportFragmentManager.beginTransaction()
             .replace(
-                R.id.auth_nav_host_fragment,
+                R.id.auth_fragments_container,
                 navHost,
                 getString(R.string.AuthNavHost)
             )

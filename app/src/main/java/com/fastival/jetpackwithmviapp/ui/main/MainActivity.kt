@@ -8,26 +8,22 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
-import com.fastival.jetpackwithmviapp.BR
 import com.fastival.jetpackwithmviapp.BaseApplication
 import com.fastival.jetpackwithmviapp.R
-import com.fastival.jetpackwithmviapp.databinding.ActivityMainBinding
 import com.fastival.jetpackwithmviapp.extension.activity.navActivity
+import com.fastival.jetpackwithmviapp.extension.activity.restoreSession
+import com.fastival.jetpackwithmviapp.extension.activity.setupBottomNavigationView
 import com.fastival.jetpackwithmviapp.extension.fragment.setPositionTopRecyclerView
-import com.fastival.jetpackwithmviapp.ui.EmptyViewModel
+import com.fastival.jetpackwithmviapp.models.AUTH_TOKEN_BUNDLE_KEY
 import com.fastival.jetpackwithmviapp.ui.auth.AuthActivity
 import com.fastival.jetpackwithmviapp.ui.base.BaseActivity
-import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
-import com.fastival.jetpackwithmviapp.ui.base.account.BaseAccountFragment
-import com.fastival.jetpackwithmviapp.ui.base.blog.BaseBlogFragment
-import com.fastival.jetpackwithmviapp.ui.base.create_blog.BaseCreateBlogFragment
 import com.fastival.jetpackwithmviapp.ui.main.account.ChangePasswordFragment
 import com.fastival.jetpackwithmviapp.ui.main.account.UpdateAccountFragment
 import com.fastival.jetpackwithmviapp.ui.main.blog.BlogFragment
 import com.fastival.jetpackwithmviapp.ui.main.blog.UpdateBlogFragment
 import com.fastival.jetpackwithmviapp.ui.main.blog.ViewBlogFragment
+import com.fastival.jetpackwithmviapp.util.BOTTOM_NAV_BACKSTACK_KEY
 import com.fastival.jetpackwithmviapp.util.BottomNavController
-import com.fastival.jetpackwithmviapp.util.setUpNavigation
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
@@ -36,9 +32,10 @@ import javax.inject.Named
 
 class MainActivity : BaseActivity(),
 BottomNavController.OnNavigationGraphChanged,
-BottomNavController.OnNavigationReselectedListener{
+BottomNavController.OnNavigationReselectedListener
+{
 
-    private lateinit var bottomNavigationView: BottomNavigationView
+    internal lateinit var bottomNavigationView: BottomNavigationView
 
     @Inject
     @Named("AccountFragmentFactory")
@@ -52,53 +49,59 @@ BottomNavController.OnNavigationReselectedListener{
     @Named("CreateBlogFragmentFactory")
     lateinit var createBlogFragmentFactory: FragmentFactory
 
-
-    private val bottomNavController by lazy(LazyThreadSafetyMode.NONE) {
+    internal val bottomNavController by lazy(LazyThreadSafetyMode.NONE) {
         BottomNavController(
             this,
-            R.id.main_nav_host_fragment,
+            R.id.main_fragments_container,
             R.id.nav_blog,
             this)
     }
 
 
-    override fun onGraphChange() {
-        cancelActiveJobs()
-        expandAppBar()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        inject()
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        setSupportActionBar(tool_bar)
+
+        restoreSession(savedInstanceState)
+
+        setupBottomNavigationView(savedInstanceState)
+
+        observeCachedToken()
     }
 
-    private fun cancelActiveJobs() {
-        val fragments = bottomNavController.fragmentManager
-            .findFragmentById(bottomNavController.containerId)
-            ?.childFragmentManager
-            ?.fragments
 
-        Log.d(TAG, "MainActivity_in_fragments: ${fragments?.size}")
+    private fun observeCachedToken() =
+        sessionManager.cachedToken.observe(this, Observer { authToken->
+            Log.d(TAG, "MainActivity, subscribeObservers: ViewState: $authToken")
 
-        if (fragments != null) {
-            for (fragment in fragments) {
-                when(fragment) {
-                    is BaseAccountFragment<*> -> {
-                        Log.d(TAG, "MainActivity_cancelActiveJobs()_AccountSection")
-                        fragment.cancelActiveJobs()
-                    }
-                    is BaseBlogFragment<*> -> {
-                        Log.d(TAG, "MainActivity_cancelActiveJobs()_BlogSection")
-                        fragment.cancelActiveJobs()
-                    }
-                    is BaseCreateBlogFragment<*> -> {
-                        Log.d(TAG, "MainActivity_cancelActiveJobs()_CreateBlogSection")
-                        fragment.cancelActiveJobs()
-                    }
+            if (authToken == null || authToken.account_pk == -1 || authToken.token == null) {
+
+                navActivity<AuthActivity>(true){}.run {
+                    (application as BaseApplication).releaseMainComponent()
                 }
-            }
-        }
 
-        displayProgressBar(false)
+            }
+        })
+
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        with(outState){
+
+            putParcelable(AUTH_TOKEN_BUNDLE_KEY, sessionManager.cachedToken.value)
+
+            putIntArray(BOTTOM_NAV_BACKSTACK_KEY, bottomNavController.navigationBackStack.toIntArray())
+
+        }
     }
+
 
     override fun onReselectNavItem(
-        navController: NavController, fragment: Fragment
+        navController: NavController,
+        fragment: Fragment
     ) = when(fragment){
         is BlogFragment -> fragment.setPositionTopRecyclerView()
         is ViewBlogFragment -> navController.navigate(R.id.action_viewBlogFragment_to_blogFragment)
@@ -108,7 +111,6 @@ BottomNavController.OnNavigationReselectedListener{
         else -> {}
     }
 
-    override fun onBackPressed() = bottomNavController.onBackPressed()
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
@@ -117,67 +119,28 @@ BottomNavController.OnNavigationReselectedListener{
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setupActionBar()
-        bottomNavigationView = findViewById(R.id.bottom_navigation_view)
-        bottomNavigationView.setUpNavigation(bottomNavController, this)
-        if (savedInstanceState == null) {
-            bottomNavController.onNavigationItemSelected()
-        }
-    }
-
-    override fun initVariables() {
-        super.initVariables()
-        Log.d(TAG, "MainActivity_ sessionManager: ${sessionManager.hashCode()}")
-        binding.smr = sessionManager
-
-    }
-
-
-    override fun getLayoutId(): Int {
-        return R.layout.activity_main
-    }
-
-    override fun subscribeObservers() {
-        sessionManager.cachedToken.observe(this, Observer {authToken->
-            Log.d(TAG, "MainActivity, subscribeObservers: ViewState: $authToken")
-
-
-            if (authToken == null) {
-                Log.d(TAG, "authToken == null")
-                navActivity<AuthActivity>(true){}.run {
-                    (application as BaseApplication).releaseMainComponent()
-                }
-            }
-
-            authToken?.let {
-                if (it.token == null || it.account_pk == -1) {
-                    Log.d(TAG, "authToken.token == null || authToken.account_pk == -1")
-                    navActivity<AuthActivity>(true){}.run {
-                        (application as BaseApplication).releaseMainComponent()
-                    }
-                }
-            }
-
-        })
-    }
 
     override fun displayProgressBar(bool: Boolean) {
         if (bool) progress_bar.visibility = View.VISIBLE
         else progress_bar.visibility = View.GONE
     }
 
-    private fun setupActionBar(){
-        setSupportActionBar(tool_bar)
+
+    override fun onGraphChange() {
+        expandAppBar()
     }
+
 
     override fun expandAppBar() {
         findViewById<AppBarLayout>(R.id.app_bar).setExpanded(true)
     }
 
-    override fun inject() {
+
+    override fun onBackPressed() =
+        bottomNavController.onBackPressed()
+
+
+    override fun inject() =
         (application as BaseApplication).mainComponent().inject(this)
-    }
+
 }

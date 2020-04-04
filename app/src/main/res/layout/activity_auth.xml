@@ -22,7 +22,7 @@
         android:visibility="gone">
 
         <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/auth_nav_host_fragment"
+            android:id="@+id/auth_fragments_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintLeft_toLeftOf="parent"

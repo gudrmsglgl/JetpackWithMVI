@@ -1,5 +1,6 @@
 package com.fastival.jetpackwithmviapp.ui.base
 
+import UICommunicationListener
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -11,7 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
-import com.fastival.jetpackwithmviapp.ui.UICommunicationListener
 
 abstract class BaseMainFragment(
     @LayoutRes contentLayoutId: Int
@@ -20,7 +20,6 @@ abstract class BaseMainFragment(
 
     val TAG = "AppDebug"
 
-    internal lateinit var stateListener: DataStateChangeListener
     internal lateinit var uiCommunicationListener: UICommunicationListener
 
 
@@ -33,11 +32,6 @@ abstract class BaseMainFragment(
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        try{
-            stateListener = context as DataStateChangeListener
-        }catch (e: ClassCastException) {
-            Log.e(TAG, "$context must implement DataStateChangeListener" )
-        }
 
         try{
             uiCommunicationListener = context as UICommunicationListener

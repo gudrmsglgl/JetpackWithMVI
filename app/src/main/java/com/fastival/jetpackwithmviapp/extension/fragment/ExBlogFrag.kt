@@ -36,7 +36,7 @@ fun BF.onBlogSearchOrFilter(){
 
 private fun BF.resetUI(){
     blog_post_recyclerview.smoothScrollToPosition(0)
-    stateListener.hideSoftKeyboard()
+    uiCommunicationListener.hideSoftKeyboard()
     focusable_view.requestFocus()
 }
 
