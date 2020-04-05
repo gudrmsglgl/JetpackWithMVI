@@ -12,7 +12,7 @@ import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.extension.activity.navActivity
 import com.fastival.jetpackwithmviapp.fragments.auth.AuthNavHostFragment
 import com.fastival.jetpackwithmviapp.ui.auth.state.AuthStateEvent
-import com.fastival.jetpackwithmviapp.ui.base.BaseActivity
+import com.fastival.jetpackwithmviapp.ui.BaseActivity
 import com.fastival.jetpackwithmviapp.ui.main.MainActivity
 import com.fastival.jetpackwithmviapp.util.StateMessageCallback
 import com.fastival.jetpackwithmviapp.util.SuccessHandling.Companion.RESPONSE_CHECK_PREVIOUS_AUTH_USER_DONE

@@ -2,27 +2,20 @@ package com.fastival.jetpackwithmviapp.ui.auth
 
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.animation.TranslateAnimation
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.fastival.jetpackwithmviapp.BR
 
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentForgotPasswordBinding
 import com.fastival.jetpackwithmviapp.di.auth.AuthScope
-import com.fastival.jetpackwithmviapp.ui.*
-import com.fastival.jetpackwithmviapp.ui.DataState
-import com.fastival.jetpackwithmviapp.ui.base.BaseAuthFragment
 import com.fastival.jetpackwithmviapp.util.*
 import com.fastival.jetpackwithmviapp.util.Response
 import kotlinx.android.synthetic.main.fragment_forgot_password.*

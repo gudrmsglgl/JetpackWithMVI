@@ -2,24 +2,19 @@ package com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel
 
 import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.liveData
-import com.fastival.jetpackwithmviapp.di.SavedStateViewModelFactory
 import com.fastival.jetpackwithmviapp.extension.parseRequestBody
 import com.fastival.jetpackwithmviapp.persistence.BlogQueryUtils.Companion.BLOG_FILTER_DATE_UPDATED
 import com.fastival.jetpackwithmviapp.persistence.BlogQueryUtils.Companion.BLOG_ORDER_ASC
 import com.fastival.jetpackwithmviapp.repository.main.BlogRepository
 import com.fastival.jetpackwithmviapp.session.SessionManager
-import com.fastival.jetpackwithmviapp.ui.DataState
 import com.fastival.jetpackwithmviapp.ui.Loading
-import com.fastival.jetpackwithmviapp.ui.base.BaseViewModel
+import com.fastival.jetpackwithmviapp.ui.BaseViewModel
 import com.fastival.jetpackwithmviapp.ui.main.blog.state.BlogStateEvent
 import com.fastival.jetpackwithmviapp.ui.main.blog.state.BlogViewState
 import com.fastival.jetpackwithmviapp.util.AbsentLiveData
 import com.fastival.jetpackwithmviapp.util.PreferenceKeys.Companion.BLOG_FILTER
 import com.fastival.jetpackwithmviapp.util.PreferenceKeys.Companion.BLOG_ORDER
-import com.squareup.inject.assisted.Assisted
-import com.squareup.inject.assisted.AssistedInject
 import javax.inject.Inject
 
 class BlogViewModel

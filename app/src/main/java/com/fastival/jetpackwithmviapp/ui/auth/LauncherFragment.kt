@@ -9,7 +9,6 @@ import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentLauncherBinding
 import com.fastival.jetpackwithmviapp.di.auth.AuthScope
 import com.fastival.jetpackwithmviapp.extension.fragment.navigate
-import com.fastival.jetpackwithmviapp.ui.base.BaseAuthFragment
 import kotlinx.android.synthetic.main.fragment_launcher.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview

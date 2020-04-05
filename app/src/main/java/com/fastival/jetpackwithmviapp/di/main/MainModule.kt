@@ -1,5 +1,6 @@
 package com.fastival.jetpackwithmviapp.di.main
 
+import CreateBlogRepositoryImpl
 import com.fastival.jetpackwithmviapp.api.main.OpenApiMainService
 import com.fastival.jetpackwithmviapp.persistence.AccountPropertiesDao
 import com.fastival.jetpackwithmviapp.persistence.AppDatabase
@@ -60,8 +61,7 @@ object MainModule {
         openApiMainService: OpenApiMainService,
         blogPostDao: BlogPostDao,
         sessionManager: SessionManager
-    ): CreateBlogRepository
-    {
-        return CreateBlogRepository(openApiMainService, blogPostDao, sessionManager)
-    }
+    ): CreateBlogRepository =
+        CreateBlogRepositoryImpl(openApiMainService, blogPostDao, sessionManager)
+
 }

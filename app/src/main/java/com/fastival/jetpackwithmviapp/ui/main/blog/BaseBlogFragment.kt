@@ -1,4 +1,4 @@
-package com.fastival.jetpackwithmviapp.ui.base.blog
+package com.fastival.jetpackwithmviapp.ui.main.blog
 
 import android.os.Bundle
 import android.view.View
@@ -9,7 +9,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.fastival.jetpackwithmviapp.R
-import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
+import com.fastival.jetpackwithmviapp.ui.main.BaseMainFragment
 import com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel.BlogViewModel
 import com.wada811.databinding.dataBinding
 

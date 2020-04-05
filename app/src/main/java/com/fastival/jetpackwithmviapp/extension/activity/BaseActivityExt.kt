@@ -3,7 +3,7 @@ package com.fastival.jetpackwithmviapp.extension.activity
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.callbacks.onDismiss
 import com.fastival.jetpackwithmviapp.R
-import com.fastival.jetpackwithmviapp.ui.base.BaseActivity
+import com.fastival.jetpackwithmviapp.ui.BaseActivity
 import com.fastival.jetpackwithmviapp.util.MessageType
 import com.fastival.jetpackwithmviapp.util.Response
 import com.fastival.jetpackwithmviapp.util.StateMessageCallback

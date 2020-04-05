@@ -3,9 +3,9 @@ package com.fastival.jetpackwithmviapp.ui.main.account
 import androidx.lifecycle.LiveData
 import com.fastival.jetpackwithmviapp.di.main.MainScope
 import com.fastival.jetpackwithmviapp.models.AccountProperties
-import com.fastival.jetpackwithmviapp.repository.main.AccountRepository
+import com.fastival.jetpackwithmviapp.repository.main.AccountRepositoryImpl
 import com.fastival.jetpackwithmviapp.session.SessionManager
-import com.fastival.jetpackwithmviapp.ui.base.BaseViewModel
+import com.fastival.jetpackwithmviapp.ui.BaseViewModel
 import com.fastival.jetpackwithmviapp.ui.main.account.state.AccountStateEvent
 import com.fastival.jetpackwithmviapp.ui.main.account.state.AccountViewState
 import com.fastival.jetpackwithmviapp.util.StateEvent
@@ -21,7 +21,7 @@ class AccountViewModel
 @Inject
 constructor(
     val sessionManager: SessionManager,
-    val accountRepository: AccountRepository
+    val accountRepository: AccountRepositoryImpl
 ): BaseViewModel<AccountViewState>()
 {
     // for xml val viewState.accountProperty.XXX

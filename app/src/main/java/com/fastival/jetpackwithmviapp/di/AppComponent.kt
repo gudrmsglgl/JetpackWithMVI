@@ -1,13 +1,10 @@
 package com.fastival.jetpackwithmviapp.di
 
 import android.app.Application
-import androidx.databinding.ViewDataBinding
-import androidx.viewbinding.ViewBinding
-import com.fastival.jetpackwithmviapp.BaseApplication
 import com.fastival.jetpackwithmviapp.di.auth.AuthComponent
 import com.fastival.jetpackwithmviapp.di.main.MainComponent
 import com.fastival.jetpackwithmviapp.session.SessionManager
-import com.fastival.jetpackwithmviapp.ui.base.BaseActivity
+import com.fastival.jetpackwithmviapp.ui.BaseActivity
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton

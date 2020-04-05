@@ -2,26 +2,17 @@ package com.fastival.jetpackwithmviapp.ui.auth
 
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.fastival.jetpackwithmviapp.BR
 
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentRegisterBinding
 import com.fastival.jetpackwithmviapp.di.auth.AuthScope
 import com.fastival.jetpackwithmviapp.extension.editToString
-import com.fastival.jetpackwithmviapp.ui.auth.state.AuthStateEvent
 import com.fastival.jetpackwithmviapp.ui.auth.state.AuthStateEvent.RegisterAttemptEvent
 import com.fastival.jetpackwithmviapp.ui.auth.state.RegistrationFields
-import com.fastival.jetpackwithmviapp.ui.base.BaseAuthFragment
-import com.fastival.jetpackwithmviapp.util.ApiEmptyResponse
-import com.fastival.jetpackwithmviapp.util.ApiErrorResponse
-import com.fastival.jetpackwithmviapp.util.ApiSuccessResponse
 import kotlinx.android.synthetic.main.fragment_register.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview

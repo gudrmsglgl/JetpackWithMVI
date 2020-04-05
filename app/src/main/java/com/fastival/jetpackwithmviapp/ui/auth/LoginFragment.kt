@@ -6,19 +6,12 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.fastival.jetpackwithmviapp.BR
 
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentLoginBinding
 import com.fastival.jetpackwithmviapp.di.auth.AuthScope
-import com.fastival.jetpackwithmviapp.models.AuthToken
-import com.fastival.jetpackwithmviapp.ui.auth.state.AuthStateEvent
 import com.fastival.jetpackwithmviapp.ui.auth.state.AuthStateEvent.LoginAttemptEvent
 import com.fastival.jetpackwithmviapp.ui.auth.state.LoginFields
-import com.fastival.jetpackwithmviapp.ui.base.BaseAuthFragment
-import com.fastival.jetpackwithmviapp.util.ApiEmptyResponse
-import com.fastival.jetpackwithmviapp.util.ApiErrorResponse
-import com.fastival.jetpackwithmviapp.util.ApiSuccessResponse
 import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview

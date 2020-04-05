@@ -6,10 +6,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -20,9 +17,6 @@ import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentBlogBinding
 import com.fastival.jetpackwithmviapp.extension.fragment.*
 import com.fastival.jetpackwithmviapp.models.BlogPost
-import com.fastival.jetpackwithmviapp.ui.DataState
-import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
-import com.fastival.jetpackwithmviapp.ui.base.blog.BaseBlogFragment
 import com.fastival.jetpackwithmviapp.ui.main.blog.state.BlogViewState
 import com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel.*
 import com.fastival.jetpackwithmviapp.util.ErrorHandling

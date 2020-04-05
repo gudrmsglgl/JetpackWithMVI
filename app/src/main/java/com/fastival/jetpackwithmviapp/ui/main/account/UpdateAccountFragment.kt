@@ -2,19 +2,13 @@ package com.fastival.jetpackwithmviapp.ui.main.account
 
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.fastival.jetpackwithmviapp.BR
 
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentUpdateAccountBinding
-import com.fastival.jetpackwithmviapp.models.AccountProperties
-import com.fastival.jetpackwithmviapp.ui.EmptyViewModel
-import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
-import com.fastival.jetpackwithmviapp.ui.base.account.BaseAccountFragment
 import com.fastival.jetpackwithmviapp.ui.main.account.state.AccountStateEvent
 import com.fastival.jetpackwithmviapp.util.StateMessageCallback
 import kotlinx.android.synthetic.main.fragment_update_account.*

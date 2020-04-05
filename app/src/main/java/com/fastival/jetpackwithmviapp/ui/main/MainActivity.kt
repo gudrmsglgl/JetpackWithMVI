@@ -15,8 +15,8 @@ import com.fastival.jetpackwithmviapp.extension.activity.restoreSession
 import com.fastival.jetpackwithmviapp.extension.activity.setupBottomNavigationView
 import com.fastival.jetpackwithmviapp.extension.fragment.setPositionTopRecyclerView
 import com.fastival.jetpackwithmviapp.models.AUTH_TOKEN_BUNDLE_KEY
+import com.fastival.jetpackwithmviapp.ui.BaseActivity
 import com.fastival.jetpackwithmviapp.ui.auth.AuthActivity
-import com.fastival.jetpackwithmviapp.ui.base.BaseActivity
 import com.fastival.jetpackwithmviapp.ui.main.account.ChangePasswordFragment
 import com.fastival.jetpackwithmviapp.ui.main.account.UpdateAccountFragment
 import com.fastival.jetpackwithmviapp.ui.main.blog.BlogFragment

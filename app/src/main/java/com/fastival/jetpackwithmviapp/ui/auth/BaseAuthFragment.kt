@@ -1,4 +1,4 @@
-package com.fastival.jetpackwithmviapp.ui.base
+package com.fastival.jetpackwithmviapp.ui.auth
 
 import UICommunicationListener
 import android.content.Context
@@ -10,7 +10,6 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import com.fastival.jetpackwithmviapp.ui.auth.AuthViewModel
 import com.wada811.databinding.dataBinding
 
 abstract class BaseAuthFragment<vb: ViewDataBinding>(

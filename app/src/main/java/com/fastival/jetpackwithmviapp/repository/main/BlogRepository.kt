@@ -13,9 +13,7 @@ import com.fastival.jetpackwithmviapp.models.AuthToken
 import com.fastival.jetpackwithmviapp.models.BlogPost
 import com.fastival.jetpackwithmviapp.persistence.BlogPostDao
 import com.fastival.jetpackwithmviapp.persistence.returnOrderedBlogQuery
-import com.fastival.jetpackwithmviapp.repository.JobManager
 import com.fastival.jetpackwithmviapp.session.SessionManager
-import com.fastival.jetpackwithmviapp.ui.DataState
 import com.fastival.jetpackwithmviapp.ui.Response
 import com.fastival.jetpackwithmviapp.ui.ResponseType
 import com.fastival.jetpackwithmviapp.ui.main.blog.state.BlogViewState

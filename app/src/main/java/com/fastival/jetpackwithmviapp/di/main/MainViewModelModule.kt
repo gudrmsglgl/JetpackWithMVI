@@ -2,14 +2,11 @@ package com.fastival.jetpackwithmviapp.di.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.fastival.jetpackwithmviapp.di.SavedStateViewModelFactory
-import com.fastival.jetpackwithmviapp.di.auth.key.AuthViewModelKey
 import com.fastival.jetpackwithmviapp.di.main.key.MainViewModelKey
 import com.fastival.jetpackwithmviapp.ui.main.account.AccountViewModel
 import com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel.BlogViewModel
-import com.fastival.jetpackwithmviapp.ui.main.create_blog.viewmodel.CreateBlogViewModel
+import com.fastival.jetpackwithmviapp.ui.main.create_blog.CreateBlogViewModel
 import com.fastival.jetpackwithmviapp.viewmodels.MainViewModelFactory
-import com.squareup.inject.assisted.dagger2.AssistedModule
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap

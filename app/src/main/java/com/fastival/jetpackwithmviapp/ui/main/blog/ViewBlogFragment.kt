@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.savedstate.SavedStateRegistryOwner
 import com.bumptech.glide.RequestManager
 import com.fastival.jetpackwithmviapp.BR
 
@@ -18,8 +17,6 @@ import com.fastival.jetpackwithmviapp.databinding.FragmentViewBlogBinding
 import com.fastival.jetpackwithmviapp.extension.activity.AreYouSureCallBack
 import com.fastival.jetpackwithmviapp.ui.UIMessage
 import com.fastival.jetpackwithmviapp.ui.UIMessageType
-import com.fastival.jetpackwithmviapp.ui.base.BaseMainFragment
-import com.fastival.jetpackwithmviapp.ui.base.blog.BaseBlogFragment
 import com.fastival.jetpackwithmviapp.ui.main.blog.state.BlogStateEvent
 import com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel.*
 import com.fastival.jetpackwithmviapp.util.SuccessHandling.Companion.SUCCESS_BLOG_DELETED

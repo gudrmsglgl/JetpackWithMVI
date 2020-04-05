@@ -1,4 +1,4 @@
-package com.fastival.jetpackwithmviapp.ui.base
+package com.fastival.jetpackwithmviapp.ui
 
 import UICommunicationListener
 import android.Manifest.*

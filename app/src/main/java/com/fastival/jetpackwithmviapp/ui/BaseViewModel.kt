@@ -1,4 +1,4 @@
-package com.fastival.jetpackwithmviapp.ui.base
+package com.fastival.jetpackwithmviapp.ui
 
 import android.util.Log
 import androidx.lifecycle.LiveData

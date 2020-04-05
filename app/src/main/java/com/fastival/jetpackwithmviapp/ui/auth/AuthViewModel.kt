@@ -3,7 +3,7 @@ package com.fastival.jetpackwithmviapp.ui.auth
 import com.fastival.jetpackwithmviapp.di.auth.AuthScope
 import com.fastival.jetpackwithmviapp.models.AuthToken
 import com.fastival.jetpackwithmviapp.repository.auth.AuthRepository
-import com.fastival.jetpackwithmviapp.ui.base.BaseViewModel
+import com.fastival.jetpackwithmviapp.ui.BaseViewModel
 import com.fastival.jetpackwithmviapp.ui.auth.state.AuthStateEvent.*
 import com.fastival.jetpackwithmviapp.ui.auth.state.AuthViewState
 import com.fastival.jetpackwithmviapp.ui.auth.state.LoginFields
