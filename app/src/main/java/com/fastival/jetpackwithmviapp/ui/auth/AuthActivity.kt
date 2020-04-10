@@ -17,8 +17,12 @@ import com.fastival.jetpackwithmviapp.ui.main.MainActivity
 import com.fastival.jetpackwithmviapp.util.StateMessageCallback
 import com.fastival.jetpackwithmviapp.util.SuccessHandling.Companion.RESPONSE_CHECK_PREVIOUS_AUTH_USER_DONE
 import kotlinx.android.synthetic.main.activity_auth.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 
+@FlowPreview
+@ExperimentalCoroutinesApi
 class AuthActivity : BaseActivity()
 {
 
@@ -121,8 +125,8 @@ class AuthActivity : BaseActivity()
         // ignore
     }
 
-    override fun displayProgressBar(isAnyJobActive: Boolean) {
-        if (isAnyJobActive) progress_bar.visibility = View.VISIBLE
+    override fun displayProgressBar(isAnyActiveJob: Boolean) {
+        if (isAnyActiveJob) progress_bar.visibility = View.VISIBLE
         else progress_bar.visibility = View.GONE
     }
 

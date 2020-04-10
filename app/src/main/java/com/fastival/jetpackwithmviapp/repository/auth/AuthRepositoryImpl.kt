@@ -10,9 +10,9 @@ import com.fastival.jetpackwithmviapp.models.AccountProperties
 import com.fastival.jetpackwithmviapp.models.AuthToken
 import com.fastival.jetpackwithmviapp.persistence.AccountPropertiesDao
 import com.fastival.jetpackwithmviapp.persistence.AuthTokenDao
-import com.fastival.jetpackwithmviapp.repository.buildError
-import com.fastival.jetpackwithmviapp.repository.safeApiCall
-import com.fastival.jetpackwithmviapp.repository.safeCacheCall
+import com.fastival.jetpackwithmviapp.extension.buildError
+import com.fastival.jetpackwithmviapp.extension.safeApiCall
+import com.fastival.jetpackwithmviapp.extension.safeCacheCall
 import com.fastival.jetpackwithmviapp.session.SessionManager
 import com.fastival.jetpackwithmviapp.ui.auth.state.AuthViewState
 import com.fastival.jetpackwithmviapp.ui.auth.state.LoginFields
@@ -57,9 +57,10 @@ constructor(
 
         if (loginFieldErrors == LoginFields.LoginError.none()) {
 
-            val apiResult = safeApiCall(Dispatchers.IO){
-                openApiAuthService.login(email, password)
-            }
+            val apiResult =
+                safeApiCall(Dispatchers.IO) {
+                    openApiAuthService.login(email, password)
+                }
 
             emit(
                 loginResponseToDataState(apiResult, stateEvent, email)
@@ -91,17 +92,17 @@ constructor(
             stateEvent = stateEvent
         ) {
 
-            override suspend fun handleSuccess(resultObj: LoginResponse): DataState<AuthViewState> {
+            override suspend fun handleApiResultSuccess(networkObj: LoginResponse): DataState<AuthViewState> {
 
                 // Incorrect login credentials counts as a 200 response from server, so need to handle that
-                if (resultObj.response == GENERIC_AUTH_ERROR)
+                if (networkObj.response == GENERIC_AUTH_ERROR)
                     return invalidUser(stateEvent, null)
 
                 withContext(Dispatchers.IO) {
                     accountPropertiesDao.insertOrIgnore(
                         AccountProperties(
-                            resultObj.pk,
-                            resultObj.email,
+                            networkObj.pk,
+                            networkObj.email,
                             ""
                         )
                     )
@@ -109,8 +110,8 @@ constructor(
 
                 // will return -1 if failure
                 val authToken = AuthToken(
-                    resultObj.pk,
-                    resultObj.token
+                    networkObj.pk,
+                    networkObj.token
                 )
 
                 var tokenResult: Long = 0L
@@ -158,7 +159,7 @@ constructor(
 
     private fun validAuthTokenData(
         authToken: AuthToken,
-        stateEvent: StateEvent
+        stateEvent: StateEvent?
     ): DataState<AuthViewState> =
         DataState.data(
             data = AuthViewState(
@@ -178,23 +179,25 @@ constructor(
         confirmPassword: String
     ): Flow<DataState<AuthViewState>> = flow {
 
-        val registrationFieldError = RegistrationFields(
-            email,
-            username,
-            password,
-            confirmPassword
-        ).isValidForRegistration()
+        val registrationFieldError =
+            RegistrationFields(
+                email,
+                username,
+                password,
+                confirmPassword
+            ).isValidForRegistration()
 
         if (registrationFieldError == RegistrationFields.RegistrationError.none()) {
 
-            val apiResult = safeApiCall(Dispatchers.IO) {
-                openApiAuthService.register(
-                    email,
-                    username,
-                    password,
-                    confirmPassword
-                )
-            }
+            val apiResult =
+                safeApiCall(Dispatchers.IO) {
+                    openApiAuthService.register(
+                        email,
+                        username,
+                        password,
+                        confirmPassword
+                    )
+                }
 
             emit(
                 registrationToDataState(apiResult, stateEvent, email)
@@ -217,48 +220,56 @@ constructor(
         apiResult: ApiResult<RegistrationResponse?>,
         stateEvent: StateEvent,
         email: String
-    ): DataState<AuthViewState> = object: ApiResponseHandler<AuthViewState, RegistrationResponse>(
-        response = apiResult,
-        stateEvent = stateEvent
-    ){
-        override suspend fun handleSuccess(resultObj: RegistrationResponse): DataState<AuthViewState> {
+    ): DataState<AuthViewState> =
 
-            if (resultObj.response == GENERIC_AUTH_ERROR)
-                return invalidUser(stateEvent, resultObj)
+        object: ApiResponseHandler<AuthViewState, RegistrationResponse>(
+            response = apiResult,
+            stateEvent = stateEvent
+        ){
 
-            var resultSaveAccount = 0L
-            withContext(Dispatchers.IO){
-                resultSaveAccount = accountPropertiesDao.insertAndReplace(
-                    AccountProperties(
-                        resultObj.pk,
-                        resultObj.email,
-                        resultObj.username
+            override suspend fun handleApiResultSuccess(
+                networkObj: RegistrationResponse
+            ): DataState<AuthViewState>
+            {
+
+                if (networkObj.response == GENERIC_AUTH_ERROR)
+                    return invalidUser(stateEvent, networkObj)
+
+                var resultSaveAccount = 0L
+
+                withContext(Dispatchers.IO){
+                    resultSaveAccount = accountPropertiesDao.insertAndReplace(
+                        AccountProperties(
+                            networkObj.pk,
+                            networkObj.email,
+                            networkObj.username
+                        )
                     )
+                }
+
+                if (resultSaveAccount < 0)
+                    return failSaveAccount(stateEvent)
+
+                val authtoken = AuthToken(
+                    networkObj.pk,
+                    networkObj.token
                 )
+
+                var resultSaveToken = 0L
+
+                withContext(Dispatchers.IO) {
+                    resultSaveToken = authTokenDao.insert(authtoken)
+                }
+
+                if (resultSaveToken < 0)
+                    return failSaveToken(stateEvent)
+
+                saveAuthenticatedUserToPrefs(email)
+
+                return validAuthTokenData(authtoken, stateEvent)
+
             }
-
-            if (resultSaveAccount < 0)
-                return failSaveAccount(stateEvent)
-
-            val authtoken = AuthToken(
-                resultObj.pk,
-                resultObj.token
-            )
-
-            var resultSaveToken = 0L
-
-            withContext(Dispatchers.IO) {
-                resultSaveToken = authTokenDao.insert(authtoken)
-            }
-
-            if (resultSaveToken < 0)
-                return failSaveToken(stateEvent)
-
-            saveAuthenticatedUserToPrefs(email)
-
-            return validAuthTokenData(authtoken, stateEvent)
-        }
-    }.getResult()
+        }.getResult()
 
 
     private fun failSaveAccount(stateEvent: StateEvent): DataState<AuthViewState> =
@@ -286,9 +297,10 @@ constructor(
 
         else {
 
-            val cacheResult = safeCacheCall(Dispatchers.IO) {
-                accountPropertiesDao.searchByEmail(previousAuthUserEmail)
-            }
+            val cacheResult =
+                safeCacheCall(Dispatchers.IO) {
+                    accountPropertiesDao.searchByEmail(previousAuthUserEmail)
+                }
 
             emit(retCacheResultPreviousUser(cacheResult, stateEvent))
 
@@ -303,12 +315,18 @@ constructor(
         response = cacheResult,
         stateEvent = stateEvent
     ){
-        override suspend fun handleSuccess(resultObj: AccountProperties): DataState<AuthViewState> {
 
-            if (resultObj.pk > -1) {
-                authTokenDao.searchByPk(resultObj.pk).let { loadedToken ->
+        override suspend fun cacheResultSuccess(
+            cacheObj: AccountProperties,
+            stateEvent: StateEvent?
+        ): DataState<AuthViewState> {
+
+            if (cacheObj.pk > -1) {
+                authTokenDao.searchByPk(cacheObj.pk).let { loadedToken ->
+
                     if (loadedToken != null)
                         return validAuthTokenData(loadedToken, stateEvent)
+
                 }
             }
 
@@ -320,7 +338,7 @@ constructor(
 
 
     private fun notFoundPreviousUser(
-        stateEvent: StateEvent
+        stateEvent: StateEvent?
     ): DataState<AuthViewState> =
         DataState.error(
             response = Response(

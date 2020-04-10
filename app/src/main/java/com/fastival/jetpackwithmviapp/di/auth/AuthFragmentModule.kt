@@ -5,7 +5,11 @@ import androidx.lifecycle.ViewModelProvider
 import com.fastival.jetpackwithmviapp.fragments.auth.AuthFragmentFactory
 import dagger.Module
 import dagger.Provides
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 
+@ExperimentalCoroutinesApi
+@FlowPreview
 @Module
 object AuthFragmentModule {
 

@@ -11,23 +11,32 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.RequestManager
-import com.fastival.jetpackwithmviapp.BR
 
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentUpdateBlogBinding
+import com.fastival.jetpackwithmviapp.di.main.MainScope
+import com.fastival.jetpackwithmviapp.extension.editToString
 import com.fastival.jetpackwithmviapp.extension.fragment.launchCropImage
 import com.fastival.jetpackwithmviapp.extension.fragment.saveChanges
+import com.fastival.jetpackwithmviapp.extension.fragment.setViewStateUri
 import com.fastival.jetpackwithmviapp.extension.fragment.showErrorDialog
 import com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel.*
 import com.fastival.jetpackwithmviapp.util.Constants.Companion.GALLERY_REQUEST_CODE
 import com.fastival.jetpackwithmviapp.util.ErrorHandling.Companion.ERROR_SOMETHING_WRONG_WITH_IMAGE
+import com.fastival.jetpackwithmviapp.util.StateMessageCallback
+import com.fastival.jetpackwithmviapp.util.SuccessHandling.Companion.SUCCESS_BLOG_UPDATED
 import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.fragment_update_blog.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass.
  */
+@FlowPreview
+@ExperimentalCoroutinesApi
+@MainScope
 class UpdateBlogFragment
 @Inject
 constructor(
@@ -38,36 +47,43 @@ constructor(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setHasOptionsMenu(true)
+
+        binding.vm = viewModel
         binding.requestManager = requestManager
         binding.fragment = this
 
-        subscribeObservers()
     }
 
-    fun subscribeObservers() {
-        viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
-            if (dataState != null) {
+    override fun observeStateMessage() =
+        viewModel
+            .stateMessage
+            .observe( viewLifecycleOwner, Observer { stateMessage ->
 
-                stateListener.onDataStateChange(dataState)
-                dataState.data?.data?.getContentIfNotHandled()?.let { viewState ->
+                stateMessage?.let {
 
-                    viewState.viewBlogFields.blogPost?.let { blogPost ->
+                    if (it.response.message == SUCCESS_BLOG_UPDATED)
+                        viewModel
+                            .updateBlogListItem()
+                            .run {
+                                findNavController().popBackStack()
+                            }
 
-                        viewModel.setSyncBlogFromServer(blogPost).run {
-                            findNavController().popBackStack()
-                        }
+                    uiCommunicationListener
+                        .onResponseReceived(
+                            response = it.response,
+                            stateMessageCallback = object: StateMessageCallback {
+                                override fun removeMessageFromStack() {
+                                    viewModel.removeStateMessage()
+                                }
+                            }
+                        )
 
-                    }
                 }
 
-            }
-        })
-
-    }
+            })
 
     fun pickFromGallery(view: View){
-        if (stateListener.isStoragePermissionGranted()) {
+        if (uiCommunicationListener.isStoragePermissionGranted()) {
 
             val intent = Intent(
                 Intent.ACTION_PICK,
@@ -93,20 +109,13 @@ constructor(
                 }
 
                 CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE -> {
-                    val result = CropImage.getActivityResult(data)
-                    val resultUri = result.uri
-
-                    viewModel.setUpdatedBlogFields(
-                        title = null,
-                        body = null,
-                        uri = resultUri,
-                        isViewStateUpdate = true
-                    )
+                    setViewStateUri(data)
                 }
 
                 CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE -> {
                     showErrorDialog(ERROR_SOMETHING_WRONG_WITH_IMAGE)
                 }
+
             }
         }
         super.onActivityResult(requestCode, resultCode, data)
@@ -130,11 +139,11 @@ constructor(
     override fun onPause() {
         super.onPause()
         viewModel.setUpdatedBlogFields(
-            blog_title.text.toString(),
-            blog_body.text.toString(),
-            null,
-            isViewStateUpdate = true
+            blog_title.editToString(),
+            blog_body.editToString(),
+            null
         )
     }
-    override fun getVariableId(): Int = BR.vm
+
+
 }

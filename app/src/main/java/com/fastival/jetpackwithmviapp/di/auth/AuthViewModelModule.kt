@@ -8,7 +8,11 @@ import com.fastival.jetpackwithmviapp.viewmodels.AuthViewModelFactory
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 
+@FlowPreview
+@ExperimentalCoroutinesApi
 @Module
 abstract class AuthViewModelModule {
 

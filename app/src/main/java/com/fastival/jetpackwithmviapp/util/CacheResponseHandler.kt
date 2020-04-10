@@ -2,7 +2,7 @@ package com.fastival.jetpackwithmviapp.util
 
 abstract class CacheResponseHandler<ViewState, Data>(
     private val response: CacheResult<Data?>,
-    private val stateEvent: StateEvent?
+    private val stateEvent: StateEvent?         // nullable b/c cache preview
 ) {
     suspend fun getResult(): DataState<ViewState>{
 

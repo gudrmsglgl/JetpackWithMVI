@@ -7,8 +7,11 @@ import com.fastival.jetpackwithmviapp.session.SessionManager
 import com.fastival.jetpackwithmviapp.ui.BaseActivity
 import dagger.BindsInstance
 import dagger.Component
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import javax.inject.Singleton
-
+@ExperimentalCoroutinesApi
+@FlowPreview
 @Singleton
 @Component(
     modules = [

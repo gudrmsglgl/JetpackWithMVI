@@ -15,8 +15,11 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
 import id.zelory.compressor.Compressor
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 
-
+@ExperimentalCoroutinesApi
+@FlowPreview
 fun CreateBlogFragment.launchImageCrop(uri: Uri) {
     context?.let {
         CropImage.activity(uri)
@@ -26,6 +29,9 @@ fun CreateBlogFragment.launchImageCrop(uri: Uri) {
     }
 }
 
+
+@ExperimentalCoroutinesApi
+@FlowPreview
 fun CreateBlogFragment.showErrorDialog(errorMessage: String) =
     uiCommunicationListener.onResponseReceived(
         response = Response(
@@ -36,7 +42,6 @@ fun CreateBlogFragment.showErrorDialog(errorMessage: String) =
         stateMessageCallback = object: StateMessageCallback{
             override fun removeMessageFromStack() {
 
-                // TODO :: 이거 맞나 확인해봐야함 b/c repository 에서 addStateMessage() 가 안됬기 때문
                 viewModel.removeStateMessage()
 
             }
@@ -44,18 +49,26 @@ fun CreateBlogFragment.showErrorDialog(errorMessage: String) =
     )
 
 
+@ExperimentalCoroutinesApi
+@FlowPreview
 fun CreateBlogFragment.setCroppedImage(image: Uri){
     requestManager
         .load(image)
         .into(binding.blogImage)
 }
 
+
+@ExperimentalCoroutinesApi
+@FlowPreview
 fun CreateBlogFragment.deFaultImage(){
     requestManager
         .load(R.drawable.default_image)
         .into(binding.blogImage)
 }
 
+
+@ExperimentalCoroutinesApi
+@FlowPreview
 fun CreateBlogFragment.showDialogConfirmPublish(){
 
     val callback: AreYouSureCallBack = object: AreYouSureCallBack{
@@ -81,9 +94,10 @@ fun CreateBlogFragment.showDialogConfirmPublish(){
 }
 
 
-
+@ExperimentalCoroutinesApi
+@FlowPreview
 fun CreateBlogFragment.publishNewBlog(){
-    context?.let { context ->
+    context?.let { _ ->
 
         var multipartBody: MultipartBody.Part? = null
 
@@ -110,6 +124,9 @@ fun CreateBlogFragment.publishNewBlog(){
     }
 }
 
+
+@ExperimentalCoroutinesApi
+@FlowPreview
 private fun CreateBlogFragment.transMultiPartBodyPart(
     filePath: String
 ): MultipartBody.Part {

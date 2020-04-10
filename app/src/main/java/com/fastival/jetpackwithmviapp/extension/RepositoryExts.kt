@@ -1,5 +1,6 @@
-package com.fastival.jetpackwithmviapp.repository
+package com.fastival.jetpackwithmviapp.extension
 
+import com.fastival.jetpackwithmviapp.models.AuthToken
 import com.fastival.jetpackwithmviapp.util.*
 import com.fastival.jetpackwithmviapp.util.Constants.Companion.CACHE_TIMEOUT
 import com.fastival.jetpackwithmviapp.util.Constants.Companion.NETWORK_TIMEOUT
@@ -43,7 +44,10 @@ suspend fun <T> safeApiCall(
 
                 is HttpException -> {
                     val code = throwable.code()
-                    val errorResponse = convertErrorBody(throwable)
+                    val errorResponse =
+                        convertErrorBody(
+                            throwable
+                        )
                     ApiResult.GenericError(
                         code,
                         errorResponse

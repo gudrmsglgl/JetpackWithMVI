@@ -8,8 +8,11 @@ import com.fastival.jetpackwithmviapp.ui.auth.ForgotPasswordFragment
 import com.fastival.jetpackwithmviapp.ui.auth.LauncherFragment
 import com.fastival.jetpackwithmviapp.ui.auth.LoginFragment
 import com.fastival.jetpackwithmviapp.ui.auth.RegisterFragment
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
-
+@ExperimentalCoroutinesApi
+@FlowPreview
 @AuthScope
 class AuthFragmentFactory
 @Inject

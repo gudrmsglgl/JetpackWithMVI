@@ -20,11 +20,14 @@ import com.fastival.jetpackwithmviapp.fragments.main.blog.BlogNavHostFragment
 import com.fastival.jetpackwithmviapp.fragments.main.create_blog.CreateBlogNavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.parcel.Parcelize
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 
 const val BOTTOM_NAV_BACKSTACK_KEY =
     "om.fastival.jetpackwithmviapp.util.BottomNavController.bottom_nav_backstack"
 
-
+@ExperimentalCoroutinesApi
+@FlowPreview
 class BottomNavController(
     val context: Context,
     @IdRes val containerId: Int,
@@ -200,7 +203,8 @@ class BottomNavController(
 
 
 }
-
+@ExperimentalCoroutinesApi
+@FlowPreview
 // Convenience extension to set up the navigation
 fun BottomNavigationView.setUpNavigation(
     bottomNavController: BottomNavController,

@@ -1,6 +1,6 @@
 package com.fastival.jetpackwithmviapp.ui.main
 
-import UICommunicationListener
+import com.fastival.jetpackwithmviapp.ui.UICommunicationListener
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -12,7 +12,14 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
+import com.fastival.jetpackwithmviapp.ui.BaseViewModel
+import com.fastival.jetpackwithmviapp.util.StateMessage
+import com.fastival.jetpackwithmviapp.util.StateMessageCallback
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 
+@FlowPreview
+@ExperimentalCoroutinesApi
 abstract class BaseMainFragment(
     @LayoutRes contentLayoutId: Int
 ): Fragment(contentLayoutId)
@@ -36,7 +43,7 @@ abstract class BaseMainFragment(
         try{
             uiCommunicationListener = context as UICommunicationListener
         }catch (e: ClassCastException) {
-            Log.e(TAG, "$context must implement UICommunicationListener" )
+            Log.e(TAG, "$context must implement com.fastival.jetpackwithmviapp.ui.UICommunicationListener" )
         }
     }
 
@@ -48,6 +55,19 @@ abstract class BaseMainFragment(
             appBarConfiguration
         )
     }
+
+    fun showStateMessage(stateMessage: StateMessage, viewModel: BaseViewModel<*>){
+        uiCommunicationListener
+            .onResponseReceived(
+                response = stateMessage.response,
+                stateMessageCallback = object: StateMessageCallback{
+                    override fun removeMessageFromStack() {
+                        viewModel.removeStateMessage()
+                    }
+                }
+            )
+    }
+
 
     @IdRes
     protected abstract fun setTopLevelDesId(): Int

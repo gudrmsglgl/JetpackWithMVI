@@ -10,8 +10,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.ui.main.BaseMainFragment
 import com.wada811.databinding.dataBinding
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 
+@ExperimentalCoroutinesApi
 @FlowPreview
 abstract class BaseCreateBlogFragment<vb: ViewDataBinding>(
     @LayoutRes layoutId: Int,

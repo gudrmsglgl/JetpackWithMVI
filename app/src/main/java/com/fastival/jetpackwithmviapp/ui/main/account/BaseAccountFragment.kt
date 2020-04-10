@@ -12,7 +12,11 @@ import com.fastival.jetpackwithmviapp.ui.main.BaseMainFragment
 import com.fastival.jetpackwithmviapp.ui.main.account.state.ACCOUNT_VIEW_STATE_BUNDLE_KEY
 import com.fastival.jetpackwithmviapp.ui.main.account.state.AccountViewState
 import com.wada811.databinding.dataBinding
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 
+@FlowPreview
+@ExperimentalCoroutinesApi
 abstract class BaseAccountFragment<vb: ViewDataBinding>(
     @LayoutRes layoutRes: Int,
     private val viewModelFactory: ViewModelProvider.Factory

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
     <data>
-        <import type="com.fastival.jetpackwithmviapp.extension.ExDateConvertKt"/>
+        <import type="com.fastival.jetpackwithmviapp.extension.StringExtKt"/>
         <variable
             name="requestManager"
             type="com.bumptech.glide.RequestManager" />
@@ -68,7 +68,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/blog_update_date"
-                android:text="@{ExDateConvertKt.convertLongToStringDate(item.date_updated)}"
+                android:text="@{StringExtKt.convertLongToStringDate(item.date_updated)}"
                 android:textColor="@color/grey5"
                 android:textSize="13sp"
                 android:layout_marginTop="10dp"

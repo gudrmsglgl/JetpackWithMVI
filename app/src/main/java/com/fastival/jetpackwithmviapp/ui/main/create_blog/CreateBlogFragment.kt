@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.RequestManager
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentCreateBlogBinding
+import com.fastival.jetpackwithmviapp.di.main.MainScope
 import com.fastival.jetpackwithmviapp.extension.editToString
 import com.fastival.jetpackwithmviapp.extension.fragment.*
 import com.fastival.jetpackwithmviapp.ui.main.create_blog.state.CREATE_BLOG_VIEW_STATE_BUNDLE_KEY
@@ -25,13 +26,16 @@ import com.fastival.jetpackwithmviapp.util.ErrorHandling.Companion.ERROR_SOMETHI
 import com.fastival.jetpackwithmviapp.util.StateMessageCallback
 import com.fastival.jetpackwithmviapp.util.SuccessHandling.Companion.SUCCESS_BLOG_CREATED
 import com.theartofdev.edmodo.cropper.CropImage
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass.
  */
+@ExperimentalCoroutinesApi
 @FlowPreview
+@MainScope
 class CreateBlogFragment
 @Inject
 constructor(

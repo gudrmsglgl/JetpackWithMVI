@@ -5,16 +5,14 @@ import com.fastival.jetpackwithmviapp.api.main.OpenApiMainService
 import com.fastival.jetpackwithmviapp.persistence.AccountPropertiesDao
 import com.fastival.jetpackwithmviapp.persistence.AppDatabase
 import com.fastival.jetpackwithmviapp.persistence.BlogPostDao
-import com.fastival.jetpackwithmviapp.repository.main.AccountRepository
-import com.fastival.jetpackwithmviapp.repository.main.AccountRepositoryImpl
-import com.fastival.jetpackwithmviapp.repository.main.BlogRepository
-import com.fastival.jetpackwithmviapp.repository.main.CreateBlogRepository
+import com.fastival.jetpackwithmviapp.repository.main.*
 import com.fastival.jetpackwithmviapp.session.SessionManager
 import dagger.Module
 import dagger.Provides
+import kotlinx.coroutines.FlowPreview
 import retrofit2.Retrofit
-import retrofit2.create
 
+@FlowPreview
 @Module
 object MainModule {
 
@@ -24,6 +22,7 @@ object MainModule {
     fun provideOpenApiMainService(builder: Retrofit.Builder): OpenApiMainService {
         return builder.build().create(OpenApiMainService::class.java)
     }
+
 
     @JvmStatic
     @MainScope
@@ -43,6 +42,7 @@ object MainModule {
         return db.getBlogPostDao()
     }
 
+
     @JvmStatic
     @MainScope
     @Provides
@@ -50,9 +50,9 @@ object MainModule {
         openApiMainService: OpenApiMainService,
         blogPostDao: BlogPostDao,
         sessionManager: SessionManager
-    ): BlogRepository{
-        return BlogRepository(openApiMainService, blogPostDao, sessionManager)
-    }
+    ): BlogRepository =
+        BlogRepositoryImpl(openApiMainService, blogPostDao, sessionManager)
+
 
     @JvmStatic
     @MainScope
@@ -63,5 +63,6 @@ object MainModule {
         sessionManager: SessionManager
     ): CreateBlogRepository =
         CreateBlogRepositoryImpl(openApiMainService, blogPostDao, sessionManager)
+
 
 }

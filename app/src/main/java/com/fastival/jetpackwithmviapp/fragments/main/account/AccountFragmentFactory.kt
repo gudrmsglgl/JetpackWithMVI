@@ -12,8 +12,12 @@ import com.fastival.jetpackwithmviapp.ui.auth.RegisterFragment
 import com.fastival.jetpackwithmviapp.ui.main.account.AccountFragment
 import com.fastival.jetpackwithmviapp.ui.main.account.ChangePasswordFragment
 import com.fastival.jetpackwithmviapp.ui.main.account.UpdateAccountFragment
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 
+@ExperimentalCoroutinesApi
+@FlowPreview
 @MainScope
 class AccountFragmentFactory
 @Inject

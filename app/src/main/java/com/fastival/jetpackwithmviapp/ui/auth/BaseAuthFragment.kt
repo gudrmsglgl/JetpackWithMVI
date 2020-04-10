@@ -1,6 +1,6 @@
 package com.fastival.jetpackwithmviapp.ui.auth
 
-import UICommunicationListener
+import com.fastival.jetpackwithmviapp.ui.UICommunicationListener
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -11,7 +11,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.wada811.databinding.dataBinding
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 
+@FlowPreview
+@ExperimentalCoroutinesApi
 abstract class BaseAuthFragment<vb: ViewDataBinding>(
     @LayoutRes layoutRes: Int,
     private val viewModelFactory: ViewModelProvider.Factory
@@ -41,7 +45,7 @@ abstract class BaseAuthFragment<vb: ViewDataBinding>(
         try{
             uiCommunicationListener = context as UICommunicationListener
         }catch (e: ClassCastException) {
-            Log.e(TAG, "$context must implement UICommunicationListener" )
+            Log.e(TAG, "$context must implement com.fastival.jetpackwithmviapp.ui.UICommunicationListener" )
         }
     }
 

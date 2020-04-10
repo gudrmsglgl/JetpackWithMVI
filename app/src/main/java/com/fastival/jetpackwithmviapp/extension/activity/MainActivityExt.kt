@@ -8,7 +8,11 @@ import com.fastival.jetpackwithmviapp.ui.main.MainActivity
 import com.fastival.jetpackwithmviapp.util.BOTTOM_NAV_BACKSTACK_KEY
 import com.fastival.jetpackwithmviapp.util.BottomNavController
 import com.fastival.jetpackwithmviapp.util.setUpNavigation
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 
+@ExperimentalCoroutinesApi
+@FlowPreview
 fun MainActivity.setupBottomNavigationView(savedInstanceState: Bundle?) {
 
     bottomNavigationView = findViewById(R.id.bottom_navigation_view)
@@ -22,25 +26,29 @@ fun MainActivity.setupBottomNavigationView(savedInstanceState: Bundle?) {
 
 }
 
+@ExperimentalCoroutinesApi
+@FlowPreview
 private fun restoreBottomNavBackStack(
     bottomNavController: BottomNavController,
     bundle: Bundle
 ){
-    (bundle[BOTTOM_NAV_BACKSTACK_KEY] as IntArray)?.let { storedIds ->
+    (bundle[BOTTOM_NAV_BACKSTACK_KEY] as IntArray).let { storedIds ->
         val backStack = BottomNavController.BackStack()
         backStack.addAll(storedIds.toTypedArray())
         bottomNavController.setupBottomNavigationBackStack(backStack)
     }
 }
 
-
+@ExperimentalCoroutinesApi
+@FlowPreview
 private fun initBottomNavBackStack(bottomNavController: BottomNavController) =
     with(bottomNavController) {
         setupBottomNavigationBackStack(null)
         onNavigationItemSelected()
     }
 
-
+@ExperimentalCoroutinesApi
+@FlowPreview
 fun MainActivity.restoreSession(savedInstanceState: Bundle?){
     savedInstanceState?.get(AUTH_TOKEN_BUNDLE_KEY)?.let { authToken ->
         sessionManager.setValue(authToken as AuthToken)

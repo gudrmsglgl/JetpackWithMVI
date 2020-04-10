@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import com.fastival.jetpackwithmviapp.di.main.MainScope
 import com.fastival.jetpackwithmviapp.extension.parseRequestBody
+import com.fastival.jetpackwithmviapp.repository.main.CreateBlogRepository
 import com.fastival.jetpackwithmviapp.session.SessionManager
 import com.fastival.jetpackwithmviapp.ui.BaseViewModel
 import com.fastival.jetpackwithmviapp.ui.main.create_blog.state.CreateBlogStateEvent
@@ -22,7 +23,7 @@ import javax.inject.Inject
 class CreateBlogViewModel
 @Inject
 constructor(
-    val repository: CreateBlogRepositoryImpl,
+    val repository: CreateBlogRepository,
     val sessionManager: SessionManager
 ) : BaseViewModel<CreateBlogViewState>() {
 
@@ -30,7 +31,7 @@ constructor(
         get() = super.viewState
 
 
-    override fun setStateEvent(stateEvent: StateEvent) =
+    override fun setStateEvent(stateEvent: StateEvent) {
         sessionManager.cachedToken.value?.let { authToken ->
 
             launchJob(
@@ -62,7 +63,8 @@ constructor(
                 }
             )
 
-        }?: sessionManager.logout()
+        }
+    }
 
     override fun handleViewState(data: CreateBlogViewState) {
         // not in

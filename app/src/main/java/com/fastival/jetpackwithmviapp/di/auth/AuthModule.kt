@@ -9,8 +9,10 @@ import com.fastival.jetpackwithmviapp.repository.auth.AuthRepositoryImpl
 import com.fastival.jetpackwithmviapp.session.SessionManager
 import dagger.Module
 import dagger.Provides
+import kotlinx.coroutines.FlowPreview
 import retrofit2.Retrofit
 
+@FlowPreview
 @Module
 object AuthModule {
 

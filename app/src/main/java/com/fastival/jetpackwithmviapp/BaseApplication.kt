@@ -5,7 +5,11 @@ import com.fastival.jetpackwithmviapp.di.AppComponent
 import com.fastival.jetpackwithmviapp.di.DaggerAppComponent
 import com.fastival.jetpackwithmviapp.di.auth.AuthComponent
 import com.fastival.jetpackwithmviapp.di.main.MainComponent
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 
+@ExperimentalCoroutinesApi
+@FlowPreview
 class BaseApplication : Application() {
 
     lateinit var appComponent: AppComponent
@@ -42,7 +46,8 @@ class BaseApplication : Application() {
     }
 
     fun initAppComponent(){
-        appComponent = DaggerAppComponent.builder()
+        appComponent = DaggerAppComponent
+            .builder()
             .application(this)
             .build()
     }

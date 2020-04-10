@@ -1,6 +1,5 @@
 package com.fastival.jetpackwithmviapp.ui
 
-import UICommunicationListener
 import android.Manifest.*
 import android.content.Context
 import android.content.pm.PackageManager
@@ -20,8 +19,11 @@ import com.fastival.jetpackwithmviapp.util.Constants.Companion.PERMISSIONS_REQUE
 import com.fastival.jetpackwithmviapp.util.Response
 import com.fastival.jetpackwithmviapp.util.StateMessageCallback
 import com.fastival.jetpackwithmviapp.util.UIComponentType
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
-
+@ExperimentalCoroutinesApi
+@FlowPreview
 abstract class BaseActivity
     : AppCompatActivity(), UICommunicationListener
 {
@@ -134,8 +136,10 @@ abstract class BaseActivity
         }
     }
 
-    abstract override fun displayProgressBar(isLoading: Boolean)
+    abstract override fun displayProgressBar(isAnyActiveJob: Boolean)
 
     abstract fun inject()
+
+    abstract override fun expandAppBar()
 
 }

@@ -41,9 +41,6 @@ class ErrorHandling{
             }
         }
 
-        fun isPaginationDone(errorResponse: String?): Boolean =
-            errorResponse?.contains(INVALID_PAGE) ?: false
-
     }
 
 }

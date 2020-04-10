@@ -7,7 +7,11 @@ import com.fastival.jetpackwithmviapp.ui.BaseActivity
 import com.fastival.jetpackwithmviapp.util.MessageType
 import com.fastival.jetpackwithmviapp.util.Response
 import com.fastival.jetpackwithmviapp.util.StateMessageCallback
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 
+@ExperimentalCoroutinesApi
+@FlowPreview
 fun BaseActivity.areYouSureDialog(
     message: String,
     callback: AreYouSureCallBack,
@@ -32,7 +36,8 @@ fun BaseActivity.areYouSureDialog(
         cancelable(false)
     }
 
-
+@ExperimentalCoroutinesApi
+@FlowPreview
 fun BaseActivity.displayDialog(
     response: Response,
     stateMessageCallback: StateMessageCallback

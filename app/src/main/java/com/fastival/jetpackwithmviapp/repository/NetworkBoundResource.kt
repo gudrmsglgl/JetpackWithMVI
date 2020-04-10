@@ -1,10 +1,12 @@
 package com.fastival.jetpackwithmviapp.repository
 
+import com.fastival.jetpackwithmviapp.extension.buildError
+import com.fastival.jetpackwithmviapp.extension.safeApiCall
+import com.fastival.jetpackwithmviapp.extension.safeCacheCall
 import com.fastival.jetpackwithmviapp.util.*
 import com.fastival.jetpackwithmviapp.util.ErrorHandling.Companion.NETWORK_ERROR
 import com.fastival.jetpackwithmviapp.util.ErrorHandling.Companion.UNKNOWN_ERROR
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
@@ -30,7 +32,8 @@ open class NetworkBoundResource<NetworkObj, CacheObj, ViewState>(
 
 
         // STEP 2: MAKE NETWORK CALL, SAVE RESULT TO CACHE OR Emit ERROR
-        val apiResult = safeApiCall(dispatcher){apiCall.invoke()}
+        val apiResult =
+            safeApiCall(dispatcher) { apiCall.invoke() }
 
         resultSaveCacheOrEmitError(this, apiResult)
 
@@ -88,7 +91,8 @@ open class NetworkBoundResource<NetworkObj, CacheObj, ViewState>(
 
     private suspend fun retCacheDataState(markJobComplete: Boolean): DataState<ViewState>{
 
-        val cacheResult = safeCacheCall(dispatcher){dbQuery?.invoke()}
+        val cacheResult =
+            safeCacheCall(dispatcher) { dbQuery.invoke() }
 
         var jobCompleteMarker: StateEvent? = null
         if (markJobComplete) jobCompleteMarker = stateEvent

@@ -1,4 +1,4 @@
-
+package com.fastival.jetpackwithmviapp.ui
 import com.fastival.jetpackwithmviapp.util.Response
 import com.fastival.jetpackwithmviapp.util.StateMessageCallback
 
@@ -9,7 +9,7 @@ interface UICommunicationListener {
         stateMessageCallback: StateMessageCallback
     )
 
-    fun displayProgressBar(isLoading: Boolean)
+    fun displayProgressBar(isAnyActiveJob: Boolean)
 
     fun expandAppBar()
 

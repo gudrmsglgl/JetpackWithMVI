@@ -8,7 +8,7 @@ import com.fastival.jetpackwithmviapp.models.AccountProperties
 import com.fastival.jetpackwithmviapp.models.AuthToken
 import com.fastival.jetpackwithmviapp.persistence.AccountPropertiesDao
 import com.fastival.jetpackwithmviapp.repository.NetworkBoundResource
-import com.fastival.jetpackwithmviapp.repository.safeApiCall
+import com.fastival.jetpackwithmviapp.extension.safeApiCall
 import com.fastival.jetpackwithmviapp.session.SessionManager
 import com.fastival.jetpackwithmviapp.ui.main.account.state.AccountViewState
 import com.fastival.jetpackwithmviapp.util.*
@@ -43,7 +43,7 @@ constructor(
                 accountPropertiesDao.searchByPk(authToken.account_pk!!)
             },
             apiCall = {
-                openApiMainService.getAccountProperties("Token ${authToken.token!!}")
+                openApiMainService.getAccountProperties(authToken.transHeaderAuthorization())
             },
             updateCache = { networkData, dispatcher ->
                 Log.d(TAG, "updateCache: $networkData")
@@ -75,12 +75,14 @@ constructor(
         stateEvent: StateEvent
     ): Flow<DataState<AccountViewState>> = flow{
 
-        val responseUpdateProperties = safeApiCall(Dispatchers.IO){
-            openApiMainService.saveAccountProperties(
-                "Token ${authToken.token!!}",
-                email,
-                username)
-        }
+        val responseUpdateProperties =
+            safeApiCall(Dispatchers.IO) {
+                openApiMainService.saveAccountProperties(
+                    authToken.transHeaderAuthorization(),
+                    email,
+                    username
+                )
+            }
 
         emit(
             resUpdateProperties2DataState(responseUpdateProperties, stateEvent, authToken)
@@ -105,8 +107,8 @@ constructor(
 
                 withContext(Dispatchers.IO) {
 
-                    val updatedAccountProperties = openApiMainService
-                        .getAccountProperties("Token ${authToken.token!!}")
+                    val updatedAccountProperties =
+                        openApiMainService.getAccountProperties(authToken.transHeaderAuthorization())
 
                     accountPropertiesDao.updateAccountProperties(
                         pk = updatedAccountProperties.pk,
@@ -138,14 +140,15 @@ constructor(
         stateEvent: StateEvent
     ): Flow<DataState<AccountViewState>> = flow {
 
-        val responseUpdatePwd = safeApiCall(Dispatchers.IO){
-            openApiMainService.updatePassword(
-                "Token ${authToken.token!!}",
-                currentPassword,
-                newPassword,
-                confirmNewPassword
-            )
-        }
+        val responseUpdatePwd =
+            safeApiCall(Dispatchers.IO) {
+                openApiMainService.updatePassword(
+                    authToken.transHeaderAuthorization(),
+                    currentPassword,
+                    newPassword,
+                    confirmNewPassword
+                )
+            }
 
         emit(
             resUpdatePwd2DataState(responseUpdatePwd, stateEvent)

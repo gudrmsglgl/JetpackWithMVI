@@ -4,6 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.RequestManager
+import com.bumptech.glide.request.RequestOptions
 import com.fastival.jetpackwithmviapp.di.auth.AuthScope
 import com.fastival.jetpackwithmviapp.di.main.MainScope
 import com.fastival.jetpackwithmviapp.ui.auth.ForgotPasswordFragment
@@ -16,13 +17,18 @@ import com.fastival.jetpackwithmviapp.ui.main.account.UpdateAccountFragment
 import com.fastival.jetpackwithmviapp.ui.main.blog.BlogFragment
 import com.fastival.jetpackwithmviapp.ui.main.blog.UpdateBlogFragment
 import com.fastival.jetpackwithmviapp.ui.main.blog.ViewBlogFragment
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 
+@ExperimentalCoroutinesApi
+@FlowPreview
 @MainScope
 class BlogFragmentFactory
 @Inject
 constructor(
     private val viewModelFactory: ViewModelProvider.Factory,
+    private val requestOptions: RequestOptions,
     private val requestManager: RequestManager
 ): FragmentFactory()
 {
@@ -31,7 +37,7 @@ constructor(
         when (className) {
 
             BlogFragment::class.java.name -> {
-                BlogFragment(viewModelFactory, requestManager)
+                BlogFragment(viewModelFactory, requestOptions)
             }
 
             UpdateBlogFragment::class.java.name -> {
@@ -43,7 +49,7 @@ constructor(
             }
 
             else -> {
-                BlogFragment(viewModelFactory, requestManager)
+                BlogFragment(viewModelFactory, requestOptions)
             }
 
         }

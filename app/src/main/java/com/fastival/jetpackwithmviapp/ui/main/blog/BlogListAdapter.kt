@@ -53,6 +53,7 @@ class BlogListAdapter(
             AsyncDifferConfig.Builder(DIFF_CALLBACK).build()
         )
 
+
     // Prepare the image that will be displayed in the RecyclerView.
     // This also ensures if the network connection is lost, they will be in the cache
     fun preloadGlideImages(
@@ -71,14 +72,19 @@ class BlogListAdapter(
         blogList: List<BlogPost>?,
         isQueryExhausted: Boolean
     ){
-      val newList = blogList?.toMutableList()
-      if (isQueryExhausted) newList?.add((NO_MORE_RESULTS_BLOG_MARKER))
-      val commitCallback = Runnable {
-          // if process died must restore list position
-          // very annoying
-          interaction?.restoreListPosition()
-      }
-      differ.submitList(newList, commitCallback)
+
+        val newList = blogList?.toMutableList()
+
+        if (isQueryExhausted)
+            newList?.add((NO_MORE_RESULTS_BLOG_MARKER))
+
+        val commitCallback = Runnable {
+            // if process died must restore list position
+            // very annoying
+            interaction?.restoreListPosition()}
+
+        differ.submitList(newList, commitCallback)
+
     }
 
     internal inner class BlogRecyclerChangeCallback(
@@ -171,7 +177,7 @@ class BlogListAdapter(
             binding.item = item
             binding.requestManager = requestManager
             binding.blogContainer.setOnClickListener{
-                interaction?.onItemSelected(adapterPosition, item)
+                interaction?.onBlogSelected(adapterPosition, item)
             }
         }
 
@@ -196,7 +202,7 @@ class BlogListAdapter(
     }
 
     interface Interaction{
-        fun onItemSelected(position: Int, item: BlogPost)
+        fun onBlogSelected(position: Int, item: BlogPost)
 
         fun restoreListPosition()
     }

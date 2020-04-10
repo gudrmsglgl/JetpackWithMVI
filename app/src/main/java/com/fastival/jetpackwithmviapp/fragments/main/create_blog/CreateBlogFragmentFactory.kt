@@ -17,8 +17,12 @@ import com.fastival.jetpackwithmviapp.ui.main.blog.BlogFragment
 import com.fastival.jetpackwithmviapp.ui.main.blog.UpdateBlogFragment
 import com.fastival.jetpackwithmviapp.ui.main.blog.ViewBlogFragment
 import com.fastival.jetpackwithmviapp.ui.main.create_blog.CreateBlogFragment
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 
+@FlowPreview
+@ExperimentalCoroutinesApi
 @MainScope
 class CreateBlogFragmentFactory
 @Inject

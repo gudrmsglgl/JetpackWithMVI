@@ -4,7 +4,7 @@ import com.fastival.jetpackwithmviapp.di.main.MainScope
 import com.fastival.jetpackwithmviapp.models.AuthToken
 import com.fastival.jetpackwithmviapp.persistence.BlogPostDao
 import com.fastival.jetpackwithmviapp.repository.main.CreateBlogRepository
-import com.fastival.jetpackwithmviapp.repository.safeApiCall
+import com.fastival.jetpackwithmviapp.extension.safeApiCall
 import com.fastival.jetpackwithmviapp.session.SessionManager
 import com.fastival.jetpackwithmviapp.ui.main.create_blog.state.CreateBlogViewState
 import com.fastival.jetpackwithmviapp.util.*
@@ -37,14 +37,15 @@ constructor(
         stateEvent: StateEvent
     ): Flow<DataState<CreateBlogViewState>> = flow{
 
-        val resCreateBlog = safeApiCall(Dispatchers.IO){
-            openApiMainService.createBlog(
-                "Token ${authToken.token!!}",
-                title,
-                body,
-                image
-            )
-        }
+        val resCreateBlog =
+            safeApiCall(Dispatchers.IO) {
+                openApiMainService.createBlog(
+                    authToken.transHeaderAuthorization(),
+                    title,
+                    body,
+                    image
+                )
+            }
 
         emit(
             resCreateBlog2DataState(blogPostDao, resCreateBlog, stateEvent)

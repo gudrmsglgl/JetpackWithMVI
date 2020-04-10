@@ -1,68 +1,91 @@
 package com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel
 
 import android.util.Log
-import com.fastival.jetpackwithmviapp.bvm
+import com.fastival.jetpackwithmviapp.ui.main.blog.BlogFragment
 import com.fastival.jetpackwithmviapp.ui.main.blog.state.BlogStateEvent
 import com.fastival.jetpackwithmviapp.ui.main.blog.state.BlogViewState
+import com.fastival.jetpackwithmviapp.util.ErrorHandling.Companion.INVALID_PAGE
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 
-fun bvm.refreshFromCache(){
-    val update = getCurrentViewStateOrNew().apply {
-        blogFields.apply {
-            isQueryInProgress = true
-            isQueryExhausted = false
-        }
+@FlowPreview
+@ExperimentalCoroutinesApi
+fun BlogViewModel.refreshFromCache(){
+
+    if (!isJobAlreadyActive(BlogStateEvent.BlogSearchEvent())){
+
+        setQueryExhausted(false)
+        setStateEvent(
+            BlogStateEvent.BlogSearchEvent(
+                clearLayoutManagerState = false
+            )
+        )
+
     }
-    setViewState(update)
-    setStateEvent(BlogStateEvent.RestoreBlogListFromCache())
+
 }
 
-fun bvm.loadFirstPage() {
-    val update = getCurrentViewStateOrNew().apply {
-        blogFields.apply {
-            isQueryInProgress = true
-            isQueryExhausted = false
-            page = 1
-        }
+
+@FlowPreview
+@ExperimentalCoroutinesApi
+fun BlogViewModel.searchBlog(query: String? = null) {
+    if (!isJobAlreadyActive(BlogStateEvent.BlogSearchEvent())) {
+
+        getCurrentViewStateOrNew()
+            .apply {
+
+                blogFields.apply {
+                    query?.let { searchQuery = it }
+                    page = 1
+                    isQueryExhausted = false
+                }
+
+            }.run {
+                setViewState(this)
+                setStateEvent(BlogStateEvent.BlogSearchEvent())
+            }
     }
-    setViewState(update)
-    setStateEvent(BlogStateEvent.BlogSearchEvent())
-    Log.e(TAG, "BlogViewModel: loadFirstPage: ${getSearchQuery()}")
 }
 
-fun bvm.nextPage(){
-    if (!getIsQueryInProgress() && !getIsQueryExhausted()) {
+
+
+
+@FlowPreview
+@ExperimentalCoroutinesApi
+fun BlogViewModel.nextPage(){
+
+    if ( !isJobAlreadyActive(BlogStateEvent.BlogSearchEvent()) &&
+         !getIsQueryExhausted())
+    {
         Log.d(TAG, "BlogViewModel: Attempting to load next page...")
 
-        val update = getCurrentViewStateOrNew().apply {
-            val currentPage = this.copy().blogFields.page
-            blogFields.apply {
-                page = currentPage + 1
-                isQueryInProgress = true
+        getCurrentViewStateOrNew()
+            .apply {
+
+                val currentPage = this.copy().blogFields.page ?: 1
+
+                blogFields.apply {
+                    page = currentPage.plus(1)
+                }
+
+            }.run {
+                setViewState(this)
+                setStateEvent(BlogStateEvent.BlogSearchEvent())
             }
-        }
-
-        setViewState(update)
-        setStateEvent(BlogStateEvent.BlogSearchEvent())
     }
 }
 
-// handled ViewState on BlogRepository
-fun bvm.handleIncomingBlogListData(handledVS: BlogViewState) {
-    Log.d(TAG, "BlogViewModel, DataState: $handledVS")
-    Log.d(TAG, "BlogViewModel, DataState: isQueryInProgress?: " +
-            "${handledVS.blogFields.isQueryInProgress}")
-    Log.d(TAG, "BlogViewModel, DataState: isQueryExhausted?: " +
-            "${handledVS.blogFields.isQueryExhausted}")
 
-    val update = getCurrentViewStateOrNew().apply {
-        blogFields.apply {
-            isQueryInProgress = handledVS.blogFields.isQueryInProgress
-            isQueryExhausted = handledVS.blogFields.isQueryExhausted
-            blogList = handledVS.blogFields.blogList
-        }
-    }
-
-    setViewState(update)
+fun isPaginationDone(errorResponse: String?): Boolean{
+    // if error response = '{"detail":"Invalid page."}' then pagination is finished
+    return errorResponse?.contains(INVALID_PAGE)?: false
 }
 
 
+@FlowPreview
+@ExperimentalCoroutinesApi
+fun paginationDone(viewModel: BlogViewModel) = with(viewModel)
+{
+    setQueryExhausted(true)
+    removeStateMessage()
+}

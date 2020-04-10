@@ -27,9 +27,13 @@ import com.fastival.jetpackwithmviapp.util.BottomNavController
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 import javax.inject.Named
 
+@FlowPreview
+@ExperimentalCoroutinesApi
 class MainActivity : BaseActivity(),
 BottomNavController.OnNavigationGraphChanged,
 BottomNavController.OnNavigationReselectedListener
@@ -120,8 +124,8 @@ BottomNavController.OnNavigationReselectedListener
     }
 
 
-    override fun displayProgressBar(bool: Boolean) {
-        if (bool) progress_bar.visibility = View.VISIBLE
+    override fun displayProgressBar(isAnyActiveJob: Boolean) {
+        if (isAnyActiveJob) progress_bar.visibility = View.VISIBLE
         else progress_bar.visibility = View.GONE
     }
 

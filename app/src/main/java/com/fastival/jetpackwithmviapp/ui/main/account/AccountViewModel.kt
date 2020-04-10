@@ -71,7 +71,7 @@ constructor(
                 }
             )
 
-        }?: sessionManager.logout()
+        }
 
     }
 

@@ -34,4 +34,8 @@ data class AuthToken(
     @SerializedName("token")
     @Expose
     var token: String? = null
-): Parcelable
+): Parcelable {
+
+    fun transHeaderAuthorization() = "Token ${this.token!!}"
+
+}

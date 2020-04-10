@@ -1,32 +1,49 @@
 package com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel
 
-import com.fastival.jetpackwithmviapp.bvm
 import com.fastival.jetpackwithmviapp.models.BlogPost
+import com.fastival.jetpackwithmviapp.persistence.BlogQueryUtils.Companion.BLOG_FILTER_DATE_UPDATED
+import com.fastival.jetpackwithmviapp.persistence.BlogQueryUtils.Companion.BLOG_ORDER_DESC
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 
-fun bvm.getSearchQuery() =
-    getCurrentViewStateOrNew().blogFields.searchQuery
+@FlowPreview
+@ExperimentalCoroutinesApi
+fun BlogViewModel.getSearchQuery() =
+    getCurrentViewStateOrNew().blogFields.searchQuery ?: ""
 
-fun bvm.getPage() =
-    getCurrentViewStateOrNew().blogFields.page
+@FlowPreview
+@ExperimentalCoroutinesApi
+fun BlogViewModel.getPage() =
+    getCurrentViewStateOrNew().blogFields.page ?: 1
 
-fun bvm.getIsQueryExhausted() =
-    getCurrentViewStateOrNew().blogFields.isQueryExhausted
+@FlowPreview
+@ExperimentalCoroutinesApi
+fun BlogViewModel.getIsQueryExhausted() =
+    getCurrentViewStateOrNew().blogFields.isQueryExhausted ?: false
 
-fun bvm.getIsQueryInProgress() =
-    getCurrentViewStateOrNew().blogFields.isQueryInProgress
 
-fun bvm.getOrder(): String =
-    getCurrentViewStateOrNew().blogFields.order
+@FlowPreview
+@ExperimentalCoroutinesApi
+fun BlogViewModel.getOrder(): String =
+    getCurrentViewStateOrNew().blogFields.order ?: BLOG_ORDER_DESC
 
-fun bvm.getFilter(): String =
-    getCurrentViewStateOrNew().blogFields.filter
+@FlowPreview
+@ExperimentalCoroutinesApi
+fun BlogViewModel.getFilter(): String =
+    getCurrentViewStateOrNew().blogFields.filter ?: BLOG_FILTER_DATE_UPDATED
 
-fun bvm.getSlug(): String =
+@FlowPreview
+@ExperimentalCoroutinesApi
+fun BlogViewModel.getSlug(): String =
     getCurrentViewStateOrNew().viewBlogFields.blogPost?.slug ?: ""
 
-fun bvm.isAuthorOfBlogPost(): Boolean =
-    getCurrentViewStateOrNew().viewBlogFields.isAuthorOfBlogPost
+@FlowPreview
+@ExperimentalCoroutinesApi
+fun BlogViewModel.isAuthorOfBlogPost(): Boolean =
+    getCurrentViewStateOrNew().viewBlogFields.isAuthorOfBlogPost ?: false
 
-fun bvm.getBlogPost(): BlogPost =
+@FlowPreview
+@ExperimentalCoroutinesApi
+fun BlogViewModel.getBlogPost(): BlogPost =
     getCurrentViewStateOrNew().viewBlogFields.blogPost ?:
     BlogPost(-1,"","","","",1,"")

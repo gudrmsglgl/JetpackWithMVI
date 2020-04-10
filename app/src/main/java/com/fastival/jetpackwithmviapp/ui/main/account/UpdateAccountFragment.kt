@@ -9,14 +9,20 @@ import androidx.lifecycle.ViewModelProvider
 
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentUpdateAccountBinding
+import com.fastival.jetpackwithmviapp.di.main.MainScope
 import com.fastival.jetpackwithmviapp.ui.main.account.state.AccountStateEvent
 import com.fastival.jetpackwithmviapp.util.StateMessageCallback
 import kotlinx.android.synthetic.main.fragment_update_account.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass.
  */
+@FlowPreview
+@ExperimentalCoroutinesApi
+@MainScope
 class UpdateAccountFragment
 @Inject
 constructor(

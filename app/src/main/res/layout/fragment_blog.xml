@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
-    <data>
-        <variable
-            name="vm"
-            type="com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel.BlogViewModel" />
-    </data>
+
 
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
