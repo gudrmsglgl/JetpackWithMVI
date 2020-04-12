@@ -14,7 +14,6 @@ import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentViewBlogBinding
 import com.fastival.jetpackwithmviapp.di.main.MainScope
 import com.fastival.jetpackwithmviapp.extension.activity.AreYouSureCallBack
-import com.fastival.jetpackwithmviapp.extension.fragment.navigate
 import com.fastival.jetpackwithmviapp.ui.main.blog.state.BlogStateEvent
 import com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel.*
 import com.fastival.jetpackwithmviapp.util.MessageType
@@ -160,7 +159,7 @@ constructor(
                     uri = getBlogPost().image.toUri())
             }
 
-            navigate(R.id.action_viewBlogFragment_to_updateBlogFragment)
+            findNavController().navigate(R.id.action_viewBlogFragment_to_updateBlogFragment)
 
         } catch (e: Exception){
             // send error report or something. These fields should never be null. Not possible

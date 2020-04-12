@@ -57,7 +57,7 @@ BottomNavController.OnNavigationReselectedListener
         BottomNavController(
             this,
             R.id.main_fragments_container,
-            R.id.nav_blog,
+            R.id.bottom_menu_blog,
             this)
     }
 

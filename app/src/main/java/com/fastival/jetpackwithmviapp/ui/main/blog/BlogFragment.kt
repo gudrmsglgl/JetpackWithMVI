@@ -9,6 +9,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
@@ -132,7 +133,7 @@ constructor(
 
     override fun onBlogSelected(position: Int, item: BlogPost) {
         viewModel.setBlogPost(item)
-        navigate(R.id.action_blogFragment_to_viewBlogFragment)
+        findNavController().navigate(R.id.action_blogFragment_to_viewBlogFragment)
     }
 
 

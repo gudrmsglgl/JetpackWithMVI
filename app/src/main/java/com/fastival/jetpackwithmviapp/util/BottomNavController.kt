@@ -4,15 +4,13 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.os.Parcelable
+import android.util.Log
 import androidx.annotation.IdRes
-import androidx.annotation.NavigationRes
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.fragments.main.account.AccountNavHostFragment
@@ -31,7 +29,7 @@ const val BOTTOM_NAV_BACKSTACK_KEY =
 class BottomNavController(
     val context: Context,
     @IdRes val containerId: Int,
-    @IdRes val appStartDestinationId: Int,
+    @IdRes val startBottomMenuId: Int,
     val graphChangeListener: OnNavigationGraphChanged?
 ) {
 
@@ -56,17 +54,17 @@ class BottomNavController(
     fun setupBottomNavigationBackStack(previousBackStack: BackStack?){
         navigationBackStack = previousBackStack?.let {
                 it
-        }?: BackStack.of(appStartDestinationId)
+        }?: BackStack.of(startBottomMenuId)
     }
 
 
-    fun onNavigationItemSelected(
+    fun onBottomNavigationItemSelected(
         menuItemId: Int = navigationBackStack.last()
     ): Boolean {
 
         // Replace fragment representing a navigation item
-        val fragment = fragmentManager.findFragmentByTag(menuItemId.toString())
-            ?: createNavHost(menuItemId)
+        val navHost =
+            fragmentManager.findFragmentByTag(menuItemId.toString()) ?: createNavHost(menuItemId)
 
         fragmentManager.beginTransaction()
             .setCustomAnimations(
@@ -77,14 +75,14 @@ class BottomNavController(
             )
             .replace(
                 containerId,
-                fragment,
+                navHost,
                 menuItemId.toString()
             )
             .addToBackStack(null)
             .commit()
 
         // Add to back stack
-        navigationBackStack.moveLast(menuItemId)
+        navigationBackStack.addLast(menuItemId)
 
         // update checked icon
         navItemChangeListener.onItemChanged(menuItemId)
@@ -99,15 +97,15 @@ class BottomNavController(
     private fun createNavHost(menuItemId: Int): Fragment =
         when(menuItemId) {
 
-            R.id.nav_blog -> {
+            R.id.bottom_menu_blog -> {
                 BlogNavHostFragment.create(R.navigation.nav_blog)
             }
 
-            R.id.nav_create_blog -> {
+            R.id.bottom_menu_create_blog -> {
                 CreateBlogNavHostFragment.create(R.navigation.nav_create_blog)
             }
 
-            R.id.nav_account -> {
+            R.id.bottom_menu_account -> {
                 AccountNavHostFragment.create(R.navigation.nav_account)
             }
 
@@ -121,6 +119,7 @@ class BottomNavController(
         val navController = fragmentManager.findFragmentById(containerId)!!
             .findNavController()
 
+
         when{
             // We should always try to go back on the child fragment manager stack before going to
             // the navigation stack. It's important to use the child fragment manager instead of the
@@ -128,7 +127,8 @@ class BottomNavController(
             // supportFragmentManager may mess up with the NavController child fragment manager back
             // stack
 
-            navigationBackStack.size > 2 -> {
+            // default backStack size 3 on Dept 1
+            navController.backStack.size > 2 ->{
                 navController.popBackStack()
             }
 
@@ -138,15 +138,15 @@ class BottomNavController(
                 navigationBackStack.removeLast()
 
                 // Update the container with new fragment
-                onNavigationItemSelected()
+                onBottomNavigationItemSelected()
             }
 
             // If the stack has only one and it's not the navigation home we should
             // ensure that the application always leave from startDestination
-            navigationBackStack.last() != appStartDestinationId -> {
+            navigationBackStack.last() != startBottomMenuId -> {
                 navigationBackStack.removeLast()
-                navigationBackStack.add(0, appStartDestinationId)
-                onNavigationItemSelected()
+                navigationBackStack.add(0, startBottomMenuId)
+                onBottomNavigationItemSelected()
             }
             // Navigation staci is empty, so finish the activity
             else -> activity.finish()
@@ -158,16 +158,16 @@ class BottomNavController(
     class BackStack: ArrayList<Int>(), Parcelable {
 
         companion object {
-            fun of(vararg elements: Int): BackStack {
-                val backStack = BackStack()
-                backStack.addAll(elements.toTypedArray())
-                return backStack
-            }
+
+            fun of(vararg elements: Int) =
+                BackStack()
+                    .apply { addAll(elements.toTypedArray())}
+
         }
 
         fun removeLast() = removeAt(size -1)
 
-        fun moveLast(item: Int) {
+        fun addLast(item: Int) {
             remove(item) // if present, remove
             add(item)
         }
@@ -213,7 +213,7 @@ fun BottomNavigationView.setUpNavigation(
 
 
     this.setOnNavigationItemSelectedListener { menuItem->
-        bottomNavController.onNavigationItemSelected(menuItem.itemId)
+        bottomNavController.onBottomNavigationItemSelected(menuItem.itemId)
     }
 
     this.setOnNavigationItemReselectedListener {
@@ -230,7 +230,7 @@ fun BottomNavigationView.setUpNavigation(
             )
         }
 
-        bottomNavController.onNavigationItemSelected()
+        bottomNavController.onBottomNavigationItemSelected()
     }
 
     bottomNavController.setOnItemNavigationChanged { itemId ->

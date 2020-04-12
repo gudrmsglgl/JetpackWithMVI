@@ -6,11 +6,11 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentAccountBinding
 import com.fastival.jetpackwithmviapp.di.main.MainScope
-import com.fastival.jetpackwithmviapp.extension.fragment.navigate
 import com.fastival.jetpackwithmviapp.ui.main.account.state.AccountStateEvent
 import com.fastival.jetpackwithmviapp.util.StateMessageCallback
 import kotlinx.android.synthetic.main.fragment_account.*
@@ -38,7 +38,7 @@ constructor(
         binding.vm = viewModel
 
         change_password.setOnClickListener {
-            navigate(R.id.action_accountFragment_to_changePasswordFragment)
+            findNavController().navigate(R.id.action_accountFragment_to_changePasswordFragment)
         }
 
     }
@@ -82,7 +82,7 @@ constructor(
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.edit -> {
-                navigate(R.id.action_accountFragment_to_updateAccountFragment)
+                findNavController().navigate(R.id.action_accountFragment_to_updateAccountFragment)
                 return true
             }
         }

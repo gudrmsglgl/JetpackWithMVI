@@ -44,7 +44,7 @@ private fun restoreBottomNavBackStack(
 private fun initBottomNavBackStack(bottomNavController: BottomNavController) =
     with(bottomNavController) {
         setupBottomNavigationBackStack(null)
-        onNavigationItemSelected()
+        onBottomNavigationItemSelected()
     }
 
 @ExperimentalCoroutinesApi
