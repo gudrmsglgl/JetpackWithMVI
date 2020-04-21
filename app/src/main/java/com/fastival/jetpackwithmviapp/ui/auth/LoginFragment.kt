@@ -12,6 +12,7 @@ import com.fastival.jetpackwithmviapp.databinding.FragmentLoginBinding
 import com.fastival.jetpackwithmviapp.di.auth.AuthScope
 import com.fastival.jetpackwithmviapp.ui.auth.state.AuthStateEvent.LoginAttemptEvent
 import com.fastival.jetpackwithmviapp.ui.auth.state.LoginFields
+import com.jakewharton.rxbinding3.view.clicks
 import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview

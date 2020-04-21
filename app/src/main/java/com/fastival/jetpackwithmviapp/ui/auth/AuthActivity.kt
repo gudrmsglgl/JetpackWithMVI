@@ -72,8 +72,7 @@ class AuthActivity : BaseActivity()
             .commit()
     }
 
-    fun subscribeObservers() {
-
+    private fun subscribeObservers() {
 
         viewModel.viewState.observe(this, Observer { viewState ->
             Log.d(TAG, "AuthActivity, subscribeObservers: AuthViewState: $viewState")
@@ -91,7 +90,7 @@ class AuthActivity : BaseActivity()
             stateMessage?.let {
 
                 if (stateMessage.response.message == RESPONSE_CHECK_PREVIOUS_AUTH_USER_DONE)
-                    onFinishCheckPreviousAuthUser()
+                    splashGone()
 
                 onResponseReceived(
                     response = it.response,
@@ -111,6 +110,8 @@ class AuthActivity : BaseActivity()
                 if (it != null && it.account_pk != -1 && it.token != null){
                     navActivity<MainActivity>(true){}
                     (application as BaseApplication).releaseAuthComponent()
+                } else {
+                    splashGone()
                 }
             }
         })
@@ -130,8 +131,8 @@ class AuthActivity : BaseActivity()
         else progress_bar.visibility = View.GONE
     }
 
-    private fun onFinishCheckPreviousAuthUser(){
+    private fun splashGone(){
         fragment_container.visibility = View.VISIBLE
-        splash_logo.visibility = View.INVISIBLE
+        splash_logo.visibility = View.GONE
     }
 }

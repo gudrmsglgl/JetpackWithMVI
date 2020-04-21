@@ -56,17 +56,18 @@ abstract class BaseMainFragment(
         )
     }
 
-    fun showStateMessage(stateMessage: StateMessage, viewModel: BaseViewModel<*>){
-        uiCommunicationListener
-            .onResponseReceived(
-                response = stateMessage.response,
-                stateMessageCallback = object: StateMessageCallback{
-                    override fun removeMessageFromStack() {
-                        viewModel.removeStateMessage()
-                    }
-                }
-            )
-    }
+    fun showStateMessage(
+        stateMessage: StateMessage,
+        viewModel: BaseViewModel<*>
+    ) = uiCommunicationListener.onResponseReceived(
+        response = stateMessage.response,
+        stateMessageCallback = object: StateMessageCallback{
+            override fun removeMessageFromStack() {
+                viewModel.removeStateMessage()
+            }
+        }
+    )
+
 
 
     @IdRes

@@ -1,5 +1,7 @@
 package com.fastival.jetpackwithmviapp.ui.main
 
+import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -83,9 +85,8 @@ BottomNavController.OnNavigationReselectedListener
 
             if (authToken == null || authToken.account_pk == -1 || authToken.token == null) {
 
-                navActivity<AuthActivity>(true){}.run {
-                    (application as BaseApplication).releaseMainComponent()
-                }
+                navAuthActivity()
+                (application as BaseApplication).releaseMainComponent()
 
             }
         })
@@ -146,5 +147,14 @@ BottomNavController.OnNavigationReselectedListener
 
     override fun inject() =
         (application as BaseApplication).mainComponent().inject(this)
+
+    private fun navAuthActivity() = Intent(this, AuthActivity::class.java)
+        .apply {
+            addFlags(FLAG_ACTIVITY_SINGLE_TOP)
+        }.run {
+            startActivity(this)
+            finish()
+        }
+
 
 }
