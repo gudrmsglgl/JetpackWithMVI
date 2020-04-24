@@ -9,9 +9,12 @@ import androidx.navigation.fragment.findNavController
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentLauncherBinding
 import com.fastival.jetpackwithmviapp.di.auth.AuthScope
+import com.fastival.jetpackwithmviapp.extension.singleClick
+import com.jakewharton.rxbinding3.view.clicks
 import kotlinx.android.synthetic.main.fragment_launcher.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 /**
@@ -28,17 +31,24 @@ class LauncherFragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        register.setOnClickListener {
-            findNavController().navigate(R.id.action_launcherFragment_to_registerFragment)
-        }
+        register
+            .singleClick()
+            .subscribe {
+                findNavController().navigate(R.id.action_launcherFragment_to_registerFragment)}
+            .addCompositeDisposable()
 
-        login.setOnClickListener {
-            findNavController().navigate(R.id.action_launcherFragment_to_loginFragment)
-        }
+        login.
+            singleClick()
+            .subscribe{
+                findNavController().navigate(R.id.action_launcherFragment_to_loginFragment)}
+            .addCompositeDisposable()
 
-        forgot_password.setOnClickListener {
-            findNavController().navigate(R.id.action_launcherFragment_to_forgotPasswordFragment)
-        }
+
+        forgot_password
+            .singleClick()
+            .subscribe {
+                findNavController().navigate(R.id.action_launcherFragment_to_forgotPasswordFragment)}
+            .addCompositeDisposable()
 
         focusable_view.requestFocus() // reset focus
     }

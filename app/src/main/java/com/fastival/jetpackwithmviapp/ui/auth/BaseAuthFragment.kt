@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.wada811.databinding.dataBinding
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 
@@ -30,15 +32,15 @@ abstract class BaseAuthFragment<vb: ViewDataBinding>(
 
     lateinit var uiCommunicationListener: UICommunicationListener
 
+    private var disposableBag: CompositeDisposable? = null
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         setupChannel()
+        disposableBag = CompositeDisposable()
     }
-
-    private fun setupChannel() = viewModel.setUpChannel()
-
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -49,5 +51,15 @@ abstract class BaseAuthFragment<vb: ViewDataBinding>(
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        disposableBag?.clear()
+        disposableBag = null
+    }
+
+
+    private fun setupChannel() = viewModel.setUpChannel()
+
+    fun Disposable.addCompositeDisposable()= disposableBag?.add(this)
 
 }
