@@ -48,11 +48,9 @@ constructor(
         }
     }
 
-    override fun observeStateMessage() =
-        viewModel
-            .stateMessage
-            .observe( viewLifecycleOwner, Observer { stateMessage ->
-
+    override fun observeStateMessage() = viewModel.stateMessage
+        .observe( viewLifecycleOwner,
+            Observer { stateMessage ->
                 stateMessage?.let {
 
                     if (it.response.message == RESPONSE_PASSWORD_UPDATE_SUCCESS){
@@ -62,19 +60,18 @@ constructor(
 
                     }
 
-                    uiCommunicationListener
-                        .onResponseReceived(
-                            response = it.response,
-                            stateMessageCallback = object: StateMessageCallback{
+                    uiCommunicationListener.onResponseReceived(
+                        response = it.response,
+                        stateMessageCallback = object: StateMessageCallback{
 
-                                override fun removeMessageFromStack() {
-                                    viewModel.removeStateMessage()
-                                }
-
+                            override fun removeMessageFromStack() {
+                                viewModel.removeStateMessage()
                             }
-                        )
+
+                        }
+                    )
 
                 }
-
             })
+
 }

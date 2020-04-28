@@ -1,10 +1,8 @@
 package com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel
 
 import android.util.Log
-import com.fastival.jetpackwithmviapp.ui.main.blog.BlogFragment
 import com.fastival.jetpackwithmviapp.ui.main.blog.state.BlogStateEvent
-import com.fastival.jetpackwithmviapp.ui.main.blog.state.BlogViewState
-import com.fastival.jetpackwithmviapp.util.ErrorHandling.Companion.INVALID_PAGE
+import com.fastival.jetpackwithmviapp.util.ErrorHandling.Companion.NOT_FOUND
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 
@@ -77,8 +75,7 @@ fun BlogViewModel.nextPage(){
 
 
 fun isPaginationDone(errorResponse: String?): Boolean{
-    // if error response = '{"detail":"Invalid page."}' then pagination is finished
-    return errorResponse?.contains(INVALID_PAGE)?: false
+    return errorResponse?.contains(NOT_FOUND)?: false
 }
 
 

@@ -1,17 +1,28 @@
 package com.fastival.jetpackwithmviapp.di.main
 
 import CreateBlogRepositoryImpl
+import android.app.Application
+import android.view.LayoutInflater
+import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.api.main.OpenApiMainService
+import com.fastival.jetpackwithmviapp.databinding.FragmentBlogBinding
 import com.fastival.jetpackwithmviapp.persistence.AccountPropertiesDao
 import com.fastival.jetpackwithmviapp.persistence.AppDatabase
 import com.fastival.jetpackwithmviapp.persistence.BlogPostDao
 import com.fastival.jetpackwithmviapp.repository.main.*
 import com.fastival.jetpackwithmviapp.session.SessionManager
+import com.fastival.jetpackwithmviapp.ui.main.MainActivity
+import com.fastival.jetpackwithmviapp.util.TopSpacingItemDecoration
 import dagger.Module
 import dagger.Provides
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import retrofit2.Retrofit
 
+@ExperimentalCoroutinesApi
 @FlowPreview
 @Module
 object MainModule {

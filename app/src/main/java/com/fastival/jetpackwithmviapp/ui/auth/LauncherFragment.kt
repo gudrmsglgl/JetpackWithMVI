@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentLauncherBinding
 import com.fastival.jetpackwithmviapp.di.auth.AuthScope
+import com.fastival.jetpackwithmviapp.extension.addCompositeDisposable
 import com.fastival.jetpackwithmviapp.extension.singleClick
 import com.jakewharton.rxbinding3.view.clicks
 import kotlinx.android.synthetic.main.fragment_launcher.*
@@ -35,20 +36,20 @@ class LauncherFragment
             .singleClick()
             .subscribe {
                 findNavController().navigate(R.id.action_launcherFragment_to_registerFragment)}
-            .addCompositeDisposable()
+            .addCompositeDisposable(disposableBag)
 
         login.
             singleClick()
             .subscribe{
                 findNavController().navigate(R.id.action_launcherFragment_to_loginFragment)}
-            .addCompositeDisposable()
+            .addCompositeDisposable(disposableBag)
 
 
         forgot_password
             .singleClick()
             .subscribe {
                 findNavController().navigate(R.id.action_launcherFragment_to_forgotPasswordFragment)}
-            .addCompositeDisposable()
+            .addCompositeDisposable(disposableBag)
 
         focusable_view.requestFocus() // reset focus
     }

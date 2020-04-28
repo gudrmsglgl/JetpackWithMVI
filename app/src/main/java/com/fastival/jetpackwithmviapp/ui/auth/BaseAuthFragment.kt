@@ -32,7 +32,7 @@ abstract class BaseAuthFragment<vb: ViewDataBinding>(
 
     lateinit var uiCommunicationListener: UICommunicationListener
 
-    private var disposableBag: CompositeDisposable? = null
+    protected var disposableBag: CompositeDisposable? = null
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,7 +59,5 @@ abstract class BaseAuthFragment<vb: ViewDataBinding>(
 
 
     private fun setupChannel() = viewModel.setUpChannel()
-
-    fun Disposable.addCompositeDisposable()= disposableBag?.add(this)
 
 }

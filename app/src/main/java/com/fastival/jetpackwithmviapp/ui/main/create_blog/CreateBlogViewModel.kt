@@ -30,7 +30,6 @@ constructor(
     override val viewState: LiveData<CreateBlogViewState>
         get() = super.viewState
 
-
     override fun setStateEvent(stateEvent: StateEvent) {
         sessionManager.cachedToken.value?.let { authToken ->
 
@@ -73,14 +72,12 @@ constructor(
 
     override fun initNewViewState() = CreateBlogViewState()
 
-
     fun clearNewBlogFields(){
         val update = getCurrentViewStateOrNew().apply {
             blogFields = CreateBlogViewState.NewBlogFields()
         }
         setViewState(update)
     }
-
 
     fun setNewBlogFields(title: String?, body: String?, uri: Uri?){
         val update = getCurrentViewStateOrNew()

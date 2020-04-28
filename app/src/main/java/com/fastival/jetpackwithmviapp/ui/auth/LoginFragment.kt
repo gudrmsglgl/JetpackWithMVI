@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentLoginBinding
 import com.fastival.jetpackwithmviapp.di.auth.AuthScope
+import com.fastival.jetpackwithmviapp.extension.addCompositeDisposable
 import com.fastival.jetpackwithmviapp.extension.singleClick
 import com.fastival.jetpackwithmviapp.ui.auth.state.AuthStateEvent.LoginAttemptEvent
 import com.fastival.jetpackwithmviapp.ui.auth.state.LoginFields
@@ -69,13 +70,13 @@ constructor(
                 binding.loginButton.setBackgroundResource(R.color.grey2)
                 binding.loginButton.isEnabled = false
             }}
-        .addCompositeDisposable()
+        .addCompositeDisposable(disposableBag)
 
     private fun observeLoginBtn() = login_button.singleClick()
         .filter { binding.loginButton.isEnabled }
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe{ login() }
-        .addCompositeDisposable()
+        .addCompositeDisposable(disposableBag)
 
     private fun login() = with(viewModel) {
 

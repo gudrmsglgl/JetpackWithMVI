@@ -7,6 +7,10 @@
     <string name="reg_not_email">이메일 형식이 아닙니다.</string>
     <string name="reg_pwd_confirm_notEqual">비밀번호와 일치하지 않습니다.</string>
 
+    <string name="create_blog_title">블로그 제목</string>
+    <string name="create_blog_body">블로그 내용</string>
+
+
     <!-- Intent extras -->
     <string name="auth_token">auth_token</string>
     <string name="password_reset_info">We\'ve emailed you instructions for setting your password. If an account exists

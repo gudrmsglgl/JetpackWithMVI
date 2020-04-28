@@ -49,11 +49,9 @@ constructor(
         observeIsAuthor()
     }
 
-    override fun observeStateMessage() =
-        viewModel
-            .stateMessage
-            .observe(viewLifecycleOwner, Observer { stateMessage ->
-
+    override fun observeStateMessage() = viewModel.stateMessage
+        .observe(viewLifecycleOwner,
+            Observer { stateMessage ->
                 stateMessage?.let {
 
                     if (it.response.message == SUCCESS_BLOG_DELETED)
@@ -70,16 +68,16 @@ constructor(
                         )
 
                 }
-
             })
 
     private fun observeIsAuthor() = viewModel.viewState
-        .observe( viewLifecycleOwner, Observer { viewState ->
+        .observe( viewLifecycleOwner,
+            Observer { viewState ->
 
             if (viewState.viewBlogFields.isAuthorOfBlogPost == true)
                 invalidateOptionMenu()
 
-        })
+            })
 
 
     private fun invalidateOptionMenu() = activity?.invalidateOptionsMenu()
@@ -91,23 +89,19 @@ constructor(
         )
     }
 
-
     private fun initDataBinding() = binding.apply {
         vm = viewModel
         requestManager = injectedReqManager
         fragment = this@ViewBlogFragment
     }
 
-
     fun confirmDeleteRequest(view: View) {
 
         val callBack: AreYouSureCallBack = object: AreYouSureCallBack{
             override fun proceed() {
-
                 viewModel.setStateEvent(
                     BlogStateEvent.DeleteBlogPostEvent()
                 )
-
             }
 
             override fun cancel() {
@@ -130,11 +124,9 @@ constructor(
 
     }
 
-
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
        if (viewModel.isAuthorOfBlogPost()) inflater.inflate(R.menu.edit_view_menu, menu)
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (viewModel.isAuthorOfBlogPost()) {
@@ -147,7 +139,6 @@ constructor(
         }
         return super.onOptionsItemSelected(item)
     }
-
 
     private fun navUpdateBlogFragment(){
         try{

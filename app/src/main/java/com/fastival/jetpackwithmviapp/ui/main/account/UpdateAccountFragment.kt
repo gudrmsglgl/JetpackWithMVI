@@ -38,33 +38,27 @@ constructor(
 
     }
 
-
-    override fun observeStateMessage() =
-        viewModel
-            .stateMessage
-            .observe( viewLifecycleOwner, Observer { stateMessage ->
-
+    override fun observeStateMessage() = viewModel.stateMessage
+        .observe(viewLifecycleOwner,
+            Observer { stateMessage ->
                 stateMessage?.let {
 
-                    uiCommunicationListener
-                        .onResponseReceived(
-                            response = it.response,
-                            stateMessageCallback = object: StateMessageCallback{
+                    uiCommunicationListener.onResponseReceived(
+                        response = it.response,
+                        stateMessageCallback = object: StateMessageCallback{
 
-                                override fun removeMessageFromStack() {
-                                    viewModel.removeStateMessage()
-                                }
-
+                            override fun removeMessageFromStack() {
+                                viewModel.removeStateMessage()
                             }
-                        )
+
+                        }
+                    )
 
                 }
-
             })
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) =
         inflater.inflate(R.menu.update_menu, menu)
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
@@ -75,7 +69,6 @@ constructor(
         }
         return super.onOptionsItemSelected(item)
     }
-
 
     private fun saveChange(){
         viewModel.setStateEvent(

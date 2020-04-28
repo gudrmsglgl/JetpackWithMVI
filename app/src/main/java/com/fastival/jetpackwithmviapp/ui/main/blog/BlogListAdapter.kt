@@ -17,11 +17,12 @@ import com.fastival.jetpackwithmviapp.databinding.LayoutBlogListItemBinding
 import com.fastival.jetpackwithmviapp.extension.convertLongToStringDate
 import com.fastival.jetpackwithmviapp.models.BlogPost
 import com.fastival.jetpackwithmviapp.util.GenericViewHolder
+import com.jakewharton.rxbinding3.view.clicks
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.layout_blog_list_item.view.*
 
 class BlogListAdapter(
-    private val requestManager: RequestManager,
-    private val interaction: Interaction? = null
+    private val requestManager: RequestManager
 ): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val TAG: String = "AppDebug"
@@ -36,6 +37,14 @@ class BlogListAdapter(
         0,
         ""
     )
+
+    private val _blogClickSubject: PublishSubject<BlogPost> = PublishSubject.create()
+    val blogClickSubject: PublishSubject<BlogPost>
+        get() = _blogClickSubject
+
+    private val _restoreListPosSubject: PublishSubject<Unit> = PublishSubject.create()
+    val restoreListPosSubject
+        get() = _restoreListPosSubject
 
     val DIFF_CALLBACK = object: DiffUtil.ItemCallback<BlogPost>(){
         override fun areItemsTheSame(oldItem: BlogPost, newItem: BlogPost): Boolean {
@@ -81,7 +90,11 @@ class BlogListAdapter(
         val commitCallback = Runnable {
             // if process died must restore list position
             // very annoying
-            interaction?.restoreListPosition()}
+
+            _restoreListPosSubject.onNext(Unit)
+
+            //interaction?.restoreListPosition()
+        }
 
         differ.submitList(newList, commitCallback)
 
@@ -136,8 +149,7 @@ class BlogListAdapter(
                         parent,
                         false
                     ),
-                    requestManager,
-                    interaction
+                    requestManager
                 )
             }
 
@@ -149,8 +161,7 @@ class BlogListAdapter(
                         parent,
                         false
                     ),
-                    requestManager,
-                    interaction
+                    requestManager
                 )
             }
         }
@@ -161,24 +172,32 @@ class BlogListAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when(holder) {
             is BlogViewHolder -> {
+
+                holder.itemView
+                    .clicks()
+                    .map{differ.currentList[position]}
+                    .subscribe(_blogClickSubject)
+
+
                 holder.bind(differ.currentList[position])
             }
         }
     }
 
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView)
+        _restoreListPosSubject.onComplete()
+        _blogClickSubject.onComplete()
+    }
 
     class BlogViewHolder(
         val binding: LayoutBlogListItemBinding,
-        val requestManager: RequestManager,
-        private val interaction: Interaction?
+        val requestManager: RequestManager
     ): RecyclerView.ViewHolder(binding.root){
 
         fun bind(item: BlogPost) {
             binding.item = item
             binding.requestManager = requestManager
-            binding.blogContainer.setOnClickListener{
-                interaction?.onBlogSelected(adapterPosition, item)
-            }
         }
 
         companion object{
@@ -201,9 +220,8 @@ class BlogListAdapter(
 
     }
 
-    interface Interaction{
-        fun onBlogSelected(position: Int, item: BlogPost)
+    /*interface Interaction{
 
         fun restoreListPosition()
-    }
+    }*/
 }

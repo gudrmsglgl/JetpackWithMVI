@@ -19,7 +19,7 @@ fun BlogViewModel.getPage() =
 @FlowPreview
 @ExperimentalCoroutinesApi
 fun BlogViewModel.getIsQueryExhausted() =
-    getCurrentViewStateOrNew().blogFields.isQueryExhausted ?: false
+    getCurrentViewStateOrNew().blogFields.isQueryExhausted ?: true
 
 
 @FlowPreview

@@ -92,9 +92,6 @@ constructor(
         setViewState(update)
     }
 
-    fun logout(){
-        sessionManager.logout()
-    }
-
+    fun logout() = sessionManager.logout()
 
 }

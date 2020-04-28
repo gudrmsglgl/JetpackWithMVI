@@ -10,6 +10,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.core.view.isEmpty
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -17,6 +18,7 @@ import com.bumptech.glide.RequestManager
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentCreateBlogBinding
 import com.fastival.jetpackwithmviapp.di.main.MainScope
+import com.fastival.jetpackwithmviapp.extension.addCompositeDisposable
 import com.fastival.jetpackwithmviapp.extension.editToString
 import com.fastival.jetpackwithmviapp.extension.fragment.*
 import com.fastival.jetpackwithmviapp.ui.main.create_blog.state.CREATE_BLOG_VIEW_STATE_BUNDLE_KEY
@@ -25,7 +27,12 @@ import com.fastival.jetpackwithmviapp.util.Constants.Companion.GALLERY_REQUEST_C
 import com.fastival.jetpackwithmviapp.util.ErrorHandling.Companion.ERROR_SOMETHING_WRONG_WITH_IMAGE
 import com.fastival.jetpackwithmviapp.util.StateMessageCallback
 import com.fastival.jetpackwithmviapp.util.SuccessHandling.Companion.SUCCESS_BLOG_CREATED
+import com.jakewharton.rxbinding3.widget.textChanges
 import com.theartofdev.edmodo.cropper.CropImage
+import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
+import io.reactivex.functions.BiFunction
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
@@ -44,6 +51,8 @@ constructor(
 ): BaseCreateBlogFragment<FragmentCreateBlogBinding>(R.layout.fragment_create_blog, provider)
 {
 
+    var disposableBag: CompositeDisposable? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Restore state after process death
@@ -54,7 +63,6 @@ constructor(
         }
     }
 
-
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putParcelable(
             CREATE_BLOG_VIEW_STATE_BUNDLE_KEY,
@@ -63,32 +71,60 @@ constructor(
         super.onSaveInstanceState(outState)
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        disposableBag = CompositeDisposable()
 
         binding.vm = viewModel
         binding.fragment = this
 
+        observeBlogTitle()
+
+        observeBlogContents()
+
         observeImgUri()
+
     }
 
+    private fun observeBlogTitle() = binding.blogTitle
+        .textChanges()
+        .subscribe {
+            if (it.isEmpty())
+                binding.blogTitleLayout.hint = getString(R.string.create_blog_title)
+            else{
+                if (it.length < 5) {
+                    binding.blogTitleLayout.hint = "글자수: ${it.length} (5글자 이상 되어야 합니다.)"
+                } else {
+                    binding.blogTitleLayout.hint = "글자수: ${it.length} (제목 가능)"}
+            }}
+        .addCompositeDisposable(disposableBag)
 
-    fun observeImgUri() =
-        viewModel
-            .viewState
-            .observe(viewLifecycleOwner, Observer { viewState ->
+    private fun observeBlogContents() = binding.blogBody
+        .textChanges()
+        .subscribe {
+            if (it.isEmpty())
+                binding.blogBodyLayout.hint = getString(R.string.create_blog_body)
+            else{
+                if (it.length < 50) {
+                    binding.blogBodyLayout.hint = "글자수: ${it.length} (50글자 이상 되어야 합니다.)"
+                } else {
+                    binding.blogBodyLayout.hint = "글자수: ${it.length} (본문 가능)"
+                }
+            }}
+        .addCompositeDisposable(disposableBag)
+
+    private fun observeImgUri() = viewModel.viewState
+        .observe(viewLifecycleOwner,
+            Observer { viewState ->
                 viewState.blogFields.newImageUri?.let {
                     setCroppedImage(it)
                 }?: deFaultImage()
             })
 
-
-    override fun observeStateMessage() =
-        viewModel
-            .stateMessage
-            .observe( viewLifecycleOwner, Observer { stateMessage ->
-
+    override fun observeStateMessage() = viewModel.stateMessage
+        .observe(viewLifecycleOwner,
+            Observer { stateMessage ->
                 stateMessage?.let {
 
                     if (it.response.message == SUCCESS_BLOG_CREATED)
@@ -108,7 +144,6 @@ constructor(
 
                 }
             })
-
 
     fun pickFromGallery(view: View){
         if (uiCommunicationListener.isStoragePermissionGranted()) {
@@ -168,7 +203,6 @@ constructor(
         }
     }
 
-
     override fun onPause() {
         super.onPause()
         viewModel.setNewBlogFields(
@@ -178,11 +212,27 @@ constructor(
         )
     }
 
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.publish_menu, menu)
+    override fun onDestroyView() {
+        super.onDestroyView()
+        disposableBag?.clear()
+        disposableBag = null
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        Observable.combineLatest(
+            binding.blogTitle.textChanges(),
+            binding.blogBody.textChanges(),
+            BiFunction{ t1: CharSequence, t2: CharSequence ->
+                    t1.length >= 5 && t2.length >= 50 })
+            .subscribe {
+                if (it){
+                    if (!menu.hasVisibleItems())
+                        inflater.inflate(R.menu.publish_menu, menu)
+                } else {
+                    menu.clear()
+                }}
+            .addCompositeDisposable(disposableBag)
+    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
@@ -196,6 +246,5 @@ constructor(
 
         return super.onOptionsItemSelected(item)
     }
-
 
 }

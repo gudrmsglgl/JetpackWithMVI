@@ -54,11 +54,9 @@ constructor(
 
     }
 
-    override fun observeStateMessage() =
-        viewModel
-            .stateMessage
-            .observe( viewLifecycleOwner, Observer { stateMessage ->
-
+    override fun observeStateMessage() = viewModel.stateMessage
+        .observe(viewLifecycleOwner,
+            Observer { stateMessage ->
                 stateMessage?.let {
 
                     if (it.response.message == SUCCESS_BLOG_UPDATED)
@@ -68,15 +66,14 @@ constructor(
                                 findNavController().popBackStack()
                             }
 
-                    uiCommunicationListener
-                        .onResponseReceived(
-                            response = it.response,
-                            stateMessageCallback = object: StateMessageCallback {
-                                override fun removeMessageFromStack() {
-                                    viewModel.removeStateMessage()
-                                }
+                    uiCommunicationListener.onResponseReceived(
+                        response = it.response,
+                        stateMessageCallback = object: StateMessageCallback {
+                            override fun removeMessageFromStack() {
+                                viewModel.removeStateMessage()
                             }
-                        )
+                        }
+                    )
 
                 }
 

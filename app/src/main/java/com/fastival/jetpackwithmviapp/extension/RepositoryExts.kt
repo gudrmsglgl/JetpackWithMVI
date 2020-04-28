@@ -1,5 +1,6 @@
 package com.fastival.jetpackwithmviapp.extension
 
+import android.util.Log
 import com.fastival.jetpackwithmviapp.models.AuthToken
 import com.fastival.jetpackwithmviapp.util.*
 import com.fastival.jetpackwithmviapp.util.Constants.Companion.CACHE_TIMEOUT
@@ -44,13 +45,12 @@ suspend fun <T> safeApiCall(
 
                 is HttpException -> {
                     val code = throwable.code()
-                    val errorResponse =
-                        convertErrorBody(
-                            throwable
-                        )
+                    val throwableMessage = throwable.message()
+
+                    Log.e(TAG,"throwableMessage: $throwableMessage")
                     ApiResult.GenericError(
                         code,
-                        errorResponse
+                        throwableMessage
                     )
                 }
 

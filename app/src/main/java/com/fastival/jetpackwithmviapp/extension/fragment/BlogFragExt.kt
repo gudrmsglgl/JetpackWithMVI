@@ -21,6 +21,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
 import com.fastival.jetpackwithmviapp.R
+import com.fastival.jetpackwithmviapp.extension.addCompositeDisposable
 import com.fastival.jetpackwithmviapp.persistence.BlogQueryUtils.Companion.BLOG_FILTER_DATE_UPDATED
 import com.fastival.jetpackwithmviapp.persistence.BlogQueryUtils.Companion.BLOG_FILTER_USERNAME
 import com.fastival.jetpackwithmviapp.persistence.BlogQueryUtils.Companion.BLOG_ORDER_ASC
@@ -29,6 +30,8 @@ import com.fastival.jetpackwithmviapp.ui.main.blog.BlogFragment
 import com.fastival.jetpackwithmviapp.ui.main.blog.BlogListAdapter
 import com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel.*
 import com.fastival.jetpackwithmviapp.util.TopSpacingItemDecoration
+import com.jakewharton.rxbinding3.recyclerview.scrollStateChanges
+import com.jakewharton.rxbinding3.view.scrollChangeEvents
 import kotlinx.android.synthetic.main.fragment_blog.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -113,40 +116,30 @@ fun BlogFragment.initSearchView(menu: Menu){
 @ExperimentalCoroutinesApi
 fun BlogFragment.initRecyclerView(){
 
-    val context = this.context
-    val fragment = this
+    recyclerAdapter = BlogListAdapter(
+        requestManager as RequestManager
+    )
 
     blog_post_recyclerview.apply {
 
-        layoutManager = LinearLayoutManager(context)
+        val topSpacingItemDecoration = TopSpacingItemDecoration(30)
 
-        val topSpacingDecorator = TopSpacingItemDecoration(30)
+        removeItemDecoration(topSpacingItemDecoration)
 
-        removeItemDecoration(topSpacingDecorator)
-
-        addItemDecoration(topSpacingDecorator)
-
-        recyclerAdapter = BlogListAdapter(
-            requestManager as RequestManager,
-            fragment
-        )
-
-        addOnScrollListener(object : RecyclerView.OnScrollListener(){
-
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-
-                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                val lastPosition = layoutManager.findLastVisibleItemPosition()
-
-                if (lastPosition == recyclerAdapter.itemCount.minus(1)) {
-                    Log.d(TAG, "BlogFragment: attempting to load next page...")
-                    viewModel.nextPage()
-                }
-            }
-        })
+        addItemDecoration(topSpacingItemDecoration)
 
         adapter = recyclerAdapter
+
+        scrollStateChanges()
+            .map { Pair(this, it) }
+            .subscribe {
+                val layoutManager = it.first.layoutManager as LinearLayoutManager
+                val lastPosition = layoutManager.findLastVisibleItemPosition()
+                if (lastPosition == it.first.adapter?.itemCount?.minus(1)){
+                    viewModel.nextPage()
+                }}
+            .addCompositeDisposable(disposableBag)
+
     }
 
 }
@@ -217,12 +210,6 @@ fun BlogFragment.saveLayoutManagerState() =
     blog_post_recyclerview.layoutManager?.onSaveInstanceState()?.let { lmState ->
         viewModel.setLayoutManagerState(lmState)
     }
-
-
-@FlowPreview
-@ExperimentalCoroutinesApi
-fun BlogFragment.setPositionTopRecyclerView(): Unit =
-    blog_post_recyclerview.smoothScrollToPosition(0)
 
 
 private fun View.findRadioGroup(@IdRes radioGroupId: Int) =

@@ -19,7 +19,7 @@ class ErrorHandling{
         const val ERROR_MUST_SELECT_IMAGE = "You must select an image."
 
         const val GENERIC_AUTH_ERROR = "Error"
-        const val INVALID_PAGE = "Invalid page."
+        const val NOT_FOUND = "Not Found"
         const val ERROR_CHECK_NETWORK_CONNECTION = "Check network connection."
         const val ERROR_UNKNOWN = "Unknown error"
 

@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentRegisterBinding
 import com.fastival.jetpackwithmviapp.di.auth.AuthScope
+import com.fastival.jetpackwithmviapp.extension.addCompositeDisposable
 import com.fastival.jetpackwithmviapp.extension.editToString
 import com.fastival.jetpackwithmviapp.extension.singleClick
 import com.fastival.jetpackwithmviapp.extension.tvToString
@@ -51,7 +52,7 @@ class RegisterFragment
     private fun observeRegButton() = binding.registerButton
         .singleClick()
         .subscribe { register() }
-        .addCompositeDisposable()
+        .addCompositeDisposable(disposableBag)
 
     private fun observeRegisterForm() = Observable.combineLatest(
         isValidIdAndName(),
@@ -71,7 +72,7 @@ class RegisterFragment
                 }
 
             }}
-        .addCompositeDisposable()
+        .addCompositeDisposable(disposableBag)
 
     private fun isValidIdAndName() = Observable.combineLatest(
         isValidID(),

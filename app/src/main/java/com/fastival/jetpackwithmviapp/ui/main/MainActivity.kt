@@ -15,7 +15,6 @@ import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.extension.activity.navActivity
 import com.fastival.jetpackwithmviapp.extension.activity.restoreSession
 import com.fastival.jetpackwithmviapp.extension.activity.setupBottomNavigationView
-import com.fastival.jetpackwithmviapp.extension.fragment.setPositionTopRecyclerView
 import com.fastival.jetpackwithmviapp.models.AUTH_TOKEN_BUNDLE_KEY
 import com.fastival.jetpackwithmviapp.ui.BaseActivity
 import com.fastival.jetpackwithmviapp.ui.auth.AuthActivity
@@ -108,7 +107,7 @@ BottomNavController.OnNavigationReselectedListener
         navController: NavController,
         fragment: Fragment
     ) = when(fragment){
-        is BlogFragment -> fragment.setPositionTopRecyclerView()
+        is BlogFragment -> fragment.onRefresh()
         is ViewBlogFragment -> navController.navigate(R.id.action_viewBlogFragment_to_blogFragment)
         is UpdateBlogFragment -> navController.navigate(R.id.action_updateBlogFragment_to_blogFragment)
         is UpdateAccountFragment -> navController.navigate(R.id.action_updateAccountFragment_to_accountFragment)

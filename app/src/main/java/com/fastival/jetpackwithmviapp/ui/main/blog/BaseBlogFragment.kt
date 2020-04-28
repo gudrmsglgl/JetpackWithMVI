@@ -33,7 +33,6 @@ abstract class BaseBlogFragment<vb: ViewDataBinding>(
 
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -49,22 +48,18 @@ abstract class BaseBlogFragment<vb: ViewDataBinding>(
     }
 
 
-    private fun observeProceedJob() =
-        viewModel
-            .numActiveJobs
-            .observe( viewLifecycleOwner, Observer {
+    private fun observeProceedJob() = viewModel.numActiveJobs
+        .observe(viewLifecycleOwner,
+            Observer {
                 uiCommunicationListener.displayProgressBar(
                     viewModel.areAnyJobActive()
                 )
             })
 
-
     private fun setupChannel() = viewModel.setUpChannel()
-
 
     // nav_blog_startDes_id
     override fun setTopLevelDesId(): Int = R.id.blogFragment
-
 
     abstract fun observeStateMessage()
 }

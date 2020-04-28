@@ -38,11 +38,9 @@ abstract class BaseCreateBlogFragment<vb: ViewDataBinding>(
         observeStateMessage()
     }
 
-
-    private fun observeProceedJob() =
-        viewModel
-            .numActiveJobs
-            .observe( viewLifecycleOwner, Observer {
+    private fun observeProceedJob() = viewModel.numActiveJobs
+        .observe(viewLifecycleOwner,
+            Observer {
 
                 uiCommunicationListener.displayProgressBar(
                     viewModel.areAnyJobActive()
@@ -53,9 +51,7 @@ abstract class BaseCreateBlogFragment<vb: ViewDataBinding>(
     // nav_create_blog_startDes_id
     override fun setTopLevelDesId(): Int = R.id.createBlogFragment
 
-
     private fun setupChannel() = viewModel.setUpChannel()
-
 
     abstract fun observeStateMessage()
 
