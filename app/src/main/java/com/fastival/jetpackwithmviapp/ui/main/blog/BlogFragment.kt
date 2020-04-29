@@ -10,19 +10,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
 import com.fastival.jetpackwithmviapp.R
 import com.fastival.jetpackwithmviapp.databinding.FragmentBlogBinding
 import com.fastival.jetpackwithmviapp.di.main.MainScope
+import com.fastival.jetpackwithmviapp.extension.addCompositeDisposable
 import com.fastival.jetpackwithmviapp.extension.fragment.*
 import com.fastival.jetpackwithmviapp.models.BlogPost
 import com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel.*
-import com.fastival.jetpackwithmviapp.util.TopSpacingItemDecoration
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_blog.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -67,6 +65,7 @@ constructor(
         observeBlogClick()
 
         observeBlogListState()
+
     }
 
     override fun onResume() {
@@ -95,17 +94,13 @@ constructor(
                 }
             })
 
-    private fun observeBlogClick() = disposableBag?.add(
-        recyclerAdapter
-            .blogClickSubject
-            .subscribe { navBlogView(it) }
-    )
+    private fun observeBlogClick() = recyclerAdapter.blogClickSubject
+        .subscribe { navBlogView(it) }
+        .addCompositeDisposable(disposableBag)
 
-    private fun observeBlogListState() = disposableBag?.add(
-        recyclerAdapter
-            .restoreListPosSubject
-            .subscribe{ restoreListPosition() }
-    )
+    private fun observeBlogListState() = recyclerAdapter.restoreListPosSubject
+        .subscribe{ restoreListPosition() }
+        .addCompositeDisposable(disposableBag)
 
     override fun observeStateMessage() = viewModel.stateMessage
         .observe(viewLifecycleOwner,

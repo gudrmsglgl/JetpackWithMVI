@@ -89,27 +89,29 @@ constructor(
 
     private fun observeBlogTitle() = binding.blogTitle
         .textChanges()
-        .subscribe {
-            if (it.isEmpty())
-                binding.blogTitleLayout.hint = getString(R.string.create_blog_title)
-            else{
-                if (it.length < 5) {
-                    binding.blogTitleLayout.hint = "글자수: ${it.length} (5글자 이상 되어야 합니다.)"
+        .subscribe { title ->
+            binding.blogTitleLayout.apply {
+                hint = if (title.isEmpty()){
+                    getString(R.string.create_blog_title)
                 } else {
-                    binding.blogTitleLayout.hint = "글자수: ${it.length} (제목 가능)"}
-            }}
+                    if (title.length < 5)
+                        "글자수: ${title.length} (5글자 이상 되어야 합니다.)"
+                    else
+                        "글자수: ${title.length} (제목 가능)"}
+                }}
         .addCompositeDisposable(disposableBag)
 
     private fun observeBlogContents() = binding.blogBody
         .textChanges()
-        .subscribe {
-            if (it.isEmpty())
-                binding.blogBodyLayout.hint = getString(R.string.create_blog_body)
-            else{
-                if (it.length < 50) {
-                    binding.blogBodyLayout.hint = "글자수: ${it.length} (50글자 이상 되어야 합니다.)"
-                } else {
-                    binding.blogBodyLayout.hint = "글자수: ${it.length} (본문 가능)"
+        .subscribe { contents ->
+            binding.blogBodyLayout.apply {
+                hint = if (contents.isEmpty())
+                    getString(R.string.create_blog_body)
+                else{
+                    if (contents.length < 50)
+                        "글자수: ${contents.length} (50글자 이상 되어야 합니다.)"
+                    else
+                        "글자수: ${contents.length} (본문 가능)"
                 }
             }}
         .addCompositeDisposable(disposableBag)
@@ -222,8 +224,8 @@ constructor(
         Observable.combineLatest(
             binding.blogTitle.textChanges(),
             binding.blogBody.textChanges(),
-            BiFunction{ t1: CharSequence, t2: CharSequence ->
-                    t1.length >= 5 && t2.length >= 50 })
+            BiFunction{ title: CharSequence, contents: CharSequence ->
+                title.length >= 5 && contents.length >= 50 })
             .subscribe {
                 if (it){
                     if (!menu.hasVisibleItems())

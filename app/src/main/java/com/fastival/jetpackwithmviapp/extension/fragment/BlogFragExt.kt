@@ -2,18 +2,15 @@ package com.fastival.jetpackwithmviapp.extension.fragment
 
 import android.app.SearchManager
 import android.content.Context
-import android.util.Log
 import android.view.Menu
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
-import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.annotation.IdRes
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.customview.getCustomView
@@ -31,7 +28,6 @@ import com.fastival.jetpackwithmviapp.ui.main.blog.BlogListAdapter
 import com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel.*
 import com.fastival.jetpackwithmviapp.util.TopSpacingItemDecoration
 import com.jakewharton.rxbinding3.recyclerview.scrollStateChanges
-import com.jakewharton.rxbinding3.view.scrollChangeEvents
 import kotlinx.android.synthetic.main.fragment_blog.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -179,8 +175,7 @@ fun BlogFragment.showFilterDialog(){
 private fun checkBeforeFilterOption(
     view: View,
     savedFilter: String
-) = with(view)
-{
+) = with(view){
     findRadioGroup(R.id.filter_group).apply {
         when (savedFilter) {
             BLOG_FILTER_DATE_UPDATED -> check(R.id.filter_date)
@@ -193,8 +188,7 @@ private fun checkBeforeFilterOption(
 private fun checkBeforeOrderOption(
     view: View,
     savedOrder: String
-) = with(view)
-{
+) = with(view){
     findRadioGroup(R.id.order_group).apply {
         when(savedOrder){
             BLOG_ORDER_ASC -> check(R.id.filter_asc)
