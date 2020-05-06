@@ -57,6 +57,7 @@ class BlogRepositoryTest {
     }
 
     @Test
+    @DisplayName("NoMoreResult_HttpException")
     fun searchBlogPostNoMoreResult() = runBlocking {
         // given
         var emitCount: Int = 1
@@ -102,11 +103,7 @@ class BlogRepositoryTest {
             TestUtil.getSearchEvent()
         ).collect {
             println("stateMessage[$emitCount]: ${it.stateMessage?.response?.message}")
-
-            if (it.stateMessage?.response?.message != null) {
-                repositoryStateMessage = it.stateMessage?.response?.message
-            }
-
+            repositoryStateMessage = it.stateMessage?.response?.message
             repositoryBlogListData.value = it.data?.blogFields?.blogList
             emitCount++
         }
@@ -114,7 +111,7 @@ class BlogRepositoryTest {
         // then
         inOrder(openApiMainService, blogPostDao) {
 
-            verify(blogPostDao)
+            verify(blogPostDao, times(1))
                 .returnOrderedBlogQuery(
                     query = testNonQuery,
                     filterAndOrder = testFilterAndOrder,
@@ -129,20 +126,10 @@ class BlogRepositoryTest {
 
             verify(blogPostDao, never()).insert(any())
 
-            verify(blogPostDao)
-                .returnOrderedBlogQuery(
-                    query = testNonQuery,
-                    filterAndOrder = testFilterAndOrder,
-                    page = testPage
-                )
         }
 
-        verify(observer, times(2)).onChanged(cacheResponse)
+        verify(observer, times(1)).onChanged(cacheResponse)
 
-        assertThat(
-            repositoryBlogListData.value,
-            hasSize(10)
-        )
         assertThat(
             repositoryStateMessage,
             `is`(endsWith(NOT_FOUND))
@@ -402,6 +389,7 @@ class BlogRepositoryTest {
                     )
             }
 
+        // then
         verify(openApiMainService)
             .updateBlog(
                 testAuthToken.transHeaderAuthorization(),
@@ -417,7 +405,90 @@ class BlogRepositoryTest {
                 updatedBlogPost.body,
                 updatedBlogPost.image)
 
+    }
 
+    @Test
+    @DisplayName("updatePost_fail_exception")
+    fun updateBlogPostFail() = runBlocking {
+        // given
+        val testAuthToken = TestUtil.createAuthToken()
+        val testBlogPost = TestUtil.createBlogPost(identifier = 1)
+
+        val updatedBlogPost = BlogCreateUpdateResponse("updatedTestBlogPost",
+            testBlogPost.pk,
+            testBlogPost.title+"Updated",
+            testBlogPost.slug,
+            testBlogPost.body,
+            testBlogPost.image,
+            "2020-05-03T04:46:10.227131Z",
+            testBlogPost.username+"updated")
+
+        val httpException: HttpException = mock {
+            on { code() } doReturn 404
+            on { message() } doReturn NOT_FOUND
+        }
+
+        var repositoryValue: DataState<BlogViewState>? = null
+
+        val updatedTitle = updatedBlogPost.title.parseRequestBody()
+        val updatedBody = updatedBlogPost.body.parseRequestBody()
+
+        val updateEvent = BlogStateEvent.UpdateBlogPostEvent(
+            body = updatedBlogPost.body, title = updatedBlogPost.title, image = null)
+
+        whenever(openApiMainService
+            .updateBlog(
+                testAuthToken.transHeaderAuthorization(),
+                testBlogPost.slug,
+                updatedTitle,
+                updatedBody,
+                null))
+            .thenThrow(httpException)
+
+        // when
+        blogRepository.updateBlogPost(
+            testAuthToken,
+            updatedBlogPost.slug,
+            updatedTitle,
+            updatedBody,
+            null,
+            updateEvent
+        ).collect {
+            repositoryValue = it
+        }
+
+        /*
+        *   then
+        *   1. order verify
+        *   2. cache not update verify
+        *   3. assert updateField null
+        * */
+        inOrder(openApiMainService, blogPostDao) {
+
+            verify(openApiMainService, times(1))
+                .updateBlog(testAuthToken.transHeaderAuthorization(),
+                    testBlogPost.slug,
+                    updatedTitle,
+                    updatedBody,
+                    null)
+
+            verify(blogPostDao, never())
+                .updateBlogPost(
+                    updatedBlogPost.pk,
+                    updatedBlogPost.title,
+                    updatedBlogPost.body,
+                    updatedBlogPost.image)
+        }
+
+        assertThat(
+            repositoryValue?.data?.updatedBlogFields?.updatedBlogBody,
+            nullValue()
+        )
+
+        assertThat(
+            repositoryValue?.data?.updatedBlogFields?.updatedBlogTitle,
+            nullValue()
+        )
     }
 
     @Test

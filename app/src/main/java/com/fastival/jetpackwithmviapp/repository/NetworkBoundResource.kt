@@ -35,18 +35,19 @@ open class NetworkBoundResource<NetworkObj, CacheObj, ViewState>(
         val apiResult =
             safeApiCall(dispatcher) { apiCall.invoke() }
 
-        resultSaveCacheOrEmitError(this, apiResult)
+        val isNotErrorEmit = isApiResultToSaveCache(this, apiResult)
 
         // STEP 3: VIEW CACHE and MARK JOB COMPLETED
-        emit(retCacheDataState(markJobComplete = true))
+        if (isNotErrorEmit)
+            emit(retCacheDataState(markJobComplete = true))
 
     }
 
 
-    private suspend fun resultSaveCacheOrEmitError(
+    private suspend fun isApiResultToSaveCache(
         flowCollector: FlowCollector<DataState<ViewState>>,
         apiResult: ApiResult<NetworkObj?>
-    ) = when (apiResult){
+    ): Boolean = when (apiResult){
 
             is ApiResult.Success -> {
 
@@ -58,10 +59,12 @@ open class NetworkBoundResource<NetworkObj, CacheObj, ViewState>(
                             stateEvent
                         )
                     )
+                    false
                 }
 
                 else {
                     updateCache.invoke(apiResult.value, dispatcher)
+                    true
                 }
 
             }
@@ -74,6 +77,7 @@ open class NetworkBoundResource<NetworkObj, CacheObj, ViewState>(
                         stateEvent
                     )
                 )
+                false
             }
 
             is ApiResult.NetworkError -> {
@@ -84,6 +88,7 @@ open class NetworkBoundResource<NetworkObj, CacheObj, ViewState>(
                         stateEvent
                     )
                 )
+                false
             }
     }
 
