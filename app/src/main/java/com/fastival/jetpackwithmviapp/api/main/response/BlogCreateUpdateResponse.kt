@@ -1,5 +1,6 @@
 package com.fastival.jetpackwithmviapp.api.main.response
 
+import android.util.Log
 import com.fastival.jetpackwithmviapp.extension.convertServerStringDateToLong
 import com.fastival.jetpackwithmviapp.models.BlogPost
 import com.google.gson.annotations.Expose

@@ -47,7 +47,7 @@ suspend fun <T> safeApiCall(
                     val code = throwable.code()
                     val throwableMessage = throwable.message()
 
-                    Log.e(TAG,"throwableMessage: $throwableMessage")
+                    //Log.e(TAG,"throwableMessage: $throwableMessage")
                     ApiResult.GenericError(
                         code,
                         throwableMessage

@@ -95,7 +95,10 @@ constructor(
             })
 
     private fun observeBlogClick() = recyclerAdapter.blogClickSubject
-        .subscribe { navBlogView(it) }
+        .doOnNext { Log.d(TAG, "blogClick_blogInfo: $it") }
+        .subscribe {
+            navBlogView(it)
+        }
         .addCompositeDisposable(disposableBag)
 
     private fun observeBlogListState() = recyclerAdapter.restoreListPosSubject

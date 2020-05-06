@@ -38,6 +38,11 @@ android {
         }
     }
 
+    sourceSets {
+        androidTest.java.srcDirs += "src/test-common/java"
+        test.java.srcDirs += "src/test-common/java"
+    }
+
     androidExtensions {
         experimental = true
     }
@@ -63,6 +68,23 @@ dependencies {
     implementation 'com.jakewharton.rxbinding3:rxbinding:3.1.0'
     implementation 'com.jakewharton.rxbinding3:rxbinding-recyclerview:3.1.0'
 
+// -------- LOCAL UNIT TESTS (use JUnit5)
+
+    // JUnit Jupiter
+    def junit_jupiter_version = "5.3.2"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_jupiter_version"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:$junit_jupiter_version"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit_jupiter_version"
+
+    // Hamcrest
+    testImplementation 'org.hamcrest:hamcrest-library:2.2'
+
+    // MOCKITO
+    def mockito_version = "2.21.0"
+    def mockito_kotlin_version = "2.2.0"
+    //testImplementation "org.mockito:mockito-core:$mockito_version"
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockito_kotlin_version"
+    testImplementation "org.mockito:mockito-inline:$mockito_version"
 
     def fragment = "1.2.0-alpha02"
     implementation "androidx.fragment:fragment-ktx:$fragment"

@@ -1,6 +1,7 @@
 package com.fastival.jetpackwithmviapp.ui.main.blog.viewmodel
 
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.fastival.jetpackwithmviapp.di.main.MainScope
 import com.fastival.jetpackwithmviapp.extension.parseRequestBody
@@ -53,7 +54,7 @@ constructor(
     override fun setStateEvent(stateEvent: StateEvent) {
         if (!isJobAlreadyActive(stateEvent)) {
             sessionManager.cachedToken.value?.let { authToken ->
-
+                Log.d(TAG, "BlogViewModel_setStateEvent_authToken(Token): ${authToken.transHeaderAuthorization()}")
                 launchJob(
                     stateEvent = stateEvent,
                     jobFunc = when(stateEvent){
@@ -62,6 +63,14 @@ constructor(
 
                             if (stateEvent.clearLayoutManagerState)
                                 clearLayoutManagerState()
+
+                            val searchBlog = """
+                                | query = ${getSearchQuery()}
+                                | filterAndOder(order+filter) = ${getOrder()}${getFilter()}
+                                | page = ${getPage()}
+                            """.trimIndent()
+
+                            Log.d(TAG, searchBlog)
 
                             blogRepository.searchBlogPosts(
                                 authToken = authToken,
