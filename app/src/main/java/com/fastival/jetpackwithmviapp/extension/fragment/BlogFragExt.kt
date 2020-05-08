@@ -124,6 +124,8 @@ fun BlogFragment.initRecyclerView(){
 
         addItemDecoration(topSpacingItemDecoration)
 
+        layoutManager?.isItemPrefetchEnabled = true
+
         adapter = recyclerAdapter
 
         scrollStateChanges()

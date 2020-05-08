@@ -6,11 +6,14 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.*
+import io.reactivex.subjects.PublishSubject
 
 
 abstract class BaseAdapter<ITEM>(
     diffCallback: DiffUtil.ItemCallback<ITEM>
 ): RecyclerView.Adapter<BaseViewHolder<ITEM>>() {
+
+    val clickSubject: PublishSubject<ITEM> = PublishSubject.create()
 
     val differ = AsyncListDiffer(
         BlogRecyclerChangeCallback(),
@@ -20,7 +23,7 @@ abstract class BaseAdapter<ITEM>(
     override fun getItemCount(): Int = differ.currentList.size
 
     override fun onBindViewHolder(holder: BaseViewHolder<ITEM>, position: Int) {
-        holder.bind(differ.currentList[position])
+        holder.bind(differ.currentList[position], clickSubject)
     }
 
     inner class BlogRecyclerChangeCallback: ListUpdateCallback {
@@ -52,4 +55,8 @@ abstract class BaseAdapter<ITEM>(
         false
     )
 
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView)
+        clickSubject.onComplete()
+    }
 }

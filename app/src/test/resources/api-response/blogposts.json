@@ -1,0 +1,97 @@
+{
+  "count": 71,
+  "next": "https://open-api.xyz/api/blog/list?ordering=-date_updated&page=2&search=",
+  "previous": null,
+  "results": [
+    {
+      "pk": 272,
+      "title": "The big design",
+      "slug": "teclado-whatever",
+      "body": "This book was writed by Stephen Hawking.\nPick topics like: what is the reality,  alternative stories and a teory of all.",
+      "image": "https://nyc3.digitaloceanspaces.com/open-api-spaces/open-api-static/blog/514/Whatever-cropped3907027324570803227.jpg",
+      "date_updated": "2020-05-08T02:04:13.407892Z",
+      "username": "Tester#1"
+    },
+    {
+      "pk": 270,
+      "title": "Volemd testinnn",
+      "slug": "dimi-adadadadad-testinnn",
+      "body": "about everigjidsjamdaisdsa\r\ndasdasdsadasdsadsadsadsadsadsadsadsa\r\ndsadsadsadsadsadsadsadsadsa\r\ndsadsadsadsadsadsadsadsadsadsadsadsadsadsadsadsadsadsa\r\ndsadsadsadsadsadsadsadsadsa\r\ndsadsadsadsadsadsadsadsadsadsa dsadsadsadsadsadsadsadsa\r\ndsa\r\nda\r\nsdsadasdsadsad",
+      "image": "https://nyc3.digitaloceanspaces.com/open-api-spaces/open-api-static/blog/859/Volemd_testinnn-cropped1135318159.jpg",
+      "date_updated": "2020-05-08T01:18:29.821504Z",
+      "username": "Tester#2"
+    },
+    {
+      "pk": 271,
+      "title": "Create a new blog with retrofit image update",
+      "slug": "dimi-create-a-new-blog-with-retrofit-image-update",
+      "body": "Testing retrofit image update, works just fine, thanks mitch \n\n\ndadadadadadadadaddadadadadadadada",
+      "image": "https://nyc3.digitaloceanspaces.com/open-api-spaces/open-api-static/blog/859/Create_a_new_blog_with_retrofit_image_update-cropped-754624801.jpg",
+      "date_updated": "2020-05-08T01:08:33.609694Z",
+      "username": "Tester#3"
+    },
+    {
+      "pk": 269,
+      "title": "teste",
+      "slug": "fgarcia1401-teste",
+      "body": "teste",
+      "image": "https://nyc3.digitaloceanspaces.com/open-api-spaces/open-api-static/blog/885/teste-image_2.png",
+      "date_updated": "2020-05-07T03:02:10.648558Z",
+      "username": "Tester#4"
+    },
+    {
+      "pk": 268,
+      "title": "dasda",
+      "slug": "tnainani-dasda",
+      "body": "dasdasdas\n\nasdasdasdasasasdasdasdasdasdasdasdasdasdasdasdsadasdsa\nasdasdasdasasasdasdasdasdasdasdasdasdasdasdasdsadasdsa\nasdasdadsadasdas\nasdasdasdasasasdasdasdasdasdasdasdasdasdasdasdsadasdsa",
+      "image": "https://nyc3.digitaloceanspaces.com/open-api-spaces/open-api-static/blog/883/dasda-cropped113670053083211649.jpg",
+      "date_updated": "2020-05-06T00:19:03.877925Z",
+      "username": "Tester#5"
+    },
+    {
+      "pk": 264,
+      "title": "Editing a blog post test",
+      "slug": "simo-create-a-blog-post-test",
+      "body": "This is a test. I've uploaded my first image from the app. Now I've edited it and everything works fine.",
+      "image": "https://nyc3.digitaloceanspaces.com/open-api-spaces/open-api-static/blog/783/Editing_a_blog_post_test-cropped3432094420816876021.jpg",
+      "date_updated": "2020-05-01T10:44:14.882103Z",
+      "username": "Tester#6"
+    },
+    {
+      "pk": 263,
+      "title": "tttttt",
+      "slug": "mo-tttttt",
+      "body": "ddgdgdgddgdgdgdgdgdgdgdgdgdgdgdgdgdgdgdgdgdgdggugufukfukfjkfjhfhkjfhkjfkhjfgjkfgjkfjkfjkhfkhfdyh",
+      "image": "https://nyc3.digitaloceanspaces.com/open-api-spaces/open-api-static/blog/814/tttttt-cropped3601807918568689539.jpg",
+      "date_updated": "2020-04-30T03:20:14.329314Z",
+      "username": "Tester#7"
+    },
+    {
+      "pk": 262,
+      "title": "new note",
+      "slug": "mo-new-note",
+      "body": "hello hello hellohghfhfhjfgjgjhfhjfhgfhjfhjfhjfhjfhjfhjfhjfhjfhjfjfjhfhjh",
+      "image": "https://nyc3.digitaloceanspaces.com/open-api-spaces/open-api-static/blog/814/new_note-cropped5388900087171790400.jpg",
+      "date_updated": "2020-04-30T03:18:50.443591Z",
+      "username": "Tester#8"
+    },
+    {
+      "pk": 254,
+      "title": "Palermo - Cathedral",
+      "slug": "simo-palermo-cathedral",
+      "body": "Palermo Cathedral is the cathedral church of the Roman Catholic Archdiocese of Palermo, located in Palermo, Sicily, southern Italy. As an architectural complex, it is characterized by the presence of different styles, due to a long history of additions, alterations and restorations, the last of which occurred in the 18th century.",
+      "image": "https://nyc3.digitaloceanspaces.com/open-api-spaces/open-api-static/blog/783/Palermo_Cathedral-cathedral-of-palermo-xl-jpg_header-151876.jpeg",
+      "date_updated": "2020-04-29T16:20:37.266676Z",
+      "username": "Tester#9"
+    },
+    {
+      "pk": 221,
+      "title": "Testing Updating a blogPost",
+      "slug": "hadyhefny-posting-a-blogpost",
+      "body": "Testing update functionality for the first time. This is a natural view.",
+      "image": "https://nyc3.digitaloceanspaces.com/open-api-spaces/open-api-static/blog/506/Testing_Updating_a_blogPost.-cropped-266380815.jpg",
+      "date_updated": "2020-04-29T11:34:16.795416Z",
+      "username": "Tester#10"
+    }
+  ]
+}

@@ -40,10 +40,6 @@ class BlogListAdapter(
         ""
     )
 
-    private val _blogClickSubject: PublishSubject<BlogPost> = PublishSubject.create()
-    val blogClickSubject: PublishSubject<BlogPost>
-        get() = _blogClickSubject
-
     private val _restoreListPosSubject: PublishSubject<Unit> = PublishSubject.create()
     val restoreListPosSubject
         get() = _restoreListPosSubject
@@ -72,18 +68,6 @@ class BlogListAdapter(
                 binding = generateBinding(parent, R.layout.layout_blog_list_item),
                 requestManager = requestManager
             )
-        }
-    }
-
-    override fun onBindViewHolder(holder: BaseViewHolder<BlogPost>, position: Int) {
-        super.onBindViewHolder(holder, position)
-        when (holder) {
-            is BlogViewHolder -> {
-                holder.itemView
-                    .clicks()
-                    .map{differ.currentList[position]}
-                    .subscribe(_blogClickSubject)
-            }
         }
     }
 
@@ -126,7 +110,6 @@ class BlogListAdapter(
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
         super.onDetachedFromRecyclerView(recyclerView)
         _restoreListPosSubject.onComplete()
-        _blogClickSubject.onComplete()
     }
 
 }

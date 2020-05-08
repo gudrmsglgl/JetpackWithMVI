@@ -94,7 +94,7 @@ constructor(
                 }
             })
 
-    private fun observeBlogClick() = recyclerAdapter.blogClickSubject
+    private fun observeBlogClick() = recyclerAdapter.clickSubject
         .doOnNext { Log.d(TAG, "blogClick_blogInfo: $it") }
         .subscribe {
             navBlogView(it)
