@@ -25,20 +25,15 @@ abstract class BaseCreateBlogFragment<vb: ViewDataBinding>(
 
     internal val binding: vb by dataBinding()
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupChannel()
-
         setHasOptionsMenu(true)
-
         observeProceedJob()
-
         observeStateMessage()
     }
 
-    private fun observeProceedJob() = viewModel.numActiveJobs
+    private fun observeProceedJob() = viewModel.totalActiveEvents
         .observe(viewLifecycleOwner,
             Observer {
 
@@ -50,7 +45,6 @@ abstract class BaseCreateBlogFragment<vb: ViewDataBinding>(
 
     // nav_create_blog_startDes_id
     override fun setTopLevelDesId(): Int = R.id.createBlogFragment
-
     private fun setupChannel() = viewModel.setUpChannel()
 
     abstract fun observeStateMessage()

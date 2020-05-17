@@ -57,7 +57,7 @@ constructor(
                 Log.d(TAG, "BlogViewModel_setStateEvent_authToken(Token): ${authToken.transHeaderAuthorization()}")
                 launchJob(
                     stateEvent = stateEvent,
-                    jobFunc = when(stateEvent){
+                    repositoryFunc = when(stateEvent){
 
                         is BlogSearchEvent -> {
 

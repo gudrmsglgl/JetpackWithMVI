@@ -34,10 +34,8 @@ abstract class BaseAuthFragment<vb: ViewDataBinding>(
 
     protected var disposableBag: CompositeDisposable? = null
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupChannel()
         disposableBag = CompositeDisposable()
     }
@@ -57,7 +55,5 @@ abstract class BaseAuthFragment<vb: ViewDataBinding>(
         disposableBag = null
     }
 
-
     private fun setupChannel() = viewModel.setUpChannel()
-
 }

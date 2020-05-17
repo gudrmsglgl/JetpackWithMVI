@@ -28,27 +28,17 @@ abstract class BaseBlogFragment<vb: ViewDataBinding>(
 
     internal val binding: vb by dataBinding()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
-
         setHasOptionsMenu(true)
-
         setupChannel()
-
         observeProceedJob()
-
         observeStateMessage()
     }
 
 
-    private fun observeProceedJob() = viewModel.numActiveJobs
+    private fun observeProceedJob() = viewModel.totalActiveEvents
         .observe(viewLifecycleOwner,
             Observer {
                 uiCommunicationListener.displayProgressBar(
@@ -56,10 +46,9 @@ abstract class BaseBlogFragment<vb: ViewDataBinding>(
                 )
             })
 
-    private fun setupChannel() = viewModel.setUpChannel()
-
     // nav_blog_startDes_id
     override fun setTopLevelDesId(): Int = R.id.blogFragment
+    private fun setupChannel() = viewModel.setUpChannel()
 
     abstract fun observeStateMessage()
 }

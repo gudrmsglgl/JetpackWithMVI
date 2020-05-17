@@ -27,7 +27,7 @@ constructor(
     override fun setStateEvent(stateEvent: StateEvent) =
         launchJob(
             stateEvent = stateEvent,
-            jobFunc = when (stateEvent){
+            repositoryFunc = when (stateEvent){
 
                 is LoginAttemptEvent -> {
                     authRepository.attemptLogin(

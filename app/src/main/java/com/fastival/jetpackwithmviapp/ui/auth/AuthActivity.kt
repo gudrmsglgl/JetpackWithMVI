@@ -58,7 +58,6 @@ class AuthActivity : BaseActivity()
     }
 
     private fun createNavHost() {
-
         val navHost =
             AuthNavHostFragment.create(R.navigation.auth_nav_graph)
 
@@ -81,12 +80,11 @@ class AuthActivity : BaseActivity()
             }
         })
 
-        viewModel.numActiveJobs.observe(this, Observer {
+        viewModel.totalActiveEvents.observe(this, Observer {
             displayProgressBar(viewModel.areAnyJobActive())
         })
 
         viewModel.stateMessage.observe(this, Observer { stateMessage ->
-
             stateMessage?.let {
 
                 if (stateMessage.response.message == RESPONSE_CHECK_PREVIOUS_AUTH_USER_DONE)
@@ -102,7 +100,6 @@ class AuthActivity : BaseActivity()
                 )
 
             }
-
         })
 
         sessionManager.cachedToken.observe(this, Observer {authToken->
@@ -115,24 +112,18 @@ class AuthActivity : BaseActivity()
                 }
             }
         })
+
     }
-
-    private fun emitCheckPreviousAuthUser() =
-        viewModel.setStateEvent(AuthStateEvent.CheckPreviousAuthEvent())
-
-
-
     override fun expandAppBar() {
         // ignore
     }
-
     override fun displayProgressBar(isAnyActiveJob: Boolean) {
         if (isAnyActiveJob) progress_bar.visibility = View.VISIBLE
         else progress_bar.visibility = View.GONE
     }
-
     private fun splashGone(){
         fragment_container.visibility = View.VISIBLE
         splash_logo.visibility = View.GONE
     }
+    private fun emitCheckPreviousAuthUser() = viewModel.setStateEvent(AuthStateEvent.CheckPreviousAuthEvent())
 }

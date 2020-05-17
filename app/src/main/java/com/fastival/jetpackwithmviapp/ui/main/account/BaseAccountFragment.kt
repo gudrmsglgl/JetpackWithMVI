@@ -27,43 +27,29 @@ abstract class BaseAccountFragment<vb: ViewDataBinding>(
 
     internal val binding: vb by dataBinding()
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupChannel()
-
         savedInstanceState?.let { inState ->
             (inState[ACCOUNT_VIEW_STATE_BUNDLE_KEY] as AccountViewState?)?.let { viewState ->
                 viewModel.setViewState(viewState)
             }
         }
-
         setHasOptionsMenu(true)
-
         observeProceedJob()
-
         observeStateMessage()
     }
 
-
-    private fun observeProceedJob() =
-        viewModel
-            .numActiveJobs
-            .observe( viewLifecycleOwner, Observer {
-
+    private fun observeProceedJob() = viewModel.totalActiveEvents
+        .observe( viewLifecycleOwner,
+            Observer {
                 uiCommunicationListener.displayProgressBar(
                     viewModel.areAnyJobActive()
                 )
-
             })
 
-
     private fun setupChannel() = viewModel.setUpChannel()
-
-
     override fun setTopLevelDesId()= R.id.accountFragment
-
 
     abstract fun observeStateMessage()
 }

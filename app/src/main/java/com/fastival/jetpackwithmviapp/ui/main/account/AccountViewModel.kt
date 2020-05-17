@@ -35,7 +35,7 @@ constructor(
 
             launchJob(
                 stateEvent = stateEvent,
-                jobFunc = when(stateEvent) {
+                repositoryFunc = when(stateEvent) {
 
                     is AccountStateEvent.GetAccountPropertiesEvent -> {
                         accountRepository

@@ -32,9 +32,8 @@ class MessageStack: ArrayList<StateMessage>() {
         return transaction
     }
 
-
     private fun setStateMessage(stateMessage: StateMessage?) {
-        _stateMessage.value = stateMessage
+        _stateMessage.postValue(stateMessage)
     }
 
     override fun removeAt(index: Int): StateMessage {
