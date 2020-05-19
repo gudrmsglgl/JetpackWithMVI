@@ -7,11 +7,13 @@ import com.fastival.jetpackwithmviapp.ui.main.blog.state.BlogStateEvent
 
 object TestUtil {
 
+    const val UPDATED_TITLE = "TEST_UPDATED_TITLE"
+    const val UPDATED_BODY = "TEST_UPDATED_BODY"
+
     fun createAuthToken() = AuthToken(
         account_pk = 1,
         token = "Token"
     )
-
 
     fun createBlogPost(identifier: Int) = BlogPost(
         pk = identifier,

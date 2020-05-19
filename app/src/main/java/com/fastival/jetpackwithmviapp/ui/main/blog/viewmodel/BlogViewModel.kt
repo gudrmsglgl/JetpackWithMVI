@@ -53,8 +53,8 @@ constructor(
 
     override fun setStateEvent(stateEvent: StateEvent) {
         if (!isJobAlreadyActive(stateEvent)) {
-            sessionManager.cachedToken.value?.let { authToken ->
-                Log.d(TAG, "BlogViewModel_setStateEvent_authToken(Token): ${authToken.transHeaderAuthorization()}")
+            sessionManager.getAuthToken()?.let { authToken ->
+
                 launchJob(
                     stateEvent = stateEvent,
                     repositoryFunc = when(stateEvent){
@@ -64,13 +64,13 @@ constructor(
                             if (stateEvent.clearLayoutManagerState)
                                 clearLayoutManagerState()
 
-                            val searchBlog = """
+                            /*val searchBlog = """
                                 | query = ${getSearchQuery()}
                                 | filterAndOder(order+filter) = ${getOrder()}${getFilter()}
                                 | page = ${getPage()}
                             """.trimIndent()
 
-                            Log.d(TAG, searchBlog)
+                            Log.d(TAG, searchBlog)*/
 
                             blogRepository.searchBlogPosts(
                                 authToken = authToken,

@@ -87,4 +87,6 @@ constructor(
         return false
     }
 
+    fun getAuthToken():AuthToken? = cachedToken.value
+
 }

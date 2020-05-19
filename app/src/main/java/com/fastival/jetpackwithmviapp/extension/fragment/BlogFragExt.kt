@@ -2,6 +2,7 @@ package com.fastival.jetpackwithmviapp.extension.fragment
 
 import android.app.SearchManager
 import android.content.Context
+import android.util.Log
 import android.view.Menu
 import android.view.View
 import android.view.inputmethod.EditorInfo

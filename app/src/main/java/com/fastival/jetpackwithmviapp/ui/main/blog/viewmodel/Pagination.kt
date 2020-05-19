@@ -51,7 +51,6 @@ fun BlogViewModel.searchBlog(query: String? = null) {
 @FlowPreview
 @ExperimentalCoroutinesApi
 fun BlogViewModel.nextPage(){
-
     if ( !isJobAlreadyActive(BlogStateEvent.BlogSearchEvent()) &&
          !getIsQueryExhausted())
     {
