@@ -29,17 +29,14 @@ abstract class BaseMainFragment(
 
     internal lateinit var uiCommunicationListener: UICommunicationListener
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupActionBarWithNavController(setTopLevelDesId(), activity as AppCompatActivity)
     }
 
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-
         try{
             uiCommunicationListener = context as UICommunicationListener
         }catch (e: ClassCastException) {
@@ -68,9 +65,6 @@ abstract class BaseMainFragment(
         }
     )
 
-
-
     @IdRes
     protected abstract fun setTopLevelDesId(): Int
-
 }

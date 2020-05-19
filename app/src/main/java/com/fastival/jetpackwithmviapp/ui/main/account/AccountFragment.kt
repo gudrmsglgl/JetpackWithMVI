@@ -34,13 +34,10 @@ constructor(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.vm = viewModel
-
         change_password.setOnClickListener {
             findNavController().navigate(R.id.action_accountFragment_to_changePasswordFragment)
         }
-
     }
 
     override fun observeStateMessage() = viewModel.stateMessage

@@ -37,7 +37,6 @@ abstract class BaseBlogFragment<vb: ViewDataBinding>(
         observeStateMessage()
     }
 
-
     private fun observeProceedJob() = viewModel.totalActiveEvents
         .observe(viewLifecycleOwner,
             Observer {

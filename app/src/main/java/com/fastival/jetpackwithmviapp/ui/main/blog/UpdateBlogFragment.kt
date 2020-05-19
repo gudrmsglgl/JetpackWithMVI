@@ -81,7 +81,6 @@ constructor(
 
     fun pickFromGallery(view: View){
         if (uiCommunicationListener.isStoragePermissionGranted()) {
-
             val intent = Intent(
                 Intent.ACTION_PICK,
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI
@@ -98,21 +97,17 @@ constructor(
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == RESULT_OK) {
             when (requestCode) {
-
                 GALLERY_REQUEST_CODE -> {
                     data?.data?.let { uri ->
                         launchCropImage(uri)
                     }?:showErrorDialog(ERROR_SOMETHING_WRONG_WITH_IMAGE)
                 }
-
                 CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE -> {
                     setViewStateUri(data)
                 }
-
                 CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE -> {
                     showErrorDialog(ERROR_SOMETHING_WRONG_WITH_IMAGE)
                 }
-
             }
         }
         super.onActivityResult(requestCode, resultCode, data)

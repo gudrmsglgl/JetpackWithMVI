@@ -47,25 +47,14 @@ constructor(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         disposableBag = CompositeDisposable()
-
         (activity as AppCompatActivity).supportActionBar?.setDisplayShowHomeEnabled(false)
-
         swipe_refresh.setOnRefreshListener(this)
-
-        Log.d(TAG, "blogFragment_ViewModel: $viewModel")
-
         setupGlide()
-
         initRecyclerView()
-
         observeBlogList()
-
         observeBlogClick()
-
         observeBlogListState()
-
     }
 
     override fun onResume() {
@@ -79,12 +68,10 @@ constructor(
                 viewState.blogFields.blogList?.let {
 
                     recyclerAdapter.apply {
-
                         preloadGlideImages(
                             requestManager = requestManager as RequestManager,
                             list = it
                         )
-
                         submitList(
                             blogList = it,
                             isQueryExhausted = viewModel.getIsQueryExhausted()
@@ -109,7 +96,6 @@ constructor(
         .observe(viewLifecycleOwner,
             Observer { stateMessage ->
                 stateMessage?.let {
-
                     if (isPaginationDone(it.response.message)){
                         paginationDone(viewModel)
                     }
@@ -160,10 +146,8 @@ constructor(
 
     override fun onDestroyView() {
         super.onDestroyView()
-
         disposableBag?.clear()
         disposableBag = null
-
         blog_post_recyclerview.adapter = null
         requestManager = null
     }
@@ -172,6 +156,4 @@ constructor(
         fetchBlog()
         swipe_refresh.isRefreshing = false
     }
-
-
 }

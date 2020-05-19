@@ -62,46 +62,31 @@ BottomNavController.OnNavigationReselectedListener
             this)
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         inject()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         setSupportActionBar(tool_bar)
-
         restoreSession(savedInstanceState)
-
         setupBottomNavigationView(savedInstanceState)
-
         observeCachedToken()
     }
 
-
-    private fun observeCachedToken() =
-        sessionManager.cachedToken.observe(this, Observer { authToken->
-            Log.d(TAG, "MainActivity, subscribeObservers: ViewState: $authToken")
-
-            if (authToken == null || authToken.account_pk == -1 || authToken.token == null) {
-
-                navAuthActivity()
-                (application as BaseApplication).releaseMainComponent()
-
-            }
-        })
-
+    private fun observeCachedToken() = sessionManager.cachedToken
+        .observe(this,
+            Observer { authToken->
+                if (authToken == null || authToken.account_pk == -1 || authToken.token == null) {
+                    navAuthActivity()
+                    (application as BaseApplication).releaseMainComponent()
+                }})
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         with(outState){
-
             putParcelable(AUTH_TOKEN_BUNDLE_KEY, sessionManager.cachedToken.value)
-
             putIntArray(BOTTOM_NAV_BACKSTACK_KEY, bottomNavController.navigationBackStack.toIntArray())
-
         }
     }
-
 
     override fun onReselectNavItem(
         navController: NavController,
@@ -115,7 +100,6 @@ BottomNavController.OnNavigationReselectedListener
         else -> {}
     }
 
-
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
             android.R.id.home -> onBackPressed()
@@ -123,37 +107,24 @@ BottomNavController.OnNavigationReselectedListener
         return super.onOptionsItemSelected(item)
     }
 
-
     override fun displayProgressBar(isAnyActiveJob: Boolean) {
         if (isAnyActiveJob) progress_bar.visibility = View.VISIBLE
         else progress_bar.visibility = View.GONE
     }
 
+    private fun navAuthActivity() = Intent(this, AuthActivity::class.java)
+        .apply {
+            addFlags(FLAG_ACTIVITY_SINGLE_TOP)}
+        .run {
+            startActivity(this)
+            finish()}
 
-    override fun onGraphChange() {
-        expandAppBar()
-    }
+    override fun onGraphChange() = expandAppBar()
 
+    override fun expandAppBar() = findViewById<AppBarLayout>(R.id.app_bar).setExpanded(true)
 
-    override fun expandAppBar() {
-        findViewById<AppBarLayout>(R.id.app_bar).setExpanded(true)
-    }
-
-
-    override fun onBackPressed() =
-        bottomNavController.onBackPressed()
-
+    override fun onBackPressed() = bottomNavController.onBackPressed()
 
     override fun inject() =
         (application as BaseApplication).mainComponent().inject(this)
-
-    private fun navAuthActivity() = Intent(this, AuthActivity::class.java)
-        .apply {
-            addFlags(FLAG_ACTIVITY_SINGLE_TOP)
-        }.run {
-            startActivity(this)
-            finish()
-        }
-
-
 }

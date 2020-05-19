@@ -41,11 +41,8 @@ constructor(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         initDataBinding()
-
         checkIsAuthor()
-
         observeIsAuthor()
     }
 
@@ -73,10 +70,8 @@ constructor(
     private fun observeIsAuthor() = viewModel.viewState
         .observe( viewLifecycleOwner,
             Observer { viewState ->
-
-            if (viewState.viewBlogFields.isAuthorOfBlogPost == true)
-                invalidateOptionMenu()
-
+                if (viewState.viewBlogFields.isAuthorOfBlogPost == true)
+                    invalidateOptionMenu()
             })
 
 
@@ -96,19 +91,16 @@ constructor(
     }
 
     fun confirmDeleteRequest(view: View) {
-
         val callBack: AreYouSureCallBack = object: AreYouSureCallBack{
             override fun proceed() {
                 viewModel.setStateEvent(
                     BlogStateEvent.DeleteBlogPostEvent()
                 )
             }
-
             override fun cancel() {
                 // ignore
             }
         }
-
         uiCommunicationListener.onResponseReceived(
             response = Response(
                 message = getString(R.string.are_you_sure_delete),
@@ -121,7 +113,6 @@ constructor(
                 }
             }
         )
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -142,16 +133,13 @@ constructor(
 
     private fun navUpdateBlogFragment(){
         try{
-
             with(viewModel) {
                 setUpdatedBlogFields(
                     title = getBlogPost().title,
                     body = getBlogPost().body,
                     uri = getBlogPost().image.toUri())
             }
-
             findNavController().navigate(R.id.action_viewBlogFragment_to_updateBlogFragment)
-
         } catch (e: Exception){
             // send error report or something. These fields should never be null. Not possible
             Log.e(TAG, "Exception: ${e.message}")
