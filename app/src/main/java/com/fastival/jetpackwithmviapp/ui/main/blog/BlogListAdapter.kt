@@ -44,7 +44,6 @@ class BlogListAdapter(
     val restoreListPosSubject
         get() = _restoreListPosSubject
 
-
     override fun getItemViewType(position: Int): Int {
         if (differ.currentList[position].pk > -1){
             return BLOG_ITEM
@@ -75,23 +74,16 @@ class BlogListAdapter(
         blogList: List<BlogPost>?,
         isQueryExhausted: Boolean
     ){
-
         val newList = blogList?.toMutableList()
 
         if (isQueryExhausted)
             newList?.add((NO_MORE_RESULTS_BLOG_MARKER))
 
         val commitCallback = Runnable {
-            // if process died must restore list position
-            // very annoying
-
             _restoreListPosSubject.onNext(Unit)
-
-            //interaction?.restoreListPosition()
         }
 
         differ.submitList(newList, commitCallback)
-
     }
 
     // Prepare the image that will be displayed in the RecyclerView.

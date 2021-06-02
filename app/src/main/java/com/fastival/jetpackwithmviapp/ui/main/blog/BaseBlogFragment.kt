@@ -48,6 +48,5 @@ abstract class BaseBlogFragment<vb: ViewDataBinding>(
     // nav_blog_startDes_id
     override fun setTopLevelDesId(): Int = R.id.blogFragment
     private fun setupChannel() = viewModel.setUpChannel()
-
     abstract fun observeStateMessage()
 }

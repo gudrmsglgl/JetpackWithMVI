@@ -36,17 +36,14 @@ abstract class BaseCreateBlogFragment<vb: ViewDataBinding>(
     private fun observeProceedJob() = viewModel.totalActiveEvents
         .observe(viewLifecycleOwner,
             Observer {
-
                 uiCommunicationListener.displayProgressBar(
                     viewModel.areAnyJobActive()
                 )
-
             })
 
     // nav_create_blog_startDes_id
     override fun setTopLevelDesId(): Int = R.id.createBlogFragment
     private fun setupChannel() = viewModel.setUpChannel()
-
     abstract fun observeStateMessage()
 
 }

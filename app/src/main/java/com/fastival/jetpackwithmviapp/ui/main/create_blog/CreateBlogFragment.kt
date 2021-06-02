@@ -80,11 +80,8 @@ constructor(
         binding.fragment = this
 
         observeBlogTitle()
-
         observeBlogContents()
-
         observeImgUri()
-
     }
 
     private fun observeBlogTitle() = binding.blogTitle
@@ -179,21 +176,14 @@ constructor(
                 }
 
                 CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE -> {
-
-                    Log.d(TAG, "CROP: CROP_IMAGE_ACTIVITY_REQUEST_CODE")
-
                     val result = CropImage.getActivityResult(data)
-
                     val resultUri = result.uri
-
-                    Log.d(TAG, "CROP: CROP_IMAGE_ACTIVITY_REQUEST_CODE: uri: $resultUri")
 
                     viewModel.setNewBlogFields(
                         title = null,
                         body = null,
                         uri = resultUri
                     )
-
                 }
 
                 CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE -> {
@@ -238,12 +228,10 @@ constructor(
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
-
             R.id.publish -> {
                 showDialogConfirmPublish()
                 return true
             }
-
         }
 
         return super.onOptionsItemSelected(item)

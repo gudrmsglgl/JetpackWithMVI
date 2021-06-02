@@ -50,6 +50,5 @@ abstract class BaseAccountFragment<vb: ViewDataBinding>(
 
     private fun setupChannel() = viewModel.setUpChannel()
     override fun setTopLevelDesId()= R.id.accountFragment
-
     abstract fun observeStateMessage()
 }

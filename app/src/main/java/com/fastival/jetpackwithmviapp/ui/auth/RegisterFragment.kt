@@ -41,11 +41,8 @@ class RegisterFragment
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         observeViewState()
-
         observeRegisterForm()
-
         observeRegButton()
     }
 
@@ -62,7 +59,6 @@ class RegisterFragment
         })
         .subscribe { isAllInputField ->
             binding.registerButton.apply {
-
                 isEnabled = if (isAllInputField) {
                     setBackgroundResource(R.drawable.main_button_drawable)
                     true
@@ -70,7 +66,6 @@ class RegisterFragment
                     setBackgroundResource(R.color.grey2)
                     false
                 }
-
             }}
         .addCompositeDisposable(disposableBag)
 

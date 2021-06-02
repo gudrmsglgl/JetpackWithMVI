@@ -7,6 +7,5 @@ import io.reactivex.subjects.PublishSubject
 abstract class BaseViewHolder<ITEM>(
     binding: ViewBinding
 ): RecyclerView.ViewHolder(binding.root) {
-
     abstract fun bind(item: ITEM, clickSubject: PublishSubject<ITEM>)
 }

@@ -39,11 +39,8 @@ constructor(
 {
 
     internal lateinit var recyclerAdapter: BlogListAdapter
-
     internal var requestManager: RequestManager? = null // can leak memory, must be nullable
-
     var disposableBag: CompositeDisposable? = null
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

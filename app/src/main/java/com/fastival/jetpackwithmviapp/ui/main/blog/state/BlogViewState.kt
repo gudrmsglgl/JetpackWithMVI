@@ -11,14 +11,8 @@ const val BLOG_VIEW_STATE_BUNDLE_KEY
                 = "com.fastival.jetpackwithmviapp.ui.main.blog.state.BlogViewState"
 @Parcelize
 data class BlogViewState(
-
-    // BlogFragment vars
     var blogFields: BlogFields = BlogFields(),
-
-    // ViewBlogFragment vars
     var viewBlogFields: ViewBlogFields = ViewBlogFields(),
-
-    // UpdateBlogFragment vars
     var updatedBlogFields: UpdatedBlogFields = UpdatedBlogFields()
 ): Parcelable
 {

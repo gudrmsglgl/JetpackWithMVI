@@ -31,7 +31,6 @@ constructor(
 ): BaseAccountFragment<FragmentAccountBinding>(R.layout.fragment_account, provider)
 {
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel

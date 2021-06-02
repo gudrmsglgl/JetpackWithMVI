@@ -25,13 +25,9 @@ abstract class BaseAuthFragment<vb: ViewDataBinding>(
 {
 
     val TAG = "AppDebug"
-
     internal val binding: vb by dataBinding()
-
     val viewModel: AuthViewModel by viewModels { viewModelFactory }
-
     lateinit var uiCommunicationListener: UICommunicationListener
-
     protected var disposableBag: CompositeDisposable? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

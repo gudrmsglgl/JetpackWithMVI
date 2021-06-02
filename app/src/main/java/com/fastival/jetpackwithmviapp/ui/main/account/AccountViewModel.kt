@@ -28,11 +28,8 @@ constructor(
     override val viewState: LiveData<AccountViewState>
         get() = super.viewState
 
-
     override fun setStateEvent(stateEvent: StateEvent) {
-
         sessionManager.cachedToken.value?.let { authToken ->
-
             launchJob(
                 stateEvent = stateEvent,
                 repositoryFunc = when(stateEvent) {
@@ -68,11 +65,10 @@ constructor(
                             emit(retInvalidEvent(stateEvent))
                         }
                     }
+
                 }
             )
-
         }
-
     }
 
     override fun handleViewState(data: AccountViewState) {

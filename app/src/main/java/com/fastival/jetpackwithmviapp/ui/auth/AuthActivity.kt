@@ -34,7 +34,6 @@ class AuthActivity : BaseActivity()
 
     val viewModel: AuthViewModel by viewModels { viewModelFactory }
 
-
     override fun inject() {
         (application as BaseApplication).authComponent().inject(this)
     }
@@ -117,13 +116,17 @@ class AuthActivity : BaseActivity()
     override fun expandAppBar() {
         // ignore
     }
+
     override fun displayProgressBar(isAnyActiveJob: Boolean) {
         if (isAnyActiveJob) progress_bar.visibility = View.VISIBLE
         else progress_bar.visibility = View.GONE
     }
+
     private fun splashGone(){
         fragment_container.visibility = View.VISIBLE
         splash_logo.visibility = View.GONE
     }
-    private fun emitCheckPreviousAuthUser() = viewModel.setStateEvent(AuthStateEvent.CheckPreviousAuthEvent())
+
+    private fun emitCheckPreviousAuthUser() = viewModel
+        .setStateEvent(AuthStateEvent.CheckPreviousAuthEvent())
 }

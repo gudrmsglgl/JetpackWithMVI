@@ -4,7 +4,6 @@ import android.Manifest.*
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -24,27 +23,20 @@ import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 @ExperimentalCoroutinesApi
 @FlowPreview
-abstract class BaseActivity
-    : AppCompatActivity(), UICommunicationListener
+abstract class BaseActivity : AppCompatActivity(), UICommunicationListener
 {
-
-    val TAG: String = "AppDebug"
 
     internal var dialogInView: MaterialDialog? = null
 
     @Inject
     lateinit var sessionManager: SessionManager
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
-
         (application as BaseApplication).appComponent
             .inject(this)
 
         super.onCreate(savedInstanceState)
-
     }
-
 
     override fun onResponseReceived(
         response: Response,
@@ -53,7 +45,6 @@ abstract class BaseActivity
         when(response.uiComponentType) {
 
             is UIComponentType.AreYouSureDialog -> {
-
                 response.message?.let {
                     areYouSureDialog(
                         message = it,
@@ -61,7 +52,6 @@ abstract class BaseActivity
                         stateMessageCallback = stateMessageCallback
                     )
                 }
-
             }
 
             is UIComponentType.Toast -> {
@@ -83,12 +73,10 @@ abstract class BaseActivity
             is UIComponentType.None -> {
                 // This would be a good place to send to your Error Reporting
                 // software of choice (ex: Firebase crash reporting)
-                Log.i(TAG, "onResponseReceived: ${response.message}")
                 stateMessageCallback.removeMessageFromStack()
             }
         }
     }
-
 
     override fun onPause() {
         super.onPause()
@@ -98,7 +86,6 @@ abstract class BaseActivity
         }
     }
 
-
     override fun hideSoftKeyboard() {
         if (currentFocus != null) {
             val inputMethodManager =
@@ -107,7 +94,6 @@ abstract class BaseActivity
                 .hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
         }
     }
-
 
     override fun isStoragePermissionGranted(): Boolean {
         if (ContextCompat.checkSelfPermission(
@@ -128,7 +114,6 @@ abstract class BaseActivity
                 ),
                 PERMISSIONS_REQUEST_READ_STORAGE
             )
-
             return false
         } else {
             // Permission has already been granted
@@ -137,9 +122,6 @@ abstract class BaseActivity
     }
 
     abstract override fun displayProgressBar(isAnyActiveJob: Boolean)
-
     abstract fun inject()
-
     abstract override fun expandAppBar()
-
 }

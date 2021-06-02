@@ -32,15 +32,9 @@ class BottomNavController(
     @IdRes val startBottomMenuId: Int,
     val graphChangeListener: OnNavigationGraphChanged?
 ) {
-
-    private val TAG: String = "AppDebug"
-
     lateinit var navigationBackStack: BackStack
-
     lateinit var activity: Activity
-
     lateinit var fragmentManager: FragmentManager
-
     lateinit var navItemChangeListener: OnNavigationItemChanged
 
     init {
@@ -50,13 +44,11 @@ class BottomNavController(
         }
     }
 
-
     fun setupBottomNavigationBackStack(previousBackStack: BackStack?){
         navigationBackStack = previousBackStack?.let {
                 it
         }?: BackStack.of(startBottomMenuId)
     }
-
 
     fun onBottomNavigationItemSelected(
         menuItemId: Int = navigationBackStack.last()
@@ -93,7 +85,6 @@ class BottomNavController(
         return true
     }
 
-
     private fun createNavHost(menuItemId: Int): Fragment =
         when(menuItemId) {
 
@@ -112,13 +103,11 @@ class BottomNavController(
             else -> BlogNavHostFragment.create(R.navigation.nav_blog)
         }
 
-
     @SuppressLint("RestrictedApi")
     fun onBackPressed(){
 
         val navController = fragmentManager.findFragmentById(containerId)!!
             .findNavController()
-
 
         when{
             // We should always try to go back on the child fragment manager stack before going to
@@ -153,16 +142,13 @@ class BottomNavController(
         }
     }
 
-
     @Parcelize
     class BackStack: ArrayList<Int>(), Parcelable {
 
         companion object {
-
             fun of(vararg elements: Int) =
                 BackStack()
                     .apply { addAll(elements.toTypedArray())}
-
         }
 
         fun removeLast() = removeAt(size -1)
@@ -173,12 +159,10 @@ class BottomNavController(
         }
     }
 
-
     // Checked icon in the bottom nav
     interface OnNavigationItemChanged{
         fun onItemChanged(itemId: Int)
     }
-
 
     // Execute when Navigation Graph changes.
     // ex: Select a new item on the bottom nav
@@ -187,11 +171,9 @@ class BottomNavController(
         fun onGraphChange()
     }
 
-
     interface OnNavigationReselectedListener{
         fun onReselectNavItem(navController: NavController, fragment: Fragment)
     }
-
 
     fun setOnItemNavigationChanged(listener: (itemId: Int) -> Unit) {
         this.navItemChangeListener = object : OnNavigationItemChanged {
@@ -200,8 +182,6 @@ class BottomNavController(
             }
         }
     }
-
-
 }
 @ExperimentalCoroutinesApi
 @FlowPreview
@@ -211,13 +191,11 @@ fun BottomNavigationView.setUpNavigation(
     onReselectListener: BottomNavController.OnNavigationReselectedListener
 ){
 
-
     this.setOnNavigationItemSelectedListener { menuItem->
         bottomNavController.onBottomNavigationItemSelected(menuItem.itemId)
     }
 
     this.setOnNavigationItemReselectedListener {
-
         bottomNavController
             .fragmentManager
             .findFragmentById(bottomNavController.containerId)!!
@@ -229,7 +207,6 @@ fun BottomNavigationView.setUpNavigation(
                 fragment
             )
         }
-
         bottomNavController.onBottomNavigationItemSelected()
     }
 

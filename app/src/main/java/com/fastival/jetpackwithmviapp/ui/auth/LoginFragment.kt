@@ -36,16 +36,11 @@ constructor(
     private val viewModelFactory: ViewModelProvider.Factory
 ) : BaseAuthFragment<FragmentLoginBinding>(R.layout.fragment_login, viewModelFactory) {
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         observeViewState()
-
         observeInputIdPwd()
-
         observeLoginBtn()
-
     }
 
     private fun observeViewState() = viewModel.viewState
@@ -79,13 +74,11 @@ constructor(
         .addCompositeDisposable(disposableBag)
 
     private fun login() = with(viewModel) {
-
         saveLoginFields(this)
 
         setStateEvent(LoginAttemptEvent(
             binding.inputEmail.text.toString(),
             binding.inputPassword.text.toString()))
-
     }
 
     override fun onDestroyView() {

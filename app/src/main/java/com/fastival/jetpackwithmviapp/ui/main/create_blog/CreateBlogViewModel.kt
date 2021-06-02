@@ -38,9 +38,7 @@ constructor(
                 repositoryFunc = when(stateEvent) {
 
                     is CreateBlogStateEvent.CreateNewBlogEvent -> {
-
                         val title = stateEvent.title.parseRequestBody()
-
                         val body = stateEvent.body.parseRequestBody()
 
                         repository.createNewBlogPost(

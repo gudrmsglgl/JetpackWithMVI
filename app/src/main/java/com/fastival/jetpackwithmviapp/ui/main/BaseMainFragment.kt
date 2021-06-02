@@ -34,7 +34,6 @@ abstract class BaseMainFragment(
         setupActionBarWithNavController(setTopLevelDesId(), activity as AppCompatActivity)
     }
 
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
         try{

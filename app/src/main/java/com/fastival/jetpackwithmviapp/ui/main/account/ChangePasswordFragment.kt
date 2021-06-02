@@ -33,7 +33,6 @@ constructor(
 ): BaseAccountFragment<FragmentChangePasswordBinding>(R.layout.fragment_change_password, provider)
 {
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

@@ -9,7 +9,6 @@ import kotlinx.coroutines.FlowPreview
 @FlowPreview
 @ExperimentalCoroutinesApi
 fun BlogViewModel.refreshFromCache(){
-
     if (!isJobAlreadyActive(BlogStateEvent.BlogSearchEvent())){
 
         setQueryExhausted(false)
@@ -20,7 +19,6 @@ fun BlogViewModel.refreshFromCache(){
         )
 
     }
-
 }
 
 
@@ -28,10 +26,8 @@ fun BlogViewModel.refreshFromCache(){
 @ExperimentalCoroutinesApi
 fun BlogViewModel.searchBlog(query: String? = null) {
     if (!isJobAlreadyActive(BlogStateEvent.BlogSearchEvent())) {
-
         getCurrentViewStateOrNew()
             .apply {
-
                 blogFields.apply {
                     query?.let { searchQuery = it }
                     page = 1

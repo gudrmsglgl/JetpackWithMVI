@@ -30,7 +30,6 @@ constructor(
 ): BaseAccountFragment<FragmentUpdateAccountBinding>(R.layout.fragment_update_account, provider)
 {
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

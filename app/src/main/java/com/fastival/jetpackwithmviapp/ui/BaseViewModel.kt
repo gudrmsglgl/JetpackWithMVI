@@ -1,6 +1,5 @@
 package com.fastival.jetpackwithmviapp.ui
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -15,8 +14,6 @@ import kotlinx.coroutines.flow.onEach
 @FlowPreview
 @ExperimentalCoroutinesApi
 abstract class BaseViewModel<ViewState>: ViewModel() {
-
-    val TAG = "AppDebug"
 
     private val liveActiveStateEvents: MutableLiveData<HashSet<String>> = MutableLiveData()
     private val hashActiveStateEvents: HashSet<String> = HashSet()
@@ -57,10 +54,12 @@ abstract class BaseViewModel<ViewState>: ViewModel() {
                 .launchIn(getChannelScope())
         }
     }
+
     fun setUpChannel() {
         cancelJobs()
         channelScope = CoroutineScope(Dispatchers.IO)
     }
+
     fun cancelJobs(){
         if (channelScope != null) {
             if (channelScope?.isActive == true) {
@@ -70,23 +69,28 @@ abstract class BaseViewModel<ViewState>: ViewModel() {
         }
         clearActiveEvents()
     }
+
     override fun onCleared() {
         super.onCleared()
         if (areAnyJobActive()) {
             cancelJobs()
         }
     }
+
     fun getChannelScope(): CoroutineScope {
         return channelScope?: CoroutineScope(Dispatchers.IO)
     }
+
     open fun setViewState(viewState: ViewState) {
         _viewState.postValue(viewState)
     }
+
     fun getCurrentViewStateOrNew(): ViewState{
         return viewState.value?.let {
             it
         }?: initNewViewState()
     }
+
     fun retInvalidEvent(
         stateEvent: StateEvent
     ): DataState<ViewState> = DataState.error(
@@ -97,23 +101,33 @@ abstract class BaseViewModel<ViewState>: ViewModel() {
         ),
         stateEvent = stateEvent
     )
+
     private fun addStateEvent(stateEvent: StateEvent){
         hashActiveStateEvents.add(stateEvent.toString())
         liveActiveStateEvents.value = hashActiveStateEvents
     }
+
     private fun removeStateEvent(stateEvent: StateEvent?) {
         hashActiveStateEvents.remove(stateEvent.toString())
         liveActiveStateEvents.postValue(hashActiveStateEvents)
     }
+
     private fun clearActiveEvents(){
         hashActiveStateEvents.clear()
         liveActiveStateEvents.value = hashActiveStateEvents
     }
-    private fun isStateEventActive(stateEvent: StateEvent) = hashActiveStateEvents.contains(stateEvent.toString())
+
+    private fun isStateEventActive(stateEvent: StateEvent) = hashActiveStateEvents
+        .contains(stateEvent.toString())
+
     private fun addStateMessageStack(stateMessage: StateMessage) = messageStack.add(stateMessage)
+
     fun removeStateMessage(index: Int = 0) = messageStack.removeAt(index)
+
     fun areAnyJobActive() = totalActiveEvents.value?.let { it > 0 } ?: false
-    fun isJobAlreadyActive(stateEvent: StateEvent): Boolean = hashActiveStateEvents.contains(stateEvent.toString())
+
+    fun isJobAlreadyActive(stateEvent: StateEvent) = hashActiveStateEvents
+        .contains(stateEvent.toString())
 
     abstract fun handleViewState(data: ViewState)
     abstract fun setStateEvent(stateEvent: StateEvent)
